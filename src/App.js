@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Login from './Login/Login';
 import Registration from './Registration/Registration';
 import Profile from './Profile/Profile';
+import LeaderBoard from './LeaderBoard/LeaderBoard';
+import Network from './Network/Network';
 
 export default function App() {
   return (
@@ -13,9 +15,7 @@ export default function App() {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>
-              <Link to="/profile">Profile</Link>
-            </li>
+
             <li>
               <Link to="/registration">Registration</Link>
             </li>
@@ -23,7 +23,13 @@ export default function App() {
               <Link to="/login">Login</Link>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li>
+              <Link to="/network">Network</Link>
+            </li>
+            <li>
+              <Link to="/leaderboard">Leaderboard</Link>
             </li>
           </ul>
         </nav>
@@ -38,8 +44,11 @@ export default function App() {
           <Route path="/registration">
             <Registration />
           </Route>
-          <Route path="/users">
-            <Users />
+          <Route path="/network">
+            <Network />
+          </Route>
+          <Route path="/leaderboard">
+            <LeaderBoard />
           </Route>
           <Route path="/">
             <Home />
@@ -51,9 +60,5 @@ export default function App() {
 }
 
 function Home() {
-  return <h2>Home1</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
+  return <h1>Home</h1>;
 }

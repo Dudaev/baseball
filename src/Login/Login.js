@@ -4,7 +4,7 @@ import { Field, Form } from 'react-final-form';
 import { GraphQLClient,  gql } from 'graphql-request';
 
 function Login() {
-  async function main(accessToken, client, uid) {
+  async function queryLogin(accessToken, client, uid) {
 
     const endpoint = 'https://baseballcloud-back.herokuapp.com/api/v1/graphql';
 
@@ -48,7 +48,9 @@ function Login() {
   }
 
 return (
-  <Form
+  <>
+  <h1>Login</h1>
+     <Form
     onSubmit={formObj => {
         axios
     .post(`https://baseballcloud-back.herokuapp.com/api/v1/auth/sign_in`, {
@@ -62,7 +64,7 @@ return (
       localStorage.accessToken = accessToken;
       localStorage.client = client;
       localStorage.uid = uid;
-      main(localStorage.accessToken, localStorage.client, localStorage.uid).catch(error => console.error(error));
+      queryLogin(localStorage.accessToken, localStorage.client, localStorage.uid).catch(error => console.error(error));
     });
     }}
   >
@@ -74,6 +76,8 @@ return (
       </form>
     )}
   </Form>
+  </>
+
 )
 }
 
