@@ -1,10 +1,11 @@
 const axios = require('axios');
 
 export default async function queryLeaderBoard(accessToken, client, uid) {
-  const data = await axios.post(
-    'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
-    {
-      query: ` query LeaderboardBatting($input: FilterLeaderboardInput!) {
+  axios
+    .post(
+      'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
+      {
+        query: ` query LeaderboardBatting($input: FilterLeaderboardInput!) {
         leaderboard_batting(input: $input) {
           leaderboard_batting {
             batter_name
@@ -25,17 +26,22 @@ export default async function queryLeaderBoard(accessToken, client, uid) {
           }
         }
       }`,
-      variables: {
-        input: { type: 'exit_velocity' },
+        variables: {
+          input: { type: 'exit_velocity' },
+        },
       },
-    },
-    {
-      headers: {
-        'access-token': accessToken,
-        client,
-        uid,
+      {
+        headers: {
+          'access-token': accessToken,
+          client,
+          uid,
+        },
       },
-    },
-  );
-  console.log(JSON.stringify(data.data, undefined, 2));
+    )
+    .catch(error => {
+      console.log(error);
+    })
+    .then(response => {
+      console.log(JSON.stringify(response.data, undefined, 2));
+    });
 }

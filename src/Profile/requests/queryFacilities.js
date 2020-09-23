@@ -1,10 +1,11 @@
 const axios = require('axios');
 
 export default async function queryFacilities(accessToken, client, uid) {
-  const data = await axios.post(
-    'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
-    {
-      query: ` query Facilities($search:String!)
+  axios
+    .post(
+      'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
+      {
+        query: ` query Facilities($search:String!)
       { facilities(search: $search) {
             facilities {
               id
@@ -12,17 +13,22 @@ export default async function queryFacilities(accessToken, client, uid) {
               u_name
           }
     }}`,
-      variables: {
-        search: '',
+        variables: {
+          search: '',
+        },
       },
-    },
-    {
-      headers: {
-        'access-token': accessToken,
-        client,
-        uid,
+      {
+        headers: {
+          'access-token': accessToken,
+          client,
+          uid,
+        },
       },
-    },
-  );
-  console.log(JSON.stringify(data.data, undefined, 2));
+    )
+    .catch(error => {
+      console.log(error);
+    })
+    .then(response => {
+      console.log(JSON.stringify(response.data, undefined, 2));
+    });
 }

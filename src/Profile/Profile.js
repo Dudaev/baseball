@@ -165,18 +165,18 @@ function Profile() {
               <Field name="feet" component="input" type="number" placeholder="Feet *" />
               <Field name="inches" component="input" type="number" placeholder="Inches" />
               <Field name="weight" component="input" type="number" placeholder="Weight *" />
-              <Field name="throws" component="select">
+              <Field name="throws" component="select" initialValue="R">
                 <option>R</option>
                 <option>L</option>
               </Field>
-              <Field name="bats" component="select">
+              <Field name="bats" component="select" initialValue="R">
                 <option>R</option>
                 <option>L</option>
               </Field>
             </div>
             <div>
               <label>School</label>
-              <Field name="school" component="select">
+              <Field name="school" component="select" initialValue="FSU">
                 <option>FSU</option>
                 <option>Rockledge</option>
                 <option>Junior</option>

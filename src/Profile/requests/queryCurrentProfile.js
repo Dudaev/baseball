@@ -1,10 +1,11 @@
 const axios = require('axios');
 
 export default async function queryCurrentProfile(accessToken, client, uid) {
-  const data = await axios.post(
-    'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
-    {
-      query: `{ current_profile ()
+  axios
+    .post(
+      'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
+      {
+        query: `{ current_profile ()
       {
           id
           first_name
@@ -34,14 +35,19 @@ export default async function queryCurrentProfile(accessToken, client, uid) {
             u_name
         }
     }}`,
-    },
-    {
-      headers: {
-        'access-token': accessToken,
-        client,
-        uid,
       },
-    },
-  );
-  console.log(JSON.stringify(data.data, undefined, 2));
+      {
+        headers: {
+          'access-token': accessToken,
+          client,
+          uid,
+        },
+      },
+    )
+    .catch(error => {
+      console.log(error);
+    })
+    .then(response => {
+      console.log(JSON.stringify(response.data, undefined, 2));
+    });
 }

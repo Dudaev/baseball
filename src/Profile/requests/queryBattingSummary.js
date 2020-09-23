@@ -38,8 +38,7 @@ export default async function queryBattingSummary(accessToken, client, uid) {
     .catch(error => {
       console.log(error);
     })
-    .then(i => {
-      console.log(`TEST `);
-      console.log(JSON.stringify(i.data, undefined, 2));
+    .then(response => {
+      console.log(JSON.stringify(response.data, undefined, 2));
     });
 }

@@ -1,10 +1,11 @@
 const axios = require('axios');
 
 export default async function queryNotifications(accessToken, client, uid) {
-  const data = await axios.post(
-    'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
-    {
-      query: ` query Notifications($input:FilterNotificationsInput!) {
+  axios
+    .post(
+      'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
+      {
+        query: ` query Notifications($input:FilterNotificationsInput!) {
         notifications(input: $input) {
           notifications {
             id
@@ -13,17 +14,22 @@ export default async function queryNotifications(accessToken, client, uid) {
         }
     }
   }`,
-      variables: {
-        input: { count: 5, offset: 0 },
+        variables: {
+          input: { count: 5, offset: 0 },
+        },
       },
-    },
-    {
-      headers: {
-        'access-token': accessToken,
-        client,
-        uid,
+      {
+        headers: {
+          'access-token': accessToken,
+          client,
+          uid,
+        },
       },
-    },
-  );
-  console.log(JSON.stringify(data.data, undefined, 2));
+    )
+    .catch(error => {
+      console.log(error);
+    })
+    .then(response => {
+      console.log(JSON.stringify(response.data, undefined, 2));
+    });
 }
