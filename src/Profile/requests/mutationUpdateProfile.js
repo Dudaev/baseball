@@ -1,6 +1,18 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-lone-blocks */
 const axios = require('axios');
 
 export default async function mutationUpdateProfile(accessToken, client, uid, formObj) {
+  {
+    if (formObj.teams == null) {
+      formObj.teams = [];
+    }
+  }
+  {
+    if (formObj.facilities == null) {
+      formObj.facilities = [];
+    }
+  }
   axios
     .post(
       'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
@@ -52,41 +64,8 @@ export default async function mutationUpdateProfile(accessToken, client, uid, fo
     }`,
         variables: {
           form: {
-            avatar: null,
-            bats_hand: 'l',
-            biography: '66v',
-            facilities: [{ id: '32', email: 'facility@example.com', u_name: 'Example' }],
-            feet: 7,
-            first_name: 'cc',
             id: localStorage.id,
-            inches: 4,
-            last_name: 'ccc',
-            position: 'catcher',
-            position2: 'first_base',
-            school: { id: '2', name: 'FSU' },
-            school_year: 'freshman',
-            teams: [{ id: '7', name: 'FTB' }],
-            throws_hand: 'r',
-            weight: 50,
-            // age: +formObj.age,
-            // bats_hand: formObj.bats,
-            // biography: formObj.about,
-            // facilities: [{id: "32", u_name: "Example"}],
-            // // formObj.facility,
-            // feet: +formObj.feet,
-            // first_name: formObj.firstName,
-            // id: '558',
-            // inches: +formObj.inches,
-            // last_name: formObj.lastName,
-            // position: "catcher",
-            // // formObj.positionInGame,
-            // position2: "first_base",
-            // // formObj.secondaryPositionInGame,
-            // teams: [{id: "7", name: "FTB"}],
-            // // formObj.teams.map(item => item.value),
-            // throws_hand: formObj.throws,
-            // weight: +formObj.weight,
-            // school: {id: "2", name: "FSU"},
+            ...formObj,
           },
         },
       },

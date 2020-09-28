@@ -13,21 +13,45 @@ import queryProfile from './requests/queryProfile';
 import queryProfileEvents from './requests/queryProfileEvents';
 import querySchools from './requests/querySchools';
 import queryTeams from './requests/queryTeams';
+import ErrorWithDelay from '../ErrorWithDelay';
 
-const ReactSelectAdapter = ({ input, ...rest }) => {
+// const ReactSelectAdapter = ({ input, ...rest }) => {
+//   const { options } = rest;
+//   return (
+//     <div>
+//       <Select
+//         {...input}
+//         onChange={selectedOptions => {
+//           if (!selectedOptions) {
+//             input.onChange(null);
+//             return;
+//           }
+//           console.log('selectedOptions', selectedOptions);
+//           input.onChange(selectedOptions.map(option => option.value));
+//         }}
+//         value={options.filter(option => input.value && input.value.includes(option.value))}
+//         {...rest}
+//         isMulti
+//       />
+//     </div>
+//   );
+// };
+const ReactSelectMultiObj = ({ input, ...rest }) => {
   const { options } = rest;
   return (
     <div>
       <Select
         {...input}
         onChange={selectedOptions => {
-          if (!selectedOptions) {
-            input.onChange(null);
-            return;
-          }
+          // if (!selectedOptions) {
+          //   input.onChange(null);
+          //   return;
+          // }
+          // console.log('selectedOptions', selectedOptions);
+
           input.onChange(selectedOptions.map(option => option.value));
         }}
-        value={options.filter(option => input.value && input.value.includes(option.value))}
+        value={options.filter(option => input.value && input.value.find(item => item.id === option.value.id))}
         {...rest}
         isMulti
       />
@@ -35,7 +59,7 @@ const ReactSelectAdapter = ({ input, ...rest }) => {
   );
 };
 
-const ReactSelect = ({ input, ...rest }) => {
+const ReactSelect = ({ input, name, ...rest }) => {
   const { options } = rest;
   return (
     <div>
@@ -44,6 +68,40 @@ const ReactSelect = ({ input, ...rest }) => {
         {...rest}
         onChange={option => input.onChange(option.value)}
         value={options.find(option => option.value === input.value)}
+        isSearchable={false}
+      />
+      <ErrorWithDelay name={input.name} delay={1000}>
+        {error => <span>{error}</span>}
+      </ErrorWithDelay>
+    </div>
+  );
+};
+const InputNum = ({ input, placeholder }) => (
+  <div>
+    <input
+      {...input}
+      type="text"
+      placeholder={placeholder}
+      onChange={event => {
+        console.log(input);
+        return input.onChange(+event.currentTarget.value);
+      }}
+    />
+    <ErrorWithDelay name={input.name} delay={1000}>
+      {error => <span>{error}</span>}
+    </ErrorWithDelay>
+  </div>
+);
+
+const ReactSelectObj = ({ input, ...rest }) => {
+  const { options } = rest;
+  return (
+    <div>
+      <Select
+        {...input}
+        {...rest}
+        onChange={option => input.onChange(option.value)}
+        value={options.find(option => option.value.id === input.value.id)}
         isSearchable={false}
       />
     </div>
@@ -83,14 +141,64 @@ function Profile() {
             console.error(error),
           );
         }}
+        validate={values => {
+          const errors = {};
+          if (!values.first_name) {
+            errors.first_name = 'First Name Required';
+          }
+          if (!values.last_name) {
+            errors.last_name = 'Last Name Required';
+          }
+          if (!values.position2) {
+            errors.position2 = 'Position Required';
+          }
+          if (!values.age) {
+            errors.age = 'Age Required';
+          }
+          if (!values.feet) {
+            errors.feet = 'Feet Required';
+          }
+          if (!values.weight) {
+            errors.weight = 'Weight Required';
+          }
+          if (!values.throws_hand) {
+            errors.throws_hand = 'Throws Required';
+          }
+          if (!values.bats_hand) {
+            errors.bats_hand = 'Bats Required';
+          }
+          // {form: "Fill out the required fields"}
+          {
+            console.log(`errors`);
+            console.log(errors);
+          }
+          return errors;
+        }}
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <Field name="firstName *">{({ input }) => <input placeholder="First Name" type="text" {...input} />}</Field>
-            {/* {({ input }) => <TextField placeholder="First Name" label="Outlined" variant="outlined" {...input}/>}</Field> */}
-            <Field name="lastName *">{({ input }) => <input placeholder="Last Name" type="text" {...input} />}</Field>
+            <Field name="first_name">
+              {({ input }) => (
+                <div>
+                  <input placeholder="firstName *" type="text" {...input} />
+                  <ErrorWithDelay name="first_name" delay={1000}>
+                    {error => <span>{error}</span>}
+                  </ErrorWithDelay>
+                </div>
+              )}
+            </Field>
+            <Field name="last_name">
+              {({ input }) => (
+                <div>
+                  <input placeholder="lastName *" type="text" {...input} />
+                  <ErrorWithDelay name="last_name" delay={1000}>
+                    {error => <span>{error}</span>}
+                  </ErrorWithDelay>
+                </div>
+              )}
+            </Field>
             <Field
-              name="positionInGame"
+              name="position2"
               component={ReactSelect}
               placeholder="Position in Game *"
               options={[
@@ -125,10 +233,14 @@ function Profile() {
               ]}
             ></Field>
             <Field
-              name="secondaryPositionInGame"
-              component={ReactSelectAdapter}
+              name="position"
+              component={ReactSelect}
               placeholder="Secondary Position in Game *"
               options={[
+                {
+                  value: '',
+                  label: '-',
+                },
                 {
                   value: 'catcher',
                   label: 'Catcher',
@@ -161,53 +273,141 @@ function Profile() {
             ></Field>
             <div>
               <label>Personal Info</label>
-              <Field name="age" component="input" type="number" placeholder="Age *" />
-              <Field name="feet" component="input" type="number" placeholder="Feet *" />
-              <Field name="inches" component="input" type="number" placeholder="Inches" />
-              <Field name="weight" component="input" type="number" placeholder="Weight *" />
-              <Field name="throws" component="select" initialValue="R">
-                <option>R</option>
-                <option>L</option>
-              </Field>
-              <Field name="bats" component="select" initialValue="R">
-                <option>R</option>
-                <option>L</option>
-              </Field>
+              {/* <Field name="firstName">
+                {({ input }) => (
+                  <div>
+                    <label>test</label>
+                    <input
+                      {...input}
+                      type="text"
+                      placeholder="test"
+                      onChange={event => {
+                        input.onChange(+event.currentTarget.value);
+                      }}
+                    />
+                  </div>
+                )}
+              </Field> */}
+              <Field name="age" component={InputNum} placeholder="Age *" />
+              <Field name="feet" component={InputNum} placeholder="Feet *" />
+              <Field name="inches" component={InputNum} placeholder="Inches" />
+              <Field name="weight" component={InputNum} placeholder="Weight *" />
+              <Field
+                name="throws_hand"
+                component={ReactSelect}
+                placeholder="Throws *"
+                options={[
+                  {
+                    value: 'r',
+                    label: 'R',
+                  },
+                  {
+                    value: 'l',
+                    label: 'L',
+                  },
+                ]}
+              ></Field>
+              <Field
+                name="bats_hand"
+                component={ReactSelect}
+                placeholder="Bats *"
+                options={[
+                  {
+                    value: 'r',
+                    label: 'R',
+                  },
+                  {
+                    value: 'l',
+                    label: 'L',
+                  },
+                ]}
+              ></Field>
             </div>
             <div>
               <label>School</label>
-              <Field name="school" component="select" initialValue="FSU">
-                <option>FSU</option>
-                <option>Rockledge</option>
-                <option>Junior</option>
-                <option>Senior</option>
-                <option>None</option>
-              </Field>
+              <Field
+                name="school"
+                component={ReactSelectObj}
+                placeholder="School"
+                options={[
+                  {
+                    value: { id: '2', name: 'FSU' },
+                    label: 'FSU',
+                  },
+                  {
+                    value: { id: '3', name: 'Rockledge' },
+                    label: 'Rockledge',
+                  },
+                  {
+                    value: { id: '4', name: 'Good' },
+                    label: 'Good',
+                  },
+                  {
+                    value: { id: '5', name: 'asq3t' },
+                    label: 'asq3t',
+                  },
+                  {
+                    value: { id: '6', name: 'fxytdc' },
+                    label: 'fxytdc',
+                  },
+                ]}
+              />
+            </div>
+            <div>
+              <label>School Year</label>
+              <Field
+                name="school_year"
+                component={ReactSelect}
+                placeholder="School Year"
+                options={[
+                  {
+                    value: { id: '2', name: 'FSU' },
+                    label: 'Freshman',
+                  },
+                  {
+                    value: 'Sophomore',
+                    label: 'Sophomore',
+                  },
+                  {
+                    value: 'Junior',
+                    label: 'Junior',
+                  },
+                  {
+                    value: 'Senior',
+                    label: 'Senior',
+                  },
+                  {
+                    value: 'None',
+                    label: 'None',
+                  },
+                ]}
+              />
             </div>
             <div>
               <label>Team</label>
               <Field
                 name="teams"
-                component={ReactSelectAdapter}
+                component={ReactSelectMultiObj}
+                placeholder="Team"
                 options={[
                   {
-                    value: 'Scorps',
+                    value: { id: '6', name: 'Scorps' },
                     label: 'Scorps',
                   },
                   {
-                    value: 'Good Team',
+                    value: { id: '8', name: 'Good Team' },
                     label: 'Good Team',
                   },
                   {
-                    value: 'FTB',
+                    value: { id: '7', name: 'FTB' },
                     label: 'FTB',
                   },
                   {
-                    value: 'uigi',
+                    value: { id: '9', name: 'uigi' },
                     label: 'uigi',
                   },
                   {
-                    value: 'ashas',
+                    value: { id: '10', name: 'ashas' },
                     label: 'ashas',
                   },
                 ]}
@@ -217,8 +417,9 @@ function Profile() {
               <label>Facility</label>
               <div>
                 <Field
-                  name="facility"
-                  component={ReactSelectAdapter}
+                  name="facilities"
+                  component={ReactSelectMultiObj}
+                  placeholder="Facility"
                   options={[
                     {
                       value: { id: '32', u_name: 'Example' },
@@ -229,9 +430,12 @@ function Profile() {
               </div>
               <div>
                 <label>About</label>
-                <Field name="about" component="textarea" placeholder="Describe yourself in a few words" />
+                <Field name="biography" component="textarea" placeholder="Describe yourself in a few words" />
               </div>
             </div>
+            <ErrorWithDelay name="form" delay={1000}>
+              {error => <span>{error}</span>}
+            </ErrorWithDelay>
             <button type="submit">Sing in</button>
           </form>
         )}
