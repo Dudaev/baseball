@@ -1,0 +1,18 @@
+.container{
+
+}
+
+.container > div{
+  margin: 10px;
+}
+
+.sidebar {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+
+.error span {
+  color: red;
+}
