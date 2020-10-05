@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
@@ -16,73 +17,82 @@ import queryTeams from './requests/queryTeams';
 import ErrorWithDelay from '../ErrorWithDelay';
 import styles from './Profile.module.css';
 
-const LeftPanel = () => {
-  const [profile, setProfile] = useState('');
-  useEffect(() => {
-    queryCurrentProfile(localStorage.accessToken, localStorage.client, localStorage.uid)
-      .catch(error => {
-        console.log(error);
-      })
-      .then(response => {
-        console.log(JSON.stringify(response.data, undefined, 2));
-        setProfile(response.data);
-      });
-  }, []);
+const LeftPanel = ({ profile }) => {
+  if (profile === '') {
+    return <p>Loading…</p>;
+  }
   return (
     <>
       {profile !== '' && (
         <div className={styles.sideBar}>
           <div>
             <div>Аватарка</div>
-            <div>Third Base</div>
-            <button>Кнопка редактирования</button>
+            <div>
+              {profile.first_name} {profile.last_name}
+            </div>
+            <div>
+              {profile.position} {profile.position2}
+            </div>
           </div>
           <div className={styles.container}>
             <div>
-              <span>svg</span>
+              <span>svg </span>
               <span>age</span>
-              <span> {profile.data.current_profile.age} </span>
+              <span> {profile.age} </span>
             </div>
             <div>
-              <span>svg</span>
+              <span>svg </span>
               <span>Height</span>
               <span>
-                ft {profile.data.current_profile.feet} in {profile.data.current_profile.inches}
+                ft {profile.feet} in {profile.inches}
               </span>
             </div>
             <div>
-              <span>svg</span>
+              <span>svg </span>
               <span>Weight</span>
-              <span>{profile.data.current_profile.weight}</span>
+              <span>{profile.weight}</span>
             </div>
             <div>
-              <span>svg</span>
-              <span>Throws</span>
-              <span>{profile.data.current_profile.throws_hand}</span>
+              <span>svg </span>
+              <span>Throws </span>
+              <span>{profile.throws_hand}</span>
             </div>
             <div>
-              <span>svg</span>
-              <span>Bats</span>
-              <span>{profile.data.current_profile.bats_hand}</span>
+              <span>svg </span>
+              <span>Bats </span>
+              <span>{profile.bats_hand}</span>
             </div>
           </div>
           <div>
-            <div>
-              <div>School</div>
-              <div>{profile.data.current_profile.school.name}</div>
-            </div>
-            <div>
-              <div>School Year</div>
-              <div>{profile.data.current_profile.school_year}</div>
-            </div>
-            <div>
-              <div>Team</div>
-              <div>{profile.data.current_profile.teams.map(team => `${team.name}, `)}</div>
-            </div>
-            {profile.data.current_profile.facilities[0] !== undefined && (
+            {profile.School != '' && (
+              <div>
+                <div>School</div>
+                <div>{profile.school.name}</div>
+              </div>
+            )}
+
+            {profile.school_year != null && (
+              <div>
+                <div>School Year</div>
+                <div>{profile.school_year}</div>
+              </div>
+            )}
+            {profile.teams != '' && (
+              <div>
+                <div>Team</div>
+                <div>{profile.teams.map(team => `${team.name}, `)}</div>
+              </div>
+            )}
+            {profile.facilities != '' && (
               <div>
                 <div>Facility</div>
-                <div>{profile.data.current_profile.facilities[0].u_name}</div>
+                <div>{profile.facilities[0].u_name}</div>
+              </div>
+            )}
+            {profile.biography != '' && (
+              <div>
+                <div>About</div>
+                <div>{profile.biography}</div>
               </div>
             )}
           </div>
@@ -169,9 +179,18 @@ function Profile() {
   const [schools, setSchools] = useState('');
   const [teams, setTeams] = useState('');
   const [facilities, setFacilities] = useState('');
+  const [profile, setProfile] = useState('');
+  const [visibleForm, setVisibleForm] = useState(false);
+
   useEffect(() => {
-    queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid);
-    queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
+    queryCurrentProfile(localStorage.accessToken, localStorage.client, localStorage.uid)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response.data, undefined, 2));
+        setProfile(response.data.data.current_profile);
+      });
     querySchools(localStorage.accessToken, localStorage.client, localStorage.uid)
       .catch(error => {
         console.log(error);
@@ -196,6 +215,8 @@ function Profile() {
         console.log(JSON.stringify(response.data, undefined, 2));
         setFacilities(response.data.data.facilities.facilities);
       });
+    queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid);
+    queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
     queryProfile(localStorage.accessToken, localStorage.client, localStorage.uid);
     queryProfileEvents(localStorage.accessToken, localStorage.client, localStorage.uid);
     queryBattingSummary(localStorage.accessToken, localStorage.client, localStorage.uid);
@@ -207,313 +228,289 @@ function Profile() {
   return (
     <>
       <h1>Profile</h1>
-      <Form
-        onSubmit={formObj => {
-          console.log('formObj', formObj);
-          mutationUpdateProfile(localStorage.accessToken, localStorage.client, localStorage.uid, formObj).catch(error =>
-            console.error(error),
-          );
-        }}
-        validate={values => {
-          const errors = {};
-          if (!values.first_name) {
-            errors.first_name = 'First Name Required';
-          }
-          if (!values.last_name) {
-            errors.last_name = 'Last Name Required';
-          }
-          if (!values.position2) {
-            errors.position2 = 'Position Required';
-          }
-          if (!values.age) {
-            errors.age = 'Age Required';
-          }
-          if (!values.feet) {
-            errors.feet = 'Feet Required';
-          }
-          if (!values.weight) {
-            errors.weight = 'Weight Required';
-          }
-          if (!values.throws_hand) {
-            errors.throws_hand = 'Throws Required';
-          }
-          if (!values.bats_hand) {
-            errors.bats_hand = 'Bats Required';
-          }
-          if (
-            JSON.stringify(errors) !== (JSON.stringify({}) || JSON.stringify({ form: 'Fill out the required fields' }))
-          ) {
-            errors.form = 'Fill out the required fields';
-          }
-          return errors;
-        }}
-      >
-        {({ handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <Field name="first_name">
-              {({ input }) => (
-                <div>
-                  <input placeholder="firstName *" type="text" {...input} />
-                  <div className={styles.error}>
-                    <ErrorWithDelay name="first_name" delay={1000}>
-                      {error => <span>{error}</span>}
-                    </ErrorWithDelay>
-                  </div>
-                </div>
-              )}
-            </Field>
-            <Field name="last_name">
-              {({ input }) => (
-                <div>
-                  <input placeholder="lastName *" type="text" {...input} />
-                  <div className={styles.error}>
-                    <ErrorWithDelay name="last_name" delay={1000}>
-                      {error => <span>{error}</span>}
-                    </ErrorWithDelay>
-                  </div>
-                </div>
-              )}
-            </Field>
-            <Field
-              name="position2"
-              component={ReactSelect}
-              placeholder="Position in Game *"
-              options={[
-                {
-                  value: 'catcher',
-                  label: 'Catcher',
-                },
-                {
-                  value: 'first_base',
-                  label: 'First Base',
-                },
-                {
-                  value: 'second_base',
-                  label: 'Second Base',
-                },
-                {
-                  value: 'shortstop',
-                  label: 'Shortstop',
-                },
-                {
-                  value: 'third_base',
-                  label: 'Third Base',
-                },
-                {
-                  value: 'outfield',
-                  label: 'Outfield',
-                },
-                {
-                  value: 'pitcher',
-                  label: 'Pitcher',
-                },
-              ]}
-            ></Field>
-            <Field
-              name="position"
-              component={ReactSelect}
-              placeholder="Secondary Position in Game *"
-              options={[
-                {
-                  value: '',
-                  label: '-',
-                },
-                {
-                  value: 'catcher',
-                  label: 'Catcher',
-                },
-                {
-                  value: 'first_base',
-                  label: 'First Base',
-                },
-                {
-                  value: 'second_base',
-                  label: 'Second Base',
-                },
-                {
-                  value: 'shortstop',
-                  label: 'Shortstop',
-                },
-                {
-                  value: 'third_base',
-                  label: 'Third Base',
-                },
-                {
-                  value: 'outfield',
-                  label: 'Outfield',
-                },
-                {
-                  value: 'pitcher',
-                  label: 'Pitcher',
-                },
-              ]}
-            ></Field>
-            <div>
-              <label>Personal Info</label>
-              {/* <Field name="firstName">
+      {visibleForm && (
+        <Form
+          onSubmit={formObj => {
+            console.log('formObj', formObj);
+            setVisibleForm(false);
+            mutationUpdateProfile(localStorage.accessToken, localStorage.client, localStorage.uid, formObj)
+              .catch(error => {
+                console.log(error);
+              })
+              .then(response => {
+                console.log(JSON.stringify(response, undefined, 2));
+                setProfile(response.data.data.update_profile.profile);
+              });
+          }}
+          validate={values => {
+            const errors = {};
+            if (!values.first_name) {
+              errors.first_name = 'First Name Required';
+            }
+            if (!values.last_name) {
+              errors.last_name = 'Last Name Required';
+            }
+            if (!values.position) {
+              errors.position = 'Position Required';
+            }
+            if (!values.age) {
+              errors.age = 'Age Required';
+            }
+            if (!values.feet) {
+              errors.feet = 'Feet Required';
+            }
+            if (!values.weight) {
+              errors.weight = 'Weight Required';
+            }
+            if (!values.throws_hand) {
+              errors.throws_hand = 'Throws Required';
+            }
+            if (!values.bats_hand) {
+              errors.bats_hand = 'Bats Required';
+            }
+            if (
+              JSON.stringify(errors) !==
+              (JSON.stringify({}) || JSON.stringify({ form: 'Fill out the required fields' }))
+            ) {
+              errors.form = 'Fill out the required fields';
+            }
+            return errors;
+          }}
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Field name="first_name">
                 {({ input }) => (
                   <div>
-                    <label>test</label>
-                    <input
-                      {...input}
-                      type="text"
-                      placeholder="test"
-                      onChange={event => {
-                        input.onChange(+event.currentTarget.value);
-                      }}
-                    />
+                    <input placeholder="firstName *" type="text" {...input} />
+                    <div className={styles.error}>
+                      <ErrorWithDelay name="first_name" delay={1000}>
+                        {error => <span>{error}</span>}
+                      </ErrorWithDelay>
+                    </div>
                   </div>
                 )}
-              </Field> */}
-              <Field name="age" component={InputNum} placeholder="Age *" />
-              <Field name="feet" component={InputNum} placeholder="Feet *" />
-              <Field name="inches" component={InputNum} placeholder="Inches" />
-              <Field name="weight" component={InputNum} placeholder="Weight *" />
+              </Field>
+              <Field name="last_name">
+                {({ input }) => (
+                  <div>
+                    <input placeholder="lastName *" type="text" {...input} />
+                    <div className={styles.error}>
+                      <ErrorWithDelay name="last_name" delay={1000}>
+                        {error => <span>{error}</span>}
+                      </ErrorWithDelay>
+                    </div>
+                  </div>
+                )}
+              </Field>
               <Field
-                name="throws_hand"
+                name="position"
                 component={ReactSelect}
-                placeholder="Throws *"
+                placeholder="Position in Game *"
                 options={[
                   {
-                    value: 'r',
-                    label: 'R',
+                    value: 'catcher',
+                    label: 'Catcher',
                   },
                   {
-                    value: 'l',
-                    label: 'L',
+                    value: 'first_base',
+                    label: 'First Base',
+                  },
+                  {
+                    value: 'second_base',
+                    label: 'Second Base',
+                  },
+                  {
+                    value: 'shortstop',
+                    label: 'Shortstop',
+                  },
+                  {
+                    value: 'third_base',
+                    label: 'Third Base',
+                  },
+                  {
+                    value: 'outfield',
+                    label: 'Outfield',
+                  },
+                  {
+                    value: 'pitcher',
+                    label: 'Pitcher',
                   },
                 ]}
               ></Field>
               <Field
-                name="bats_hand"
+                name="position2"
                 component={ReactSelect}
-                placeholder="Bats *"
+                placeholder="Secondary Position in Game"
                 options={[
                   {
-                    value: 'r',
-                    label: 'R',
+                    value: null,
+                    label: '-',
                   },
                   {
-                    value: 'l',
-                    label: 'L',
+                    value: 'catcher',
+                    label: 'Catcher',
+                  },
+                  {
+                    value: 'first_base',
+                    label: 'First Base',
+                  },
+                  {
+                    value: 'second_base',
+                    label: 'Second Base',
+                  },
+                  {
+                    value: 'shortstop',
+                    label: 'Shortstop',
+                  },
+                  {
+                    value: 'third_base',
+                    label: 'Third Base',
+                  },
+                  {
+                    value: 'outfield',
+                    label: 'Outfield',
+                  },
+                  {
+                    value: 'pitcher',
+                    label: 'Pitcher',
                   },
                 ]}
               ></Field>
-            </div>
-            <div>
-              <label>School</label>
-              <Field
-                name="school"
-                component={ReactSelectObj}
-                placeholder="School"
-                options={schools.map(school => ({
-                  value: school,
-                  label: school.name,
-                }))}
-              />
-            </div>
-            <div>
-              <label>School Year</label>
-              <Field
-                name="school_year"
-                component={ReactSelect}
-                placeholder="School Year"
-                options={[
-                  {
-                    value: 'Freshman',
-                    label: 'Freshman',
-                  },
-                  {
-                    value: 'Sophomore',
-                    label: 'Sophomore',
-                  },
-                  {
-                    value: 'Junior',
-                    label: 'Junior',
-                  },
-                  {
-                    value: 'Senior',
-                    label: 'Senior',
-                  },
-                  {
-                    value: 'None',
-                    label: 'None',
-                  },
-                ]}
-              />
-            </div>
-            <div>
-              <label>Team</label>
-              <Field
-                name="teams"
-                component={ReactSelectMultiObj}
-                placeholder="Team"
-                options={teams.map(team => ({
-                  value: team,
-                  label: team.name,
-                }))}
-                // options={[
-                //   {
-                //     value: { id: '6', name: 'Scorps' },
-                //     label: 'Scorps',
-                //   },
-                //   {
-                //     value: { id: '8', name: 'Good Team' },
-                //     label: 'Good Team',
-                //   },
-                //   {
-                //     value: { id: '7', name: 'FTB' },
-                //     label: 'FTB',
-                //   },
-                //   {
-                //     value: { id: '9', name: 'uigi' },
-                //     label: 'uigi',
-                //   },
-                //   {
-                //     value: { id: '10', name: 'ashas' },
-                //     label: 'ashas',
-                //   },
-                // ]}
-              />
-            </div>
-            <div>
-              <label>Facility</label>
               <div>
+                <label>Personal Info</label>
+                <Field name="age" component={InputNum} placeholder="Age *" />
+                <Field name="feet" component={InputNum} placeholder="Feet *" />
+                <Field name="inches" component={InputNum} placeholder="Inches" />
+                <Field name="weight" component={InputNum} placeholder="Weight *" />
                 <Field
-                  name="facilities"
-                  component={ReactSelectMultiObj}
-                  placeholder="Facility"
+                  name="throws_hand"
+                  component={ReactSelect}
+                  placeholder="Throws *"
                   options={[
                     {
-                      value: facilities[0],
-                      label: 'Example',
+                      value: 'r',
+                      label: 'R',
+                    },
+                    {
+                      value: 'l',
+                      label: 'L',
+                    },
+                  ]}
+                ></Field>
+                <Field
+                  name="bats_hand"
+                  component={ReactSelect}
+                  placeholder="Bats *"
+                  options={[
+                    {
+                      value: 'r',
+                      label: 'R',
+                    },
+                    {
+                      value: 'l',
+                      label: 'L',
+                    },
+                  ]}
+                ></Field>
+              </div>
+              <div>
+                <label>School</label>
+                <Field
+                  name="school"
+                  component={ReactSelectObj}
+                  defaultValue={null}
+                  options={schools.map(school => ({
+                    value: school,
+                    label: school.name,
+                  }))}
+                />
+              </div>
+              <div>
+                <label>School Year</label>
+                <Field
+                  name="school_year"
+                  component={ReactSelect}
+                  placeholder="School Year"
+                  options={[
+                    {
+                      value: 'Freshman',
+                      label: 'Freshman',
+                    },
+                    {
+                      value: 'Sophomore',
+                      label: 'Sophomore',
+                    },
+                    {
+                      value: 'Junior',
+                      label: 'Junior',
+                    },
+                    {
+                      value: 'Senior',
+                      label: 'Senior',
+                    },
+                    {
+                      value: 'None',
+                      label: 'None',
                     },
                   ]}
                 />
               </div>
               <div>
-                <label>About</label>
-                <Field name="biography" component="textarea" placeholder="Describe yourself in a few words" />
+                <label>Team</label>
+                <Field
+                  name="teams"
+                  component={ReactSelectMultiObj}
+                  placeholder="Team"
+                  options={teams.map(team => ({
+                    value: team,
+                    label: team.name,
+                  }))}
+                />
               </div>
-            </div>
-            <div className={styles.error}>
-              <ErrorWithDelay name="form" delay={1000}>
-                {error => <span>{error}</span>}
-                {/* {schools !== '' &&
-                  console.log(
-                    schools.map(school => ({
-                      value: school,
-                      label: school.name,
-                    })),
-                  )} */}
-              </ErrorWithDelay>
-            </div>
+              <div>
+                <label>Facility</label>
+                <div>
+                  <Field
+                    name="facilities"
+                    component={ReactSelectMultiObj}
+                    placeholder="Facility"
+                    options={[
+                      {
+                        value: facilities[0],
+                        label: 'Example',
+                      },
+                    ]}
+                  />
+                </div>
+                <div>
+                  <label>About</label>
+                  <Field
+                    name="biography"
+                    component="textarea"
+                    placeholder="Describe yourself in a few words"
+                    defaultValue=""
+                  />
+                </div>
+              </div>
+              <div className={styles.error}>
+                <ErrorWithDelay name="form" delay={1000}>
+                  {error => <span>{error}</span>}
+                </ErrorWithDelay>
+              </div>
 
-            <button type="submit">Sing in</button>
-          </form>
-        )}
-      </Form>
-      <LeftPanel />
+              <button type="submit">Save</button>
+            </form>
+          )}
+        </Form>
+      )}
+      {!visibleForm && (
+        <>
+          {' '}
+          <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>
+          <LeftPanel profile={profile} />{' '}
+        </>
+      )}
     </>
   );
 }

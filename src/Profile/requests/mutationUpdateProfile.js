@@ -13,11 +13,10 @@ export default async function mutationUpdateProfile(accessToken, client, uid, fo
       formObj.facilities = [];
     }
   }
-  axios
-    .post(
-      'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
-      {
-        query: `mutation UpdateProfile($form: UpdateProfileInput!) {
+  return axios.post(
+    'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
+    {
+      query: `mutation UpdateProfile($form: UpdateProfileInput!) {
       update_profile(input: $form) {
         profile {
           id
@@ -62,26 +61,19 @@ export default async function mutationUpdateProfile(accessToken, client, uid, fo
         }
       }
     }`,
-        variables: {
-          form: {
-            id: localStorage.id,
-            ...formObj,
-          },
+      variables: {
+        form: {
+          id: localStorage.id,
+          ...formObj,
         },
       },
-      {
-        headers: {
-          'access-token': accessToken,
-          client,
-          uid,
-        },
+    },
+    {
+      headers: {
+        'access-token': accessToken,
+        client,
+        uid,
       },
-    )
-    .catch(error => {
-      console.log(error);
-    })
-    .then(response => {
-      console.log(JSON.stringify(response.data, undefined, 2));
-      console.log(formObj);
-    });
+    },
+  );
 }
