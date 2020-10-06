@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -10,6 +11,10 @@ import Paper from '@material-ui/core/Paper';
 import Select from 'react-select';
 import { Field, Form } from 'react-final-form';
 import queryLeaderBoard from './requests/queryLeaderBoard';
+import queryLeaderboardPitching from './requests/queryLeaderboardPitching';
+import mutationUpdateProfile from './requests/mutationUpdateFavoriteProfile';
+import heart from '../img/heart.png';
+import like from '../img/like.png';
 
 const useStyles = makeStyles({
   table: {
@@ -17,9 +22,6 @@ const useStyles = makeStyles({
   },
 });
 
-const onSubmit = async values => {
-  console.log(JSON.stringify(values, 0, 2));
-};
 let submit;
 
 const ReactSelect = ({ input, name, ...rest }) => {
@@ -30,7 +32,13 @@ const ReactSelect = ({ input, name, ...rest }) => {
         {...input}
         {...rest}
         onChange={option => {
-          input.onChange(option.value);
+          // eslint-disable-next-line no-restricted-globals
+          if (isNaN(option.value)) {
+            input.onChange(option.value);
+          } else {
+            input.onChange(+option.value);
+          }
+
           console.log(option);
           submit();
         }}
@@ -47,7 +55,13 @@ const inputText = ({ input, name, ...rest }) => (
       {...input}
       {...rest}
       onChange={event => {
-        input.onChange(event.currentTarget.value);
+        // eslint-disable-next-line no-restricted-globals
+        if (isNaN(event.currentTarget.value)) {
+          input.onChange(event.currentTarget.value);
+        } else {
+          input.onChange(+event.currentTarget.value);
+        }
+
         submit();
       }}
     />
@@ -56,19 +70,62 @@ const inputText = ({ input, name, ...rest }) => (
 
 function LeaderBoard() {
   const [data, setData] = useState('');
+  const [table, setTable] = useState('Batting');
+
+  const onSubmit = async values => {
+    if (table === 'Batting') {
+      console.log(values);
+      queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid, values)
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          let i = 1;
+          // eslint-disable-next-line no-plusplus
+          setData(response.data.data.leaderboard_batting.leaderboard_batting.map(person => ({ ...person, rank: i++ })));
+        });
+    } else {
+      queryLeaderboardPitching(localStorage.accessToken, localStorage.client, localStorage.uid, {})
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          let i = 1;
+          // eslint-disable-next-line no-plusplus
+          setData(
+            response.data.data.leaderboard_pitching.leaderboard_pitching.map(person => ({ ...person, rank: i++ })),
+          );
+        });
+    }
+  };
 
   useEffect(() => {
-    queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid)
+    if (table === 'Batting') {
+      queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid, {})
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          let i = 1;
+          // eslint-disable-next-line no-plusplus
+          setData(response.data.data.leaderboard_batting.leaderboard_batting.map(person => ({ ...person, rank: i++ })));
+        });
+    }
+  }, []);
+
+  function updateFavorite(PersonId, isFavorite) {
+    mutationUpdateProfile(localStorage.accessToken, localStorage.client, localStorage.uid, PersonId, isFavorite)
       .catch(error => {
         console.log(error);
       })
       .then(response => {
         console.log(JSON.stringify(response.data, undefined, 2));
-        let i = 1;
-        // eslint-disable-next-line no-plusplus
-        setData(response.data.data.leaderboard_batting.leaderboard_batting.map(person => ({ ...person, rank: i++ })));
+        submit();
       });
-  }, []);
+  }
 
   const classes = useStyles();
   if (data === '') {
@@ -78,7 +135,7 @@ function LeaderBoard() {
     <>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, form, submitting, pristine, values }) => {
+        render={({ handleSubmit, form }) => {
           submit = handleSubmit;
           return (
             <form id="exampleForm" onSubmit={handleSubmit}>
@@ -87,7 +144,7 @@ function LeaderBoard() {
                 <Field
                   name="date"
                   component={ReactSelect}
-                  placeholder="Position in Game *"
+                  placeholder="Date"
                   options={[
                     {
                       value: 'All',
@@ -152,7 +209,7 @@ function LeaderBoard() {
                 <Field name="age" component={inputText} type="number" placeholder="Age" />
               </div>
               <Field
-                name="Favorite"
+                name="favorite"
                 component={ReactSelect}
                 placeholder="Favorite"
                 options={[
@@ -166,30 +223,58 @@ function LeaderBoard() {
                   },
                 ]}
               ></Field>
-              <Field
-                name="type"
-                component={ReactSelect}
-                options={[
-                  {
-                    value: 'exit_velocity',
-                    label: 'Exit Velocity',
-                  },
-                  {
-                    value: 'carry_distance',
-                    label: 'Carry Distance',
-                  },
-                ]}
-              ></Field>
 
-              <div className="buttons">
-                <button type="submit" disabled={submitting || pristine}>
-                  Submit
-                </button>
-                <button type="button" onClick={form.reset} disabled={submitting || pristine}>
-                  Reset
-                </button>
-              </div>
-              <pre>{JSON.stringify(values, 0, 2)}</pre>
+              {table === 'Batting' && (
+                <Field
+                  name="type"
+                  component={ReactSelect}
+                  options={[
+                    {
+                      value: 'exit_velocity',
+                      label: 'Exit Velocity',
+                    },
+                    {
+                      value: 'carry_distance',
+                      label: 'Carry Distance',
+                    },
+                  ]}
+                ></Field>
+              )}
+              {table === 'Pitching' && (
+                <Field
+                  name="type"
+                  component={ReactSelect}
+                  options={[
+                    {
+                      value: 'pitch_velocity',
+                      label: 'Pitch Velocity',
+                    },
+                    {
+                      value: 'spin_rate',
+                      label: 'Spin Rate',
+                    },
+                  ]}
+                ></Field>
+              )}
+
+              <button
+                onClick={() => {
+                  setTable('Batting');
+                  // submit();
+                  console.log(`table = ${table}`);
+                }}
+              >
+                Batting
+              </button>
+              <button
+                onClick={() => {
+                  setTable('Pitching');
+                  // submit();
+                  console.log(`table = ${table}`);
+                }}
+              >
+                Pitching
+              </button>
             </form>
           );
         }}
@@ -200,13 +285,19 @@ function LeaderBoard() {
           <TableHead>
             <TableRow>
               <TableCell>Rank</TableCell>
-              <TableCell align="right">Batter Name</TableCell>
+              {table === 'Batting' && <TableCell align="right">Batter Name</TableCell>}
+              {table === 'Pitching' && <TableCell align="right">Pitcher Name</TableCell>}
               <TableCell align="right">Age</TableCell>
               <TableCell align="right">School</TableCell>
               <TableCell align="right">Teams</TableCell>
-              <TableCell align="right">Exit Velocity</TableCell>
-              <TableCell align="right">Launch Angle</TableCell>
-              <TableCell align="right">Distance</TableCell>
+              {table === 'Batting' && <TableCell align="right">Exit Velocity</TableCell>}
+              {table === 'Pitching' && <TableCell align="right">Pitch Type</TableCell>}
+              {table === 'Batting' && <TableCell align="right">Launch Angle</TableCell>}
+              {table === 'Pitching' && <TableCell align="right">Velocity</TableCell>}
+
+              {table === 'Batting' && <TableCell align="right">Distance</TableCell>}
+              {table === 'Pitching' && <TableCell align="right">Spin Rate</TableCell>}
+
               <TableCell align="right">Favorite</TableCell>
             </TableRow>
           </TableHead>
@@ -214,14 +305,28 @@ function LeaderBoard() {
             {data.map(person => (
               <TableRow key={person.rank}>
                 <TableCell align="right">{person.rank}</TableCell>
-                <TableCell align="right">{person.batter_name}</TableCell>
+                {table === 'Batting' && <TableCell align="right">{person.batter_name}</TableCell>}
+                {table === 'Pitching' && <TableCell align="right">{person.pitcher_name}</TableCell>}
+
                 <TableCell align="right">{person.age}</TableCell>
                 <TableCell align="right">{person.school.name}</TableCell>
                 <TableCell align="right">{person.teams.map(team => `${team.name}`)}</TableCell>
-                <TableCell align="right">{person.exit_velocity}</TableCell>
-                <TableCell align="right">{person.launch_angle}</TableCell>
-                <TableCell align="right">{person.distance}</TableCell>
-                <TableCell align="right">{String(person.favorite)}</TableCell>
+                {table === 'Batting' && <TableCell align="right">{person.exit_velocity}</TableCell>}
+                {table === 'Pitching' && <TableCell align="right">{person.pitch_type}</TableCell>}
+
+                {table === 'Batting' && <TableCell align="right">{person.launch_angle}</TableCell>}
+                {table === 'Pitching' && <TableCell align="right">{person.velocity}</TableCell>}
+                {table === 'Batting' && <TableCell align="right">{person.distance}</TableCell>}
+                {table === 'Pitching' && <TableCell align="right">{person.spin_rate}</TableCell>}
+
+                <TableCell align="right">
+                  {!person.favorite && (
+                    <img onClick={() => updateFavorite(person.batter_datraks_id, true)} src={heart} alt="Heart" />
+                  )}{' '}
+                  {person.favorite && (
+                    <img src={like} onClick={() => updateFavorite(person.batter_datraks_id, false)} alt="Like" />
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-export default async function queryLeaderBoard(accessToken, client, uid) {
+export default async function queryLeaderBoard(accessToken, client, uid, values) {
   return axios.post(
     'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
     {
@@ -26,7 +26,7 @@ export default async function queryLeaderBoard(accessToken, client, uid) {
         }
       }`,
       variables: {
-        input: { type: 'exit_velocity' },
+        input: { type: 'exit_velocity', ...values },
         // input: formObj,
       },
     },
