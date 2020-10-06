@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 export default async function queryLeaderboardPitching(accessToken, client, uid, values) {
+  console.log(values);
   return axios.post(
     'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
     {
@@ -28,7 +29,8 @@ export default async function queryLeaderboardPitching(accessToken, client, uid,
       }
     }`,
       variables: {
-        input: { type: 'pitch_velocity', ...values },
+        // eslint-disable-next-line no-dupe-keys
+        input: { ...values, type: 'pitch_velocity' },
         // input: formObj,
       },
     },

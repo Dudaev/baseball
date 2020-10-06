@@ -86,15 +86,16 @@ function LeaderBoard() {
           setData(response.data.data.leaderboard_batting.leaderboard_batting.map(person => ({ ...person, rank: i++ })));
         });
     } else {
-      queryLeaderboardPitching(localStorage.accessToken, localStorage.client, localStorage.uid, {})
+      queryLeaderboardPitching(localStorage.accessToken, localStorage.client, localStorage.uid, values)
         .catch(error => {
           console.log(error);
         })
         .then(response => {
           console.log(JSON.stringify(response.data, undefined, 2));
           let i = 1;
-          // eslint-disable-next-line no-plusplus
+
           setData(
+            // eslint-disable-next-line no-plusplus
             response.data.data.leaderboard_pitching.leaderboard_pitching.map(person => ({ ...person, rank: i++ })),
           );
         });
@@ -242,7 +243,7 @@ function LeaderBoard() {
               )}
               {table === 'Pitching' && (
                 <Field
-                  name="type"
+                  name="type2"
                   component={ReactSelect}
                   options={[
                     {
