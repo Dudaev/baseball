@@ -35,7 +35,7 @@ export default function App() {
         </nav>
 
         <Switch>
-          <Route path="/profile">
+          <Route path="/profile/:personId?">
             <Profile />
           </Route>
           <Route path="/login">

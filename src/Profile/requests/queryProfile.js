@@ -1,11 +1,20 @@
 const axios = require('axios');
 
-export default async function queryProfile(accessToken, client, uid) {
-  axios
-    .post(
-      'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
-      {
-        query: `query Profile($id:String!)
+export default async function queryProfile(accessToken, client, personId) {
+  let id;
+  console.log(personId);
+  if (personId) {
+    console.log(personId);
+    id = personId;
+  } else {
+    // eslint-disable-next-line prefer-destructuring
+    id = localStorage.id;
+  }
+  console.log(id);
+  return axios.post(
+    'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
+    {
+      query: `query Profile($id:String!)
       { profile(id: $id)
         {
           id
@@ -84,22 +93,16 @@ export default async function queryProfile(accessToken, client, uid) {
           paid
         }
       }`,
-        variables: {
-          id: localStorage.id,
-        },
+      variables: {
+        id,
       },
-      {
-        headers: {
-          'access-token': accessToken,
-          client,
-          uid,
-        },
+    },
+    {
+      headers: {
+        'access-token': accessToken,
+        client,
+        uid: localStorage.uid,
       },
-    )
-    .catch(error => {
-      console.log(error);
-    })
-    .then(response => {
-      console.log(JSON.stringify(response.data, undefined, 2));
-    });
+    },
+  );
 }

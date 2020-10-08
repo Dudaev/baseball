@@ -1,7 +1,10 @@
 const axios = require('axios');
 
 export default async function queryLeaderboardPitching(accessToken, client, uid, values) {
-  console.log(values);
+  if (values.type === 'exit_velocity' || values.type === 'carry_distance' || values.type === undefined) {
+    // eslint-disable-next-line no-param-reassign
+    values.type = 'pitch_velocity';
+  }
   return axios.post(
     'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
     {
@@ -29,9 +32,7 @@ export default async function queryLeaderboardPitching(accessToken, client, uid,
       }
     }`,
       variables: {
-        // eslint-disable-next-line no-dupe-keys
-        input: { ...values, type: 'pitch_velocity' },
-        // input: formObj,
+        input: { ...values },
       },
     },
     {
@@ -42,11 +43,4 @@ export default async function queryLeaderboardPitching(accessToken, client, uid,
       },
     },
   );
-
-  // .catch(error => {
-  //   console.log(error);
-  // })
-  // .then(response => {
-  //   console.log(JSON.stringify(response.data, undefined, 2));
-  // });
 }

@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
+import { useParams } from 'react-router-dom';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryBattingSummary from './requests/queryBattingSummary';
@@ -181,50 +182,65 @@ function Profile() {
   const [facilities, setFacilities] = useState('');
   const [profile, setProfile] = useState('');
   const [visibleForm, setVisibleForm] = useState(false);
+  const { personId } = useParams();
 
   useEffect(() => {
-    queryCurrentProfile(localStorage.accessToken, localStorage.client, localStorage.uid)
-      .catch(error => {
-        console.log(error);
-      })
-      .then(response => {
-        console.log(JSON.stringify(response.data, undefined, 2));
-        setProfile(response.data.data.current_profile);
-      });
-    querySchools(localStorage.accessToken, localStorage.client, localStorage.uid)
-      .catch(error => {
-        console.log(error);
-      })
-      .then(response => {
-        console.log(JSON.stringify(response.data, undefined, 2));
-        setSchools(response.data.data.schools.schools);
-      });
-    queryTeams(localStorage.accessToken, localStorage.client, localStorage.uid)
-      .catch(error => {
-        console.log(error);
-      })
-      .then(response => {
-        console.log(JSON.stringify(response.data, undefined, 2));
-        setTeams(response.data.data.teams.teams);
-      });
-    queryFacilities(localStorage.accessToken, localStorage.client, localStorage.uid)
-      .catch(error => {
-        console.log(error);
-      })
-      .then(response => {
-        console.log(JSON.stringify(response.data, undefined, 2));
-        setFacilities(response.data.data.facilities.facilities);
-      });
-    queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid);
-    queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
-    queryProfile(localStorage.accessToken, localStorage.client, localStorage.uid);
-    queryProfileEvents(localStorage.accessToken, localStorage.client, localStorage.uid);
-    queryBattingSummary(localStorage.accessToken, localStorage.client, localStorage.uid);
+    // eslint-disable-next-line no-lone-blocks
+    {
+      if (!personId) {
+        queryCurrentProfile(localStorage.accessToken, localStorage.client, localStorage.uid)
+          .catch(error => {
+            console.log(error);
+          })
+          .then(response => {
+            console.log(JSON.stringify(response.data, undefined, 2));
+            setProfile(response.data.data.current_profile);
+          });
+        querySchools(localStorage.accessToken, localStorage.client, localStorage.uid)
+          .catch(error => {
+            console.log(error);
+          })
+          .then(response => {
+            console.log(JSON.stringify(response.data, undefined, 2));
+            setSchools(response.data.data.schools.schools);
+          });
+        queryTeams(localStorage.accessToken, localStorage.client, localStorage.uid)
+          .catch(error => {
+            console.log(error);
+          })
+          .then(response => {
+            console.log(JSON.stringify(response.data, undefined, 2));
+            setTeams(response.data.data.teams.teams);
+          });
+        queryFacilities(localStorage.accessToken, localStorage.client, localStorage.uid)
+          .catch(error => {
+            console.log(error);
+          })
+          .then(response => {
+            console.log(JSON.stringify(response.data, undefined, 2));
+            setFacilities(response.data.data.facilities.facilities);
+          });
+        queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid);
+        queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
+        // queryProfile(localStorage.accessToken, localStorage.client, personId);
+        queryProfileEvents(localStorage.accessToken, localStorage.client, localStorage.uid);
+        queryBattingSummary(localStorage.accessToken, localStorage.client, localStorage.uid);
+      } else {
+        queryProfile(localStorage.accessToken, localStorage.client, personId)
+          .catch(error => {
+            console.log(error);
+          })
+          .then(response => {
+            console.log(JSON.stringify(response.data, undefined, 2));
+            setProfile(response.data.data.profile);
+          });
+      }
+    }
   }, []);
-
-  if (schools === '' || teams === '' || facilities === '') {
-    return <p>Loading…</p>;
-  }
+  console.log(personId);
+  // if (schools === '' || teams === '' || facilities === '') {
+  //   return <p>Loading…</p>;
+  // }
   return (
     <>
       <h1>Profile</h1>
@@ -507,7 +523,7 @@ function Profile() {
       {!visibleForm && (
         <>
           {' '}
-          <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>
+          {!personId && <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>}
           <LeftPanel profile={profile} />{' '}
         </>
       )}

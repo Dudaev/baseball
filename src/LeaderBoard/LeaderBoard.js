@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Select from 'react-select';
 import { Field, Form } from 'react-final-form';
+import { Link } from 'react-router-dom';
 import queryLeaderBoard from './requests/queryLeaderBoard';
 import queryLeaderboardPitching from './requests/queryLeaderboardPitching';
 import mutationUpdateProfile from './requests/mutationUpdateFavoriteProfile';
@@ -243,7 +244,7 @@ function LeaderBoard() {
               )}
               {table === 'Pitching' && (
                 <Field
-                  name="type2"
+                  name="type"
                   component={ReactSelect}
                   options={[
                     {
@@ -295,7 +296,6 @@ function LeaderBoard() {
               {table === 'Pitching' && <TableCell align="right">Pitch Type</TableCell>}
               {table === 'Batting' && <TableCell align="right">Launch Angle</TableCell>}
               {table === 'Pitching' && <TableCell align="right">Velocity</TableCell>}
-
               {table === 'Batting' && <TableCell align="right">Distance</TableCell>}
               {table === 'Pitching' && <TableCell align="right">Spin Rate</TableCell>}
 
@@ -306,8 +306,16 @@ function LeaderBoard() {
             {data.map(person => (
               <TableRow key={person.rank}>
                 <TableCell align="right">{person.rank}</TableCell>
-                {table === 'Batting' && <TableCell align="right">{person.batter_name}</TableCell>}
-                {table === 'Pitching' && <TableCell align="right">{person.pitcher_name}</TableCell>}
+                {table === 'Batting' && (
+                  <TableCell align="right">
+                    <Link to={`/profile/${person.batter_datraks_id}`}>{person.batter_name}</Link>
+                  </TableCell>
+                )}
+                {table === 'Pitching' && (
+                  <TableCell align="right">
+                    <Link to={`/profile/${person.pitcher_datraks_id}`}>{person.pitcher_name}</Link>
+                  </TableCell>
+                )}
 
                 <TableCell align="right">{person.age}</TableCell>
                 <TableCell align="right">{person.school.name}</TableCell>
