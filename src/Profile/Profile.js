@@ -65,7 +65,7 @@ const LeftPanel = ({ profile }) => {
             </div>
           </div>
           <div>
-            {profile.School != '' && (
+            {profile.School != null && (
               <div>
                 <div>School</div>
                 <div>{profile.school.name}</div>

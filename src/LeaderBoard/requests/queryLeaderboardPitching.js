@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 export default async function queryLeaderboardPitching(accessToken, client, uid, values) {
-  if (values.type === 'exit_velocity' || values.type === 'carry_distance') {
+  if (values.type === 'exit_velocity' || values.type === 'carry_distance' || values.type === undefined) {
     // eslint-disable-next-line no-param-reassign
     values.type = 'pitch_velocity';
   }
