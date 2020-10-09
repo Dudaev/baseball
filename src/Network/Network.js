@@ -19,6 +19,7 @@ import like from '../img/like.png';
 function Network() {
   const [profiles, setProfiles] = useState('');
   const [totalCount, setTotalCount] = useState('');
+  const [profilesСount, setProfilesСount] = useState(10);
   useEffect(() => {
     queryProfiles(localStorage.accessToken, localStorage.client, localStorage.uid, {})
       .catch(error => {
@@ -40,6 +41,7 @@ function Network() {
       .then(response => {
         console.log(JSON.stringify(response.data, undefined, 2));
         setProfiles(response.data.data.profiles.profiles);
+        setTotalCount(response.data.data.profiles.total_count);
       });
   };
 
@@ -74,6 +76,8 @@ function Network() {
         <Select
           {...input}
           {...rest}
+          value={options.find(option => option.value === input.value)}
+          isSearchable={false}
           onChange={option => {
             // eslint-disable-next-line no-restricted-globals
             if (isNaN(option.value)) {
@@ -84,9 +88,11 @@ function Network() {
 
             console.log(option);
             submit();
+            {
+              console.log(input.name);
+              input.name == 'profilesСount' && setProfilesСount(+option.value);
+            }
           }}
-          value={options.find(option => option.value === input.value)}
-          isSearchable={false}
         />
       </div>
     );
@@ -111,10 +117,10 @@ function Network() {
     </div>
   );
 
-  const pagination = ({ input }) => (
+  const pagination = ({ input, profilesСount, totalCount }) => (
     <div>
       <Pagination
-        count={6}
+        count={Math.ceil(totalCount / profilesСount)}
         variant="outlined"
         shape="rounded"
         onChange={(event, page) => {
@@ -218,7 +224,12 @@ function Network() {
               ></Field>
 
               <Field name="playerName" component={inputText} type="text" placeholder="Player Name" />
-              <Field name="tableNavigation" component={pagination} />
+              <Field
+                name="tableNavigation"
+                component={pagination}
+                profilesСount={profilesСount}
+                totalCount={totalCount}
+              />
             </form>
           );
         }}
