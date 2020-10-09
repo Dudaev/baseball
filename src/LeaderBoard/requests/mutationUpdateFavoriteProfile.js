@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-lone-blocks */
 const axios = require('axios');
 

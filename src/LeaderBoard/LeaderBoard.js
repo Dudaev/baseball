@@ -123,9 +123,16 @@ function LeaderBoard() {
       .catch(error => {
         console.log(error);
       })
-      .then(response => {
-        console.log(JSON.stringify(response.data, undefined, 2));
-        submit();
+      .then(() => {
+        setData(
+          data.map(d => {
+            const player = d;
+            if (player.batter_datraks_id === PersonId) {
+              player.favorite = isFavorite;
+            }
+            return player;
+          }),
+        );
       });
   }
 
@@ -287,48 +294,48 @@ function LeaderBoard() {
           <TableHead>
             <TableRow>
               <TableCell>Rank</TableCell>
-              {table === 'Batting' && <TableCell align="right">Batter Name</TableCell>}
-              {table === 'Pitching' && <TableCell align="right">Pitcher Name</TableCell>}
-              <TableCell align="right">Age</TableCell>
-              <TableCell align="right">School</TableCell>
-              <TableCell align="right">Teams</TableCell>
-              {table === 'Batting' && <TableCell align="right">Exit Velocity</TableCell>}
-              {table === 'Pitching' && <TableCell align="right">Pitch Type</TableCell>}
-              {table === 'Batting' && <TableCell align="right">Launch Angle</TableCell>}
-              {table === 'Pitching' && <TableCell align="right">Velocity</TableCell>}
-              {table === 'Batting' && <TableCell align="right">Distance</TableCell>}
-              {table === 'Pitching' && <TableCell align="right">Spin Rate</TableCell>}
+              {table === 'Batting' && <TableCell align="center">Batter Name</TableCell>}
+              {table === 'Pitching' && <TableCell align="center">Pitcher Name</TableCell>}
+              <TableCell align="center">Age</TableCell>
+              <TableCell align="center">School</TableCell>
+              <TableCell align="center">Teams</TableCell>
+              {table === 'Batting' && <TableCell align="center">Exit Velocity</TableCell>}
+              {table === 'Pitching' && <TableCell align="center">Pitch Type</TableCell>}
+              {table === 'Batting' && <TableCell align="center">Launch Angle</TableCell>}
+              {table === 'Pitching' && <TableCell align="center">Velocity</TableCell>}
+              {table === 'Batting' && <TableCell align="center">Distance</TableCell>}
+              {table === 'Pitching' && <TableCell align="center">Spin Rate</TableCell>}
 
-              <TableCell align="right">Favorite</TableCell>
+              <TableCell align="center">Favorite</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map(person => (
               <TableRow key={person.rank}>
-                <TableCell align="right">{person.rank}</TableCell>
+                <TableCell align="center">{person.rank}</TableCell>
                 {table === 'Batting' && (
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <Link to={`/profile/${person.batter_datraks_id}`}>{person.batter_name}</Link>
                   </TableCell>
                 )}
                 {table === 'Pitching' && (
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <Link to={`/profile/${person.pitcher_datraks_id}`}>{person.pitcher_name}</Link>
                   </TableCell>
                 )}
 
-                <TableCell align="right">{person.age}</TableCell>
-                <TableCell align="right">{person.school.name}</TableCell>
-                <TableCell align="right">{person.teams.map(team => `${team.name}`)}</TableCell>
-                {table === 'Batting' && <TableCell align="right">{person.exit_velocity}</TableCell>}
-                {table === 'Pitching' && <TableCell align="right">{person.pitch_type}</TableCell>}
+                <TableCell align="center">{person.age}</TableCell>
+                <TableCell align="center">{person.school.name}</TableCell>
+                <TableCell align="center">{person.teams.map(team => `${team.name}`)}</TableCell>
+                {table === 'Batting' && <TableCell align="center">{person.exit_velocity}</TableCell>}
+                {table === 'Pitching' && <TableCell align="center">{person.pitch_type}</TableCell>}
 
-                {table === 'Batting' && <TableCell align="right">{person.launch_angle}</TableCell>}
-                {table === 'Pitching' && <TableCell align="right">{person.velocity}</TableCell>}
-                {table === 'Batting' && <TableCell align="right">{person.distance}</TableCell>}
-                {table === 'Pitching' && <TableCell align="right">{person.spin_rate}</TableCell>}
+                {table === 'Batting' && <TableCell align="center">{person.launch_angle}</TableCell>}
+                {table === 'Pitching' && <TableCell align="center">{person.velocity}</TableCell>}
+                {table === 'Batting' && <TableCell align="center">{person.distance}</TableCell>}
+                {table === 'Pitching' && <TableCell align="center">{person.spin_rate}</TableCell>}
 
-                <TableCell align="right">
+                <TableCell align="center">
                   {!person.favorite && (
                     <img onClick={() => updateFavorite(person.batter_datraks_id, true)} src={heart} alt="Heart" />
                   )}{' '}
