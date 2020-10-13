@@ -5,6 +5,15 @@ import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
 import { useParams } from 'react-router-dom';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryBattingSummary from './requests/queryBattingSummary';
@@ -17,8 +26,193 @@ import querySchools from './requests/querySchools';
 import queryTeams from './requests/queryTeams';
 import ErrorWithDelay from '../ErrorWithDelay';
 import styles from './Profile.module.css';
+import queryBattingGraph from './requests/queryBattingGraph';
 
-const LeftPanel = ({ profile }) => {
+function Charts({ personId }) {
+  const [chart, setChart] = useState('');
+  useEffect(() => {
+    queryBattingGraph(localStorage.accessToken, localStorage.client, personId, '')
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response.data, undefined, 2));
+        setChart(response.data.data.batting_graph.graph_rows);
+      });
+  }, []);
+  if (chart === '') {
+    return <p>Loading…</p>;
+  }
+  // if (chart == 0) {
+  //   return <p>There&apos;s no info yet!</p>;
+  // }
+  const options = {
+    chart: {
+      type: 'spline',
+    },
+    title: {
+      text: 'Rolling Exit Velocity for Corey Whiting',
+    },
+
+    subtitle: {
+      text: 'Average over last 11 batted balls',
+    },
+
+    yAxis: {
+      title: {
+        text: 'Exit Velocity',
+      },
+    },
+    plotOptions: {
+      series: {
+        label: {
+          connectorAllowed: false,
+        },
+        pointStart: 1,
+      },
+    },
+
+    series: [
+      {
+        name: 'Exit Velocity',
+        data: chart,
+      },
+    ],
+
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            legend: {
+              layout: 'horizontal',
+              align: 'center',
+              verticalAlign: 'bottom',
+            },
+          },
+        },
+      ],
+    },
+  };
+
+  const handleChange = event => {
+    queryBattingGraph(localStorage.accessToken, localStorage.client, personId, event.value)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response.data, undefined, 2));
+        setChart(response.data.data.batting_graph.graph_rows);
+      });
+  };
+
+  return (
+    <>
+      <Select
+        options={[
+          { value: '', label: 'None' },
+          { value: 'Four Seam Fastball', label: 'Four Seam Fastball' },
+          { value: 'Two Seam Fastball', label: 'Two Seam Fastball' },
+          { value: 'Curveball', label: 'Curveball' },
+          { value: 'Changeup', label: 'Changeup' },
+          { value: 'Slider', label: 'Slider' },
+        ]}
+        onChange={handleChange}
+      />
+      <div>
+        <HighchartsReact highcharts={Highcharts} options={options} />
+      </div>
+    </>
+  );
+}
+
+const PlayerResults = ({ battingSummary, personId }) => {
+  if (battingSummary === '') {
+    return <p>Loading…</p>;
+  }
+  {
+    console.log(battingSummary);
+  }
+  return (
+    <div className={styles.playerResults}>
+      <div>Top Batting Values</div>
+      <div className={styles.topBattingValues}>
+        <div>
+          <p>Exit Velocity {battingSummary.top_values[0].exit_velocity}</p>
+        </div>
+        <div>
+          <p>Carry Distance {battingSummary.top_values[0].distance}</p>
+        </div>
+        <div>
+          <p>Launch Angle {battingSummary.top_values[0].launch_angle}</p>
+        </div>
+      </div>
+      <div>
+        <p>Recent Session Reports</p>
+        <p>No data currently linked to this profile</p>
+      </div>
+
+      <div>Batting Session Reports Сomparison</div>
+      <div>
+        <p>Top Batting Values</p>
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Pitch Type</TableCell>
+                <TableCell align="center">Distance</TableCell>
+                <TableCell align="center">Launch Angle</TableCell>
+                <TableCell align="center">Exit Velocity</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {battingSummary.top_values.map(row => (
+                <TableRow key={row.exit_velocity}>
+                  <TableCell align="center">{row.pitch_type}</TableCell>
+                  <TableCell align="center">{row.distance}</TableCell>
+                  <TableCell align="center">{row.launch_angle}</TableCell>
+                  <TableCell align="center">{row.exit_velocity}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <div>
+        <p>Average Batting Values</p>
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Pitch Type</TableCell>
+                <TableCell align="center">Distance</TableCell>
+                <TableCell align="center">Launch Angle</TableCell>
+                <TableCell align="center">Exit Velocity</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {battingSummary.average_values.map(row => (
+                <TableRow key={row.exit_velocity}>
+                  <TableCell align="center">{row.pitch_type}</TableCell>
+                  <TableCell align="center">{row.distance}</TableCell>
+                  <TableCell align="center">{row.launch_angle}</TableCell>
+                  <TableCell align="center">{row.exit_velocity}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <div>
+        <Charts personId={personId} />
+      </div>
+    </div>
+  );
+};
+
+const LeftPanel = ({ profile, personId, setVisibleForm }) => {
   if (profile === '') {
     return <p>Loading…</p>;
   }
@@ -26,6 +220,7 @@ const LeftPanel = ({ profile }) => {
     <>
       {profile !== '' && (
         <div className={styles.sideBar}>
+          {!personId && <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>}
           <div>
             <div>Аватарка</div>
             <div>
@@ -181,6 +376,7 @@ function Profile() {
   const [teams, setTeams] = useState('');
   const [facilities, setFacilities] = useState('');
   const [profile, setProfile] = useState('');
+  const [battingSummary, setBattingSummary] = useState('');
   const [visibleForm, setVisibleForm] = useState(false);
   const { personId } = useParams();
 
@@ -224,7 +420,7 @@ function Profile() {
         queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
         // queryProfile(localStorage.accessToken, localStorage.client, personId);
         queryProfileEvents(localStorage.accessToken, localStorage.client, localStorage.uid);
-        queryBattingSummary(localStorage.accessToken, localStorage.client, localStorage.uid);
+        // queryBattingSummary(localStorage.accessToken, localStorage.client, localStorage.uid);
       } else {
         queryProfile(localStorage.accessToken, localStorage.client, personId)
           .catch(error => {
@@ -233,6 +429,14 @@ function Profile() {
           .then(response => {
             console.log(JSON.stringify(response.data, undefined, 2));
             setProfile(response.data.data.profile);
+          });
+        queryBattingSummary(localStorage.accessToken, localStorage.client, personId)
+          .catch(error => {
+            console.log(error);
+          })
+          .then(response => {
+            console.log(JSON.stringify(response, undefined, 2));
+            setBattingSummary(response.data.data.batting_summary);
           });
       }
     }
@@ -521,11 +725,12 @@ function Profile() {
         </Form>
       )}
       {!visibleForm && (
-        <>
+        <div className={styles.PlayerResultsContainer}>
           {' '}
-          {!personId && <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>}
-          <LeftPanel profile={profile} />{' '}
-        </>
+          {/* {!personId && <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>} */}
+          <LeftPanel profile={profile} personId={personId} setVisibleForm={setVisibleForm} />
+          <PlayerResults battingSummary={battingSummary} personId={personId} />
+        </div>
       )}
     </>
   );

@@ -16,3 +16,24 @@
 .error span {
   color: red;
 }
+.PlayerResultsContainer{
+  display: inline-flex;
+}
+
+
+
+
+
+
+
+.playerResults{
+
+}
+.topBattingValues{
+  display: inline-flex;
+
+}
+.topBattingValues > div{
+  margin-right: 20px;
+
+}
