@@ -136,6 +136,7 @@ function Charts({ personId }) {
 const PlayerResults = ({ personId }) => {
   const [battingLog, setBattingLog] = useState('');
   const [battingSummary, setBattingSummary] = useState('');
+  const [visible, setVisible] = useState('Summary');
 
   useEffect(() => {
     queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
@@ -171,6 +172,12 @@ const PlayerResults = ({ personId }) => {
 
   console.log(battingLog);
   console.log(battingSummary);
+
+  const handleChange = e => {
+    console.log(e);
+    setVisible(e.value);
+  };
+
   if (battingLog === '' || battingSummary === '') {
     return <p>Loading PlayerResults…</p>;
   }
@@ -210,155 +217,170 @@ const PlayerResults = ({ personId }) => {
         <p>Recent Session Reports</p>
         <p>No data currently linked to this profile</p>
       </div>
-
-      <div>Batting Session Reports Сomparison</div>
-      {!battingSummary.top_values.length && !battingSummary.average_values.length && <p>There&apos;s no info yet!</p>}
-      {!!battingSummary.top_values.length && !!battingSummary.average_values.length && (
+      <Select
+        options={[
+          { value: 'Summary', label: 'Summary' },
+          { value: 'Charts', label: 'Charts' },
+          { value: 'Log', label: 'Log' },
+        ]}
+        onChange={handleChange}
+      />
+      {visible === 'Summary' && (
         <>
-          <div>
-            <p>Top Batting Values</p>
-            <TableContainer component={Paper}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Pitch Type</TableCell>
-                    <TableCell align="center">Distance</TableCell>
-                    <TableCell align="center">Launch Angle</TableCell>
-                    <TableCell align="center">Exit Velocity</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {battingSummary.top_values.map(row => (
-                    <TableRow key={row.exit_velocity}>
-                      <TableCell align="center">{row.pitch_type}</TableCell>
-                      <TableCell align="center">{row.distance}</TableCell>
-                      <TableCell align="center">{row.launch_angle}</TableCell>
-                      <TableCell align="center">{row.exit_velocity}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-          <div>
-            <p>Average Batting Values</p>
-            <TableContainer component={Paper}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Pitch Type</TableCell>
-                    <TableCell align="center">Distance</TableCell>
-                    <TableCell align="center">Launch Angle</TableCell>
-                    <TableCell align="center">Exit Velocity</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {battingSummary.average_values.map(row => (
-                    <TableRow key={row.exit_velocity}>
-                      <TableCell align="center">{row.pitch_type}</TableCell>
-                      <TableCell align="center">{row.distance}</TableCell>
-                      <TableCell align="center">{row.launch_angle}</TableCell>
-                      <TableCell align="center">{row.exit_velocity}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
+          {!battingSummary.top_values.length && !battingSummary.average_values.length && (
+            <p>There&apos;s no info yet!</p>
+          )}
+          {!!battingSummary.top_values.length && !!battingSummary.average_values.length && (
+            <>
+              <div>
+                <p>Top Batting Values</p>
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">Pitch Type</TableCell>
+                        <TableCell align="center">Distance</TableCell>
+                        <TableCell align="center">Launch Angle</TableCell>
+                        <TableCell align="center">Exit Velocity</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {battingSummary.top_values.map(row => (
+                        <TableRow key={row.exit_velocity}>
+                          <TableCell align="center">{row.pitch_type}</TableCell>
+                          <TableCell align="center">{row.distance}</TableCell>
+                          <TableCell align="center">{row.launch_angle}</TableCell>
+                          <TableCell align="center">{row.exit_velocity}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+              <div>
+                <p>Average Batting Values</p>
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">Pitch Type</TableCell>
+                        <TableCell align="center">Distance</TableCell>
+                        <TableCell align="center">Launch Angle</TableCell>
+                        <TableCell align="center">Exit Velocity</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {battingSummary.average_values.map(row => (
+                        <TableRow key={row.exit_velocity}>
+                          <TableCell align="center">{row.pitch_type}</TableCell>
+                          <TableCell align="center">{row.distance}</TableCell>
+                          <TableCell align="center">{row.launch_angle}</TableCell>
+                          <TableCell align="center">{row.exit_velocity}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </>
+          )}
         </>
       )}
+      {visible === 'Charts' && (
+        <div>
+          <Charts personId={personId} />
+        </div>
+      )}
+      {visible === 'Log' && (
+        <div>
+          <p>Batting Log</p>
+          <Form
+            onSubmit={onSubmit}
+            render={({ handleSubmit, form }) => {
+              submit = handleSubmit;
+              return (
+                <form id="exampleForm" onSubmit={handleSubmit}>
+                  <Field
+                    handleSubmit={handleSubmit}
+                    name="pitchType"
+                    component={ReactSelect}
+                    placeholder="Pitch Type"
+                    options={[
+                      {
+                        value: '',
+                        label: 'None',
+                      },
+                      {
+                        value: 'Four Seam Fastball',
+                        label: 'Four Seam Fastball',
+                      },
+                      {
+                        value: 'Two Seam Fastball',
+                        label: 'Two Seam Fastball',
+                      },
+                      {
+                        value: 'Curveball',
+                        label: 'Curveball',
+                      },
+                      {
+                        value: 'Changeup',
+                        label: 'Changeup',
+                      },
+                      {
+                        value: 'Slider',
+                        label: 'Slider',
+                      },
+                    ]}
+                  ></Field>
 
-      <div>
-        <Charts personId={personId} />
-      </div>
-      <div>
-        <p>Batting Log</p>
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit, form }) => {
-            submit = handleSubmit;
-            return (
-              <form id="exampleForm" onSubmit={handleSubmit}>
-                <Field
-                  handleSubmit={handleSubmit}
-                  name="pitchType"
-                  component={ReactSelect}
-                  placeholder="Pitch Type"
-                  options={[
-                    {
-                      value: '',
-                      label: 'None',
-                    },
-                    {
-                      value: 'Four Seam Fastball',
-                      label: 'Four Seam Fastball',
-                    },
-                    {
-                      value: 'Two Seam Fastball',
-                      label: 'Two Seam Fastball',
-                    },
-                    {
-                      value: 'Curveball',
-                      label: 'Curveball',
-                    },
-                    {
-                      value: 'Changeup',
-                      label: 'Changeup',
-                    },
-                    {
-                      value: 'Slider',
-                      label: 'Slider',
-                    },
-                  ]}
-                ></Field>
-
-                <Field
-                  handleSubmit={handleSubmit}
-                  name="playerName"
-                  component={InputText}
-                  type="text"
-                  placeholder="Player Name"
-                />
-                {console.log(battingLog.total_count)}
-                <Field
-                  totalCount={battingLog.total_count}
-                  name="tableNavigation"
-                  handleSubmit={handleSubmit}
-                  component={TableNavigation}
-                />
-              </form>
-            );
-          }}
-        />
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Pitcher Name</TableCell>
-                <TableCell align="center">Pitcher Handedness</TableCell>
-                <TableCell align="center">Pitch Type</TableCell>
-                <TableCell align="center">Pitch Call</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {console.log(battingLog)}
-              {!battingLog.batting_log.length && <p>There's no info yet!</p>}
-              {!!battingLog.batting_log.length &&
-                battingLog.batting_log.map(row => (
-                  // eslint-disable-next-line react/jsx-key
-                  <TableRow>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.pitcher_name}</TableCell>
-                    <TableCell align="center">{row.pitcher_handedness}</TableCell>
-                    <TableCell align="center">{row.pitch_type}</TableCell>
-                    <TableCell align="center">{row.pitch_call}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+                  <Field
+                    handleSubmit={handleSubmit}
+                    name="playerName"
+                    component={InputText}
+                    type="text"
+                    placeholder="Player Name"
+                  />
+                  {console.log(battingLog.total_count)}
+                  <Field
+                    totalCount={battingLog.total_count}
+                    name="tableNavigation"
+                    handleSubmit={handleSubmit}
+                    component={TableNavigation}
+                  />
+                </form>
+              );
+            }}
+          />
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Pitcher Name</TableCell>
+                  <TableCell align="center">Pitcher Handedness</TableCell>
+                  <TableCell align="center">Pitch Type</TableCell>
+                  <TableCell align="center">Pitch Call</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {console.log(battingLog)}
+                {!battingLog.batting_log.length && <p>There&apos;s no info yet!</p>}
+                {!!battingLog.batting_log.length &&
+                  battingLog.batting_log.map(row => (
+                    // eslint-disable-next-line react/jsx-key
+                    <TableRow>
+                      <TableCell align="center">{row.date}</TableCell>
+                      <TableCell align="center">{row.pitcher_name}</TableCell>
+                      <TableCell align="center">{row.pitcher_handedness}</TableCell>
+                      <TableCell align="center">{row.pitch_type}</TableCell>
+                      <TableCell align="center">{row.pitch_call}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
     </div>
   );
 };
@@ -509,8 +531,6 @@ function Profile() {
   const [teams, setTeams] = useState('');
   const [facilities, setFacilities] = useState('');
   const [profile, setProfile] = useState('');
-  const [battingSummary, setBattingSummary] = useState('');
-
   const [visibleForm, setVisibleForm] = useState(false);
   const { personId } = useParams();
 
@@ -888,7 +908,7 @@ function Profile() {
           {personId !== undefined && (
             <>
               {console.log(`personId ${personId}`)}
-              <PlayerResults battingSummary={battingSummary} personId={personId} />
+              <PlayerResults personId={personId} />
             </>
           )}
           {console.log(profile.id)}
