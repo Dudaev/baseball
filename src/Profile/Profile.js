@@ -27,6 +27,11 @@ import queryTeams from './requests/queryTeams';
 import ErrorWithDelay from '../ErrorWithDelay';
 import styles from './Profile.module.css';
 import queryBattingGraph from './requests/queryBattingGraph';
+import PageNavigation from '../PageNavigation/PageNavigation';
+import queryBattingLog from './requests/queryBattingLog';
+import ReactSelect from '../ReactSelect/ReactSelect';
+import InputText from '../InputText/InputText';
+import TableNavigation from '../TableNavigation/TableNavigation';
 
 function Charts({ personId }) {
   const [chart, setChart] = useState('');
@@ -41,11 +46,11 @@ function Charts({ personId }) {
       });
   }, []);
   if (chart === '') {
-    return <p>Loading…</p>;
+    return <p>Loading Charts…</p>;
   }
-  // if (chart == 0) {
-  //   return <p>There&apos;s no info yet!</p>;
-  // }
+  if (!chart.length) {
+    return <p>There&apos;s no info yet!</p>;
+  }
   const options = {
     chart: {
       type: 'spline',
@@ -128,93 +133,242 @@ function Charts({ personId }) {
   );
 }
 
-const PlayerResults = ({ battingSummary, personId }) => {
-  if (battingSummary === '') {
-    return <p>Loading…</p>;
-  }
-  {
-    console.log(battingSummary);
+const PlayerResults = ({ personId }) => {
+  const [battingLog, setBattingLog] = useState('');
+  const [battingSummary, setBattingSummary] = useState('');
+
+  useEffect(() => {
+    queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response, undefined, 2));
+        setBattingLog(response.data.data.batting_log);
+      });
+    queryBattingSummary(localStorage.accessToken, localStorage.client, personId)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response, undefined, 2));
+        setBattingSummary(response.data.data.batting_summary);
+      });
+  }, []);
+
+  const onSubmit = async values => {
+    console.log(values);
+    queryBattingLog(localStorage.accessToken, localStorage.client, personId, values)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response, undefined, 2));
+        setBattingLog(response.data.data.batting_log);
+      });
+  };
+  let submit;
+
+  console.log(battingLog);
+  console.log(battingSummary);
+  if (battingLog === '' || battingSummary === '') {
+    return <p>Loading PlayerResults…</p>;
   }
   return (
     <div className={styles.playerResults}>
       <div>Top Batting Values</div>
       <div className={styles.topBattingValues}>
-        <div>
-          <p>Exit Velocity {battingSummary.top_values[0].exit_velocity}</p>
-        </div>
-        <div>
-          <p>Carry Distance {battingSummary.top_values[0].distance}</p>
-        </div>
-        <div>
-          <p>Launch Angle {battingSummary.top_values[0].launch_angle}</p>
-        </div>
+        {!battingSummary.top_values.length && (
+          <>
+            <div>
+              <p>Exit Velocity {'NA'}</p>
+            </div>
+            <div>
+              <p>Carry Distance {'NA'}</p>
+            </div>
+            <div>
+              <p>Launch Angle {'NA'}</p>
+            </div>
+          </>
+        )}
+        {!!battingSummary.top_values.length && (
+          <>
+            <div>
+              <p>Exit Velocity {battingSummary.top_values[0].exit_velocity}</p>
+            </div>
+            <div>
+              <p>Carry Distance {battingSummary.top_values[0].distance}</p>
+            </div>
+            <div>
+              <p>Launch Angle {battingSummary.top_values[0].launch_angle}</p>
+            </div>
+          </>
+        )}
       </div>
+
       <div>
         <p>Recent Session Reports</p>
         <p>No data currently linked to this profile</p>
       </div>
 
       <div>Batting Session Reports Сomparison</div>
-      <div>
-        <p>Top Batting Values</p>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Pitch Type</TableCell>
-                <TableCell align="center">Distance</TableCell>
-                <TableCell align="center">Launch Angle</TableCell>
-                <TableCell align="center">Exit Velocity</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {battingSummary.top_values.map(row => (
-                <TableRow key={row.exit_velocity}>
-                  <TableCell align="center">{row.pitch_type}</TableCell>
-                  <TableCell align="center">{row.distance}</TableCell>
-                  <TableCell align="center">{row.launch_angle}</TableCell>
-                  <TableCell align="center">{row.exit_velocity}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-      <div>
-        <p>Average Batting Values</p>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Pitch Type</TableCell>
-                <TableCell align="center">Distance</TableCell>
-                <TableCell align="center">Launch Angle</TableCell>
-                <TableCell align="center">Exit Velocity</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {battingSummary.average_values.map(row => (
-                <TableRow key={row.exit_velocity}>
-                  <TableCell align="center">{row.pitch_type}</TableCell>
-                  <TableCell align="center">{row.distance}</TableCell>
-                  <TableCell align="center">{row.launch_angle}</TableCell>
-                  <TableCell align="center">{row.exit_velocity}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+      {!battingSummary.top_values.length && !battingSummary.average_values.length && <p>There&apos;s no info yet!</p>}
+      {!!battingSummary.top_values.length && !!battingSummary.average_values.length && (
+        <>
+          <div>
+            <p>Top Batting Values</p>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Pitch Type</TableCell>
+                    <TableCell align="center">Distance</TableCell>
+                    <TableCell align="center">Launch Angle</TableCell>
+                    <TableCell align="center">Exit Velocity</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {battingSummary.top_values.map(row => (
+                    <TableRow key={row.exit_velocity}>
+                      <TableCell align="center">{row.pitch_type}</TableCell>
+                      <TableCell align="center">{row.distance}</TableCell>
+                      <TableCell align="center">{row.launch_angle}</TableCell>
+                      <TableCell align="center">{row.exit_velocity}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+          <div>
+            <p>Average Batting Values</p>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Pitch Type</TableCell>
+                    <TableCell align="center">Distance</TableCell>
+                    <TableCell align="center">Launch Angle</TableCell>
+                    <TableCell align="center">Exit Velocity</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {battingSummary.average_values.map(row => (
+                    <TableRow key={row.exit_velocity}>
+                      <TableCell align="center">{row.pitch_type}</TableCell>
+                      <TableCell align="center">{row.distance}</TableCell>
+                      <TableCell align="center">{row.launch_angle}</TableCell>
+                      <TableCell align="center">{row.exit_velocity}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        </>
+      )}
+
       <div>
         <Charts personId={personId} />
+      </div>
+      <div>
+        <p>Batting Log</p>
+        <Form
+          onSubmit={onSubmit}
+          render={({ handleSubmit, form }) => {
+            submit = handleSubmit;
+            return (
+              <form id="exampleForm" onSubmit={handleSubmit}>
+                <Field
+                  handleSubmit={handleSubmit}
+                  name="pitchType"
+                  component={ReactSelect}
+                  placeholder="Pitch Type"
+                  options={[
+                    {
+                      value: '',
+                      label: 'None',
+                    },
+                    {
+                      value: 'Four Seam Fastball',
+                      label: 'Four Seam Fastball',
+                    },
+                    {
+                      value: 'Two Seam Fastball',
+                      label: 'Two Seam Fastball',
+                    },
+                    {
+                      value: 'Curveball',
+                      label: 'Curveball',
+                    },
+                    {
+                      value: 'Changeup',
+                      label: 'Changeup',
+                    },
+                    {
+                      value: 'Slider',
+                      label: 'Slider',
+                    },
+                  ]}
+                ></Field>
+
+                <Field
+                  handleSubmit={handleSubmit}
+                  name="playerName"
+                  component={InputText}
+                  type="text"
+                  placeholder="Player Name"
+                />
+                {console.log(battingLog.total_count)}
+                <Field
+                  totalCount={battingLog.total_count}
+                  name="tableNavigation"
+                  handleSubmit={handleSubmit}
+                  component={TableNavigation}
+                />
+              </form>
+            );
+          }}
+        />
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Pitcher Name</TableCell>
+                <TableCell align="center">Pitcher Handedness</TableCell>
+                <TableCell align="center">Pitch Type</TableCell>
+                <TableCell align="center">Pitch Call</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {console.log(battingLog)}
+              {!battingLog.batting_log.length && <p>There's no info yet!</p>}
+              {!!battingLog.batting_log.length &&
+                battingLog.batting_log.map(row => (
+                  // eslint-disable-next-line react/jsx-key
+                  <TableRow>
+                    <TableCell align="center">{row.date}</TableCell>
+                    <TableCell align="center">{row.pitcher_name}</TableCell>
+                    <TableCell align="center">{row.pitcher_handedness}</TableCell>
+                    <TableCell align="center">{row.pitch_type}</TableCell>
+                    <TableCell align="center">{row.pitch_call}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </div>
   );
 };
 
 const LeftPanel = ({ profile, personId, setVisibleForm }) => {
+  console.log(`Мой профиль2 ${profile}`);
+  console.log(profile);
+
   if (profile === '') {
-    return <p>Loading…</p>;
+    return <p>Loading LeftPanel…</p>;
   }
   return (
     <>
@@ -315,27 +469,6 @@ const ReactSelectMultiObj = ({ input, ...rest }) => {
   );
 };
 
-const ReactSelect = ({ input, name, ...rest }) => {
-  const { options } = rest;
-  return (
-    <div>
-      <Select
-        {...input}
-        {...rest}
-        onChange={option => input.onChange(option.value)}
-        value={options.find(option => option.value === input.value)}
-        isSearchable={false}
-      />
-
-      <div className={styles.error}>
-        <ErrorWithDelay name={input.name} delay={1000}>
-          {error => <span>{error}</span>}
-        </ErrorWithDelay>
-      </div>
-    </div>
-  );
-};
-
 const InputNum = ({ input, placeholder }) => (
   <div>
     <input
@@ -377,12 +510,14 @@ function Profile() {
   const [facilities, setFacilities] = useState('');
   const [profile, setProfile] = useState('');
   const [battingSummary, setBattingSummary] = useState('');
+
   const [visibleForm, setVisibleForm] = useState(false);
   const { personId } = useParams();
 
   useEffect(() => {
     // eslint-disable-next-line no-lone-blocks
     {
+      console.log(personId);
       if (!personId) {
         queryCurrentProfile(localStorage.accessToken, localStorage.client, localStorage.uid)
           .catch(error => {
@@ -392,36 +527,35 @@ function Profile() {
             console.log(JSON.stringify(response.data, undefined, 2));
             setProfile(response.data.data.current_profile);
           });
-        querySchools(localStorage.accessToken, localStorage.client, localStorage.uid)
-          .catch(error => {
-            console.log(error);
-          })
-          .then(response => {
-            console.log(JSON.stringify(response.data, undefined, 2));
-            setSchools(response.data.data.schools.schools);
-          });
-        queryTeams(localStorage.accessToken, localStorage.client, localStorage.uid)
-          .catch(error => {
-            console.log(error);
-          })
-          .then(response => {
-            console.log(JSON.stringify(response.data, undefined, 2));
-            setTeams(response.data.data.teams.teams);
-          });
-        queryFacilities(localStorage.accessToken, localStorage.client, localStorage.uid)
-          .catch(error => {
-            console.log(error);
-          })
-          .then(response => {
-            console.log(JSON.stringify(response.data, undefined, 2));
-            setFacilities(response.data.data.facilities.facilities);
-          });
-        queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid);
-        queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
-        // queryProfile(localStorage.accessToken, localStorage.client, personId);
-        queryProfileEvents(localStorage.accessToken, localStorage.client, localStorage.uid);
-        // queryBattingSummary(localStorage.accessToken, localStorage.client, localStorage.uid);
-      } else {
+      }
+      querySchools(localStorage.accessToken, localStorage.client, localStorage.uid)
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          setSchools(response.data.data.schools.schools);
+        });
+      queryTeams(localStorage.accessToken, localStorage.client, localStorage.uid)
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          setTeams(response.data.data.teams.teams);
+        });
+      queryFacilities(localStorage.accessToken, localStorage.client, localStorage.uid)
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          setFacilities(response.data.data.facilities.facilities);
+        });
+      queryNotifications(localStorage.accessToken, localStorage.client, localStorage.uid);
+      // queryProfile(localStorage.accessToken, localStorage.client, personId);
+      // queryProfileEvents(localStorage.accessToken, localStorage.client, localStorage.uid);
+      if (personId) {
         queryProfile(localStorage.accessToken, localStorage.client, personId)
           .catch(error => {
             console.log(error);
@@ -430,308 +564,342 @@ function Profile() {
             console.log(JSON.stringify(response.data, undefined, 2));
             setProfile(response.data.data.profile);
           });
-        queryBattingSummary(localStorage.accessToken, localStorage.client, personId)
-          .catch(error => {
-            console.log(error);
-          })
-          .then(response => {
-            console.log(JSON.stringify(response, undefined, 2));
-            setBattingSummary(response.data.data.batting_summary);
-          });
       }
     }
   }, []);
-  console.log(personId);
-  // if (schools === '' || teams === '' || facilities === '') {
-  //   return <p>Loading…</p>;
-  // }
+  console.log(schools);
+  console.log(teams);
+  console.log(facilities);
+  console.log(profile);
+  if (schools === '' || teams === '' || facilities === '' || profile === '') {
+    return <p>Loading Профиль…</p>;
+  }
   return (
     <>
       <h1>Profile</h1>
-      {visibleForm && (
-        <Form
-          onSubmit={formObj => {
-            console.log('formObj', formObj);
-            setVisibleForm(false);
-            mutationUpdateProfile(localStorage.accessToken, localStorage.client, localStorage.uid, formObj)
-              .catch(error => {
-                console.log(error);
-              })
-              .then(response => {
-                console.log(JSON.stringify(response, undefined, 2));
-                setProfile(response.data.data.update_profile.profile);
-              });
-          }}
-          validate={values => {
-            const errors = {};
-            if (!values.first_name) {
-              errors.first_name = 'First Name Required';
-            }
-            if (!values.last_name) {
-              errors.last_name = 'Last Name Required';
-            }
-            if (!values.position) {
-              errors.position = 'Position Required';
-            }
-            if (!values.age) {
-              errors.age = 'Age Required';
-            }
-            if (!values.feet) {
-              errors.feet = 'Feet Required';
-            }
-            if (!values.weight) {
-              errors.weight = 'Weight Required';
-            }
-            if (!values.throws_hand) {
-              errors.throws_hand = 'Throws Required';
-            }
-            if (!values.bats_hand) {
-              errors.bats_hand = 'Bats Required';
-            }
-            if (
-              JSON.stringify(errors) !==
-              (JSON.stringify({}) || JSON.stringify({ form: 'Fill out the required fields' }))
-            ) {
-              errors.form = 'Fill out the required fields';
-            }
-            return errors;
-          }}
-        >
-          {({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <Field name="first_name">
-                {({ input }) => (
-                  <div>
-                    <input placeholder="firstName *" type="text" {...input} />
-                    <div className={styles.error}>
-                      <ErrorWithDelay name="first_name" delay={1000}>
-                        {error => <span>{error}</span>}
-                      </ErrorWithDelay>
-                    </div>
-                  </div>
-                )}
-              </Field>
-              <Field name="last_name">
-                {({ input }) => (
-                  <div>
-                    <input placeholder="lastName *" type="text" {...input} />
-                    <div className={styles.error}>
-                      <ErrorWithDelay name="last_name" delay={1000}>
-                        {error => <span>{error}</span>}
-                      </ErrorWithDelay>
-                    </div>
-                  </div>
-                )}
-              </Field>
-              <Field
-                name="position"
-                component={ReactSelect}
-                placeholder="Position in Game *"
-                options={[
-                  {
-                    value: 'catcher',
-                    label: 'Catcher',
-                  },
-                  {
-                    value: 'first_base',
-                    label: 'First Base',
-                  },
-                  {
-                    value: 'second_base',
-                    label: 'Second Base',
-                  },
-                  {
-                    value: 'shortstop',
-                    label: 'Shortstop',
-                  },
-                  {
-                    value: 'third_base',
-                    label: 'Third Base',
-                  },
-                  {
-                    value: 'outfield',
-                    label: 'Outfield',
-                  },
-                  {
-                    value: 'pitcher',
-                    label: 'Pitcher',
-                  },
-                ]}
-              ></Field>
-              <Field
-                name="position2"
-                component={ReactSelect}
-                placeholder="Secondary Position in Game"
-                options={[
-                  {
-                    value: null,
-                    label: '-',
-                  },
-                  {
-                    value: 'catcher',
-                    label: 'Catcher',
-                  },
-                  {
-                    value: 'first_base',
-                    label: 'First Base',
-                  },
-                  {
-                    value: 'second_base',
-                    label: 'Second Base',
-                  },
-                  {
-                    value: 'shortstop',
-                    label: 'Shortstop',
-                  },
-                  {
-                    value: 'third_base',
-                    label: 'Third Base',
-                  },
-                  {
-                    value: 'outfield',
-                    label: 'Outfield',
-                  },
-                  {
-                    value: 'pitcher',
-                    label: 'Pitcher',
-                  },
-                ]}
-              ></Field>
-              <div>
-                <label>Personal Info</label>
-                <Field name="age" component={InputNum} placeholder="Age *" />
-                <Field name="feet" component={InputNum} placeholder="Feet *" />
-                <Field name="inches" component={InputNum} placeholder="Inches" />
-                <Field name="weight" component={InputNum} placeholder="Weight *" />
-                <Field
-                  name="throws_hand"
-                  component={ReactSelect}
-                  placeholder="Throws *"
-                  options={[
-                    {
-                      value: 'r',
-                      label: 'R',
-                    },
-                    {
-                      value: 'l',
-                      label: 'L',
-                    },
-                  ]}
-                ></Field>
-                <Field
-                  name="bats_hand"
-                  component={ReactSelect}
-                  placeholder="Bats *"
-                  options={[
-                    {
-                      value: 'r',
-                      label: 'R',
-                    },
-                    {
-                      value: 'l',
-                      label: 'L',
-                    },
-                  ]}
-                ></Field>
-              </div>
-              <div>
-                <label>School</label>
-                <Field
-                  name="school"
-                  component={ReactSelectObj}
-                  defaultValue={null}
-                  options={schools.map(school => ({
-                    value: school,
-                    label: school.name,
-                  }))}
-                />
-              </div>
-              <div>
-                <label>School Year</label>
-                <Field
-                  name="school_year"
-                  component={ReactSelect}
-                  placeholder="School Year"
-                  options={[
-                    {
-                      value: 'Freshman',
-                      label: 'Freshman',
-                    },
-                    {
-                      value: 'Sophomore',
-                      label: 'Sophomore',
-                    },
-                    {
-                      value: 'Junior',
-                      label: 'Junior',
-                    },
-                    {
-                      value: 'Senior',
-                      label: 'Senior',
-                    },
-                    {
-                      value: 'None',
-                      label: 'None',
-                    },
-                  ]}
-                />
-              </div>
-              <div>
-                <label>Team</label>
-                <Field
-                  name="teams"
-                  component={ReactSelectMultiObj}
-                  placeholder="Team"
-                  options={teams.map(team => ({
-                    value: team,
-                    label: team.name,
-                  }))}
-                />
-              </div>
-              <div>
-                <label>Facility</label>
-                <div>
+      <div className={styles.PlayerResultsContainer}>
+        <div>
+          {visibleForm && (
+            <Form
+              onSubmit={formObj => {
+                console.log('formObj', formObj);
+                setVisibleForm(false);
+                mutationUpdateProfile(localStorage.accessToken, localStorage.client, localStorage.uid, formObj)
+                  .catch(error => {
+                    console.log(error);
+                  })
+                  .then(response => {
+                    console.log(JSON.stringify(response, undefined, 2));
+                    setProfile(response.data.data.update_profile.profile);
+                  });
+              }}
+              validate={values => {
+                const errors = {};
+                if (!values.first_name) {
+                  errors.first_name = 'First Name Required';
+                }
+                if (!values.last_name) {
+                  errors.last_name = 'Last Name Required';
+                }
+                if (!values.position) {
+                  errors.position = 'Position Required';
+                }
+                if (!values.age) {
+                  errors.age = 'Age Required';
+                }
+                if (!values.feet) {
+                  errors.feet = 'Feet Required';
+                }
+                if (!values.weight) {
+                  errors.weight = 'Weight Required';
+                }
+                if (!values.throws_hand) {
+                  errors.throws_hand = 'Throws Required';
+                }
+                if (!values.bats_hand) {
+                  errors.bats_hand = 'Bats Required';
+                }
+                if (
+                  JSON.stringify(errors) !==
+                  (JSON.stringify({}) || JSON.stringify({ form: 'Fill out the required fields' }))
+                ) {
+                  errors.form = 'Fill out the required fields';
+                }
+                return errors;
+              }}
+            >
+              {({ handleSubmit }) => (
+                <form onSubmit={handleSubmit}>
+                  <Field name="first_name">
+                    {({ input }) => (
+                      <div>
+                        <input placeholder="firstName *" type="text" {...input} />
+                        <div className={styles.error}>
+                          <ErrorWithDelay name="first_name" delay={1000}>
+                            {error => <span>{error}</span>}
+                          </ErrorWithDelay>
+                        </div>
+                      </div>
+                    )}
+                  </Field>
+                  <Field name="last_name">
+                    {({ input }) => (
+                      <div>
+                        <input placeholder="lastName *" type="text" {...input} />
+                        <div className={styles.error}>
+                          <ErrorWithDelay name="last_name" delay={1000}>
+                            {error => <span>{error}</span>}
+                          </ErrorWithDelay>
+                        </div>
+                      </div>
+                    )}
+                  </Field>
                   <Field
-                    name="facilities"
-                    component={ReactSelectMultiObj}
-                    placeholder="Facility"
+                    name="position"
+                    handleSubmit={handleSubmit}
+                    component={ReactSelect}
+                    placeholder="Position in Game *"
                     options={[
                       {
-                        value: facilities[0],
-                        label: 'Example',
+                        value: 'catcher',
+                        label: 'Catcher',
+                      },
+                      {
+                        value: 'first_base',
+                        label: 'First Base',
+                      },
+                      {
+                        value: 'second_base',
+                        label: 'Second Base',
+                      },
+                      {
+                        value: 'shortstop',
+                        label: 'Shortstop',
+                      },
+                      {
+                        value: 'third_base',
+                        label: 'Third Base',
+                      },
+                      {
+                        value: 'outfield',
+                        label: 'Outfield',
+                      },
+                      {
+                        value: 'pitcher',
+                        label: 'Pitcher',
                       },
                     ]}
-                  />
-                </div>
-                <div>
-                  <label>About</label>
+                  ></Field>
                   <Field
-                    name="biography"
-                    component="textarea"
-                    placeholder="Describe yourself in a few words"
-                    defaultValue=""
-                  />
-                </div>
-              </div>
-              <div className={styles.error}>
-                <ErrorWithDelay name="form" delay={1000}>
-                  {error => <span>{error}</span>}
-                </ErrorWithDelay>
-              </div>
+                    name="position2"
+                    handleSubmit={handleSubmit}
+                    component={ReactSelect}
+                    placeholder="Secondary Position in Game"
+                    options={[
+                      {
+                        value: null,
+                        label: '-',
+                      },
+                      {
+                        value: 'catcher',
+                        label: 'Catcher',
+                      },
+                      {
+                        value: 'first_base',
+                        label: 'First Base',
+                      },
+                      {
+                        value: 'second_base',
+                        label: 'Second Base',
+                      },
+                      {
+                        value: 'shortstop',
+                        label: 'Shortstop',
+                      },
+                      {
+                        value: 'third_base',
+                        label: 'Third Base',
+                      },
+                      {
+                        value: 'outfield',
+                        label: 'Outfield',
+                      },
+                      {
+                        value: 'pitcher',
+                        label: 'Pitcher',
+                      },
+                    ]}
+                  ></Field>
+                  <div>
+                    <label>Personal Info</label>
+                    <Field name="age" component={InputNum} placeholder="Age *" />
+                    <Field name="feet" component={InputNum} placeholder="Feet *" />
+                    <Field name="inches" component={InputNum} placeholder="Inches" />
+                    <Field name="weight" component={InputNum} placeholder="Weight *" />
+                    <Field
+                      name="throws_hand"
+                      handleSubmit={handleSubmit}
+                      component={ReactSelect}
+                      placeholder="Throws *"
+                      options={[
+                        {
+                          value: 'r',
+                          label: 'R',
+                        },
+                        {
+                          value: 'l',
+                          label: 'L',
+                        },
+                      ]}
+                    ></Field>
+                    <Field
+                      name="bats_hand"
+                      handleSubmit={handleSubmit}
+                      component={ReactSelect}
+                      placeholder="Bats *"
+                      options={[
+                        {
+                          value: 'r',
+                          label: 'R',
+                        },
+                        {
+                          value: 'l',
+                          label: 'L',
+                        },
+                      ]}
+                    ></Field>
+                  </div>
+                  <div>
+                    <label>School</label>
+                    <Field
+                      name="school"
+                      handleSubmit={handleSubmit}
+                      component={ReactSelectObj}
+                      defaultValue={null}
+                      options={schools.map(school => ({
+                        value: school,
+                        label: school.name,
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <label>School Year</label>
+                    <Field
+                      name="school_year"
+                      handleSubmit={handleSubmit}
+                      component={ReactSelect}
+                      placeholder="School Year"
+                      options={[
+                        {
+                          value: 'Freshman',
+                          label: 'Freshman',
+                        },
+                        {
+                          value: 'Sophomore',
+                          label: 'Sophomore',
+                        },
+                        {
+                          value: 'Junior',
+                          label: 'Junior',
+                        },
+                        {
+                          value: 'Senior',
+                          label: 'Senior',
+                        },
+                        {
+                          value: 'None',
+                          label: 'None',
+                        },
+                      ]}
+                    />
+                  </div>
+                  <div>
+                    <label>Team</label>
+                    <Field
+                      name="teams"
+                      handleSubmit={handleSubmit}
+                      component={ReactSelectMultiObj}
+                      placeholder="Team"
+                      options={teams.map(team => ({
+                        value: team,
+                        label: team.name,
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <label>Facility</label>
+                    <div>
+                      <Field
+                        name="facilities"
+                        handleSubmit={handleSubmit}
+                        component={ReactSelectMultiObj}
+                        placeholder="Facility"
+                        options={[
+                          {
+                            value: facilities[0],
+                            label: 'Example',
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div>
+                      <label>About</label>
+                      <Field
+                        name="biography"
+                        component="textarea"
+                        placeholder="Describe yourself in a few words"
+                        defaultValue=""
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.error}>
+                    <ErrorWithDelay name="form" delay={1000}>
+                      {error => <span>{error}</span>}
+                    </ErrorWithDelay>
+                  </div>
 
-              <button type="submit">Save</button>
-            </form>
+                  <button type="submit">Save</button>
+                </form>
+              )}
+            </Form>
           )}
-        </Form>
-      )}
-      {!visibleForm && (
-        <div className={styles.PlayerResultsContainer}>
-          {' '}
-          {/* {!personId && <button onClick={() => setVisibleForm(true)}>Кнопка редактирования</button>} */}
-          <LeftPanel profile={profile} personId={personId} setVisibleForm={setVisibleForm} />
-          <PlayerResults battingSummary={battingSummary} personId={personId} />
         </div>
-      )}
+
+        {!visibleForm && (
+          <div>
+            <div>
+              {personId !== undefined && (
+                <>
+                  <LeftPanel profile={profile} personId={personId} setVisibleForm={setVisibleForm} />
+                </>
+              )}
+              {personId === undefined && (
+                <>
+                  <LeftPanel profile={profile} personId={profile.id} setVisibleForm={setVisibleForm} />
+                </>
+              )}
+            </div>
+            <div>
+              <button onClick={() => setVisibleForm(true)}>Редактировать</button>
+            </div>
+          </div>
+        )}
+        <div>
+          {personId !== undefined && (
+            <>
+              {console.log(`personId ${personId}`)}
+              <PlayerResults battingSummary={battingSummary} personId={personId} />
+            </>
+          )}
+          {console.log(profile.id)}
+          {personId === undefined && (
+            <>
+              {console.log(`Мой профиль ${profile}`)}
+              <PlayerResults personId={profile.id} />
+            </>
+          )}
+        </div>
+      </div>
     </>
   );
 }

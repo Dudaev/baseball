@@ -64,6 +64,8 @@ return (
       localStorage.accessToken = accessToken;
       localStorage.client = client;
       localStorage.uid = uid;
+      // localStorage.id = response.data.data.id;
+
       queryLogin(localStorage.accessToken, localStorage.client, localStorage.uid).catch(error => console.error(error));
     });
     }}
