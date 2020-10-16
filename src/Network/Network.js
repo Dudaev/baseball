@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
@@ -248,6 +249,7 @@ function Network() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {console.log(profiles)}
             {profiles.map(row => (
               <TableRow key={row.id}>
                 {/* <TableCell component="th" scope="row">

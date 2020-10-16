@@ -14,6 +14,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import Popper from '@material-ui/core/Popper';
+import Tooltip from '@material-ui/core/Tooltip';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryBattingSummary from './requests/queryBattingSummary';
@@ -32,6 +34,7 @@ import queryBattingLog from './requests/queryBattingLog';
 import ReactSelect from '../ReactSelect/ReactSelect';
 import InputText from '../InputText/InputText';
 import TableNavigation from '../TableNavigation/TableNavigation';
+import queryProfileNames from './requests/queryProfileNames';
 
 function Charts({ personId }) {
   const [chart, setChart] = useState('');
@@ -133,11 +136,14 @@ function Charts({ personId }) {
   );
 }
 
-const PlayerResults = ({ personId }) => {
+const PlayerResults = ({ personId, profile }) => {
   const [battingLog, setBattingLog] = useState('');
+  const [comparedProfile, setСomparedProfile] = useState('');
   const [battingSummary, setBattingSummary] = useState('');
+  const [profileNames, setProfileNames] = useState('');
   const [visible, setVisible] = useState('Summary');
-
+  const [open, setOpen] = useState(false);
+  console.log(profile);
   useEffect(() => {
     queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
       .catch(error => {
@@ -169,6 +175,7 @@ const PlayerResults = ({ personId }) => {
       });
   };
   let submit;
+  let data;
 
   console.log(battingLog);
   console.log(battingSummary);
@@ -178,6 +185,38 @@ const PlayerResults = ({ personId }) => {
     setVisible(e.value);
   };
 
+  const handleProfileNames = playerName => {
+    queryProfileNames(localStorage.accessToken, localStorage.client, personId, playerName, profile.position)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response, undefined, 2));
+        setProfileNames(response.data.data.profile_names.profile_names);
+      });
+  };
+
+  const handleQueryProfile = playerId => {
+    queryProfile(localStorage.accessToken, localStorage.client, playerId)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response.data, undefined, 2));
+        setСomparedProfile(response.data.data.profile);
+      });
+  };
+
+  if (profileNames !== '' && +profileNames !== +[] && profileNames !== undefined) {
+    console.log(profileNames);
+    const a = profileNames;
+    data = a.map(player => (
+      // handleQueryProfile(player.id)
+      <div onClick={() => console.log('1  ')}>
+        {player.first_name} {player.last_name}
+      </div>
+    ));
+  }
   if (battingLog === '' || battingSummary === '') {
     return <p>Loading PlayerResults…</p>;
   }
@@ -225,6 +264,7 @@ const PlayerResults = ({ personId }) => {
         ]}
         onChange={handleChange}
       />
+      <button onClick={() => setVisible('Сomparison')}>Сomparison</button>
       {visible === 'Summary' && (
         <>
           {!battingSummary.top_values.length && !battingSummary.average_values.length && (
@@ -379,6 +419,78 @@ const PlayerResults = ({ personId }) => {
               </TableBody>
             </Table>
           </TableContainer>
+        </div>
+      )}
+      {visible === 'Сomparison' && (
+        <div>
+          <div>
+            <div>
+              <div>
+                {profile.first_name} {profile.last_name}
+              </div>
+              <div>
+                <span>svg </span>
+                <span>age</span>
+                <span> {profile.age} </span>
+              </div>
+              <div>
+                <span>svg </span>
+                <span>Height</span>
+                <span>
+                  ft {profile.feet} in {profile.inches}
+                </span>
+              </div>
+              <div>
+                <span>svg </span>
+                <span>Weight</span>
+                <span>{profile.weight}</span>
+              </div>
+            </div>
+            <div>
+              <Tooltip
+                title={<>{data}</>}
+                aria-label="add"
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                open={open}
+              >
+                <input
+                  onChange={event => {
+                    console.log(event.currentTarget.value);
+                    handleProfileNames(event.currentTarget.value);
+                    setOpen(true);
+                  }}
+                  onBlur={() => setOpen(false)}
+                />
+              </Tooltip>
+              {comparedProfile !== '' && (
+                <div>
+                  <div>
+                    {comparedProfile.first_name} {comparedProfile.last_name}
+                  </div>
+                  <div>
+                    <span>svg </span>
+                    <span>age</span>
+                    <span> {comparedProfile.age} </span>
+                  </div>
+                  <div>
+                    <span>svg </span>
+                    <span>Height</span>
+                    <span>
+                      ft {comparedProfile.feet} in {comparedProfile.inches}
+                    </span>
+                  </div>
+                  <div>
+                    <span>svg </span>
+                    <span>Weight</span>
+                    <span>{comparedProfile.weight}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div></div>
         </div>
       )}
     </div>
@@ -908,7 +1020,7 @@ function Profile() {
           {personId !== undefined && (
             <>
               {console.log(`personId ${personId}`)}
-              <PlayerResults personId={personId} />
+              <PlayerResults personId={personId} profile={profile} />
             </>
           )}
           {console.log(profile.id)}
