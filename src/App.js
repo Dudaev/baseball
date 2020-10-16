@@ -14,10 +14,6 @@ export default function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
-            </li>
-
-            <li>
               <Link to="/registration">Registration</Link>
             </li>
             <li>
@@ -51,15 +47,8 @@ export default function App() {
           <Route path="/leaderboard">
             <LeaderBoard />
           </Route>
-          <Route path="/">
-            <Home />
-          </Route>
         </Switch>
       </div>
     </Router>
   );
-}
-
-function Home() {
-  return <h1>Home</h1>;
 }

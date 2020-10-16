@@ -15,8 +15,6 @@ return (
       password: formObj.password,
     })
     .then(response => {
-      console.log(response);
-      // eslint-disable-next-line prettier/prettier
       const accessToken = response.headers.[`access-token`];
       const {client, uid} = response.headers
       localStorage.accessToken = accessToken;
