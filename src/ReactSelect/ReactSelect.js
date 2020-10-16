@@ -14,7 +14,8 @@ const ReactSelect = ({ input, handleSubmit, setProfilesСount, ...rest }) => {
         value={options.find(option => option.value === input.value)}
         isSearchable={false}
         onChange={option => {
-          if (typeof +option.value !== 'number') {
+          // eslint-disable-next-line no-restricted-globals
+          if (isNaN(option.value)) {
             input.onChange(option.value);
           } else {
             input.onChange(+option.value);

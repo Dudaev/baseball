@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 export default async function queryLeaderboardPitching(accessToken, client, uid, values) {
-  if (values.type === 'exit_velocity' || values.type === 'carry_distance' || values.type === undefined) {
-    // eslint-disable-next-line no-param-reassign
-    values.type = 'pitch_velocity';
+  const parameters = values;
+  if (parameters.type === 'exit_velocity' || parameters.type === 'carry_distance' || parameters.type === undefined) {
+    parameters.type = 'pitch_velocity';
   }
   return axios.post(
     'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
@@ -32,7 +32,7 @@ export default async function queryLeaderboardPitching(accessToken, client, uid,
       }
     }`,
       variables: {
-        input: { ...values },
+        input: { ...parameters },
       },
     },
     {

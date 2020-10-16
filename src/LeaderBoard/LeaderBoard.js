@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -9,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Select from 'react-select';
 import { Field, Form } from 'react-final-form';
 import { Link } from 'react-router-dom';
 import queryLeaderBoard from './requests/queryLeaderBoard';
@@ -19,6 +16,7 @@ import heart from '../img/heart.png';
 import like from '../img/fullHeart.png';
 import inputText from '../InputText/InputText';
 import InputNum from '../InputNum/InputNum';
+import ReactSelect from '../ReactSelect/ReactSelect';
 
 const useStyles = makeStyles({
   table: {
@@ -26,40 +24,12 @@ const useStyles = makeStyles({
   },
 });
 
-let submit;
-
-const ReactSelect = ({ input, name, ...rest }) => {
-  const { options } = rest;
-  return (
-    <div>
-      <Select
-        {...input}
-        {...rest}
-        value={options.find(option => option.value === input.value)}
-        isSearchable={false}
-        onChange={option => {
-          // eslint-disable-next-line no-restricted-globals
-          if (isNaN(option.value)) {
-            input.onChange(option.value);
-          } else {
-            input.onChange(+option.value);
-          }
-
-          console.log(option);
-          submit();
-        }}
-      />
-    </div>
-  );
-};
-
 function LeaderBoard() {
   const [data, setData] = useState('');
   const [table, setTable] = useState('Batting');
 
   const onSubmit = async values => {
     if (table === 'Batting') {
-      console.log(values);
       queryLeaderBoard(localStorage.accessToken, localStorage.client, localStorage.uid, values)
         .catch(error => {
           console.log(error);
@@ -128,149 +98,147 @@ function LeaderBoard() {
     <>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, form }) => {
-          submit = handleSubmit;
-          return (
-            <form id="exampleForm" onSubmit={handleSubmit}>
-              <div>
-                <label>Last Week</label>
-                <Field
-                  name="date"
-                  component={ReactSelect}
-                  placeholder="Date"
-                  options={[
-                    {
-                      value: 'All',
-                      label: 'All',
-                    },
-                    {
-                      value: 'last_week',
-                      label: 'Last Week',
-                    },
-                    {
-                      value: 'last_month',
-                      label: 'Last Month',
-                    },
-                  ]}
-                ></Field>
-              </div>
-              <div>
-                <label>School</label>
-                <Field name="school" handleSubmit={submit} component={inputText} type="text" placeholder="School" />
-              </div>
-              <div>
-                <label>Team</label>
-                <Field name="team" handleSubmit={submit} component={inputText} type="text" placeholder="Team" />
-              </div>
+        render={({ handleSubmit, form }) => (
+          <form id="exampleForm" onSubmit={handleSubmit}>
+            <div>
+              <label>Last Week</label>
               <Field
-                name="position"
+                name="date"
                 component={ReactSelect}
-                placeholder="Position"
-                options={[
-                  {
-                    value: 'catcher',
-                    label: 'Catcher',
-                  },
-                  {
-                    value: 'first_base',
-                    label: 'First Base',
-                  },
-                  {
-                    value: 'second_base',
-                    label: 'Second Base',
-                  },
-                  {
-                    value: 'shortstop',
-                    label: 'Shortstop',
-                  },
-                  {
-                    value: 'third_base',
-                    label: 'Third Base',
-                  },
-                  {
-                    value: 'outfield',
-                    label: 'Outfield',
-                  },
-                  {
-                    value: 'pitcher',
-                    label: 'Pitcher',
-                  },
-                ]}
-              ></Field>
-              <div>
-                <label>Age</label>
-                <Field name="age" handleSubmit={submit} component={InputNum} type="number" placeholder="Age" />
-              </div>
-              <Field
-                name="favorite"
-                component={ReactSelect}
-                placeholder="Favorite"
+                placeholder="Date"
+                handleSubmit={handleSubmit}
                 options={[
                   {
                     value: 'All',
                     label: 'All',
                   },
                   {
-                    value: '1',
-                    label: 'Favorite',
+                    value: 'last_week',
+                    label: 'Last Week',
+                  },
+                  {
+                    value: 'last_month',
+                    label: 'Last Month',
                   },
                 ]}
               ></Field>
+            </div>
+            <div>
+              <label>School</label>
+              <Field name="school" handleSubmit={handleSubmit} component={inputText} type="text" placeholder="School" />
+            </div>
+            <div>
+              <label>Team</label>
+              <Field name="team" handleSubmit={handleSubmit} component={inputText} type="text" placeholder="Team" />
+            </div>
+            <Field
+              name="position"
+              component={ReactSelect}
+              placeholder="Position"
+              handleSubmit={handleSubmit}
+              options={[
+                {
+                  value: 'catcher',
+                  label: 'Catcher',
+                },
+                {
+                  value: 'first_base',
+                  label: 'First Base',
+                },
+                {
+                  value: 'second_base',
+                  label: 'Second Base',
+                },
+                {
+                  value: 'shortstop',
+                  label: 'Shortstop',
+                },
+                {
+                  value: 'third_base',
+                  label: 'Third Base',
+                },
+                {
+                  value: 'outfield',
+                  label: 'Outfield',
+                },
+                {
+                  value: 'pitcher',
+                  label: 'Pitcher',
+                },
+              ]}
+            ></Field>
+            <div>
+              <label>Age</label>
+              <Field name="age" handleSubmit={handleSubmit} component={InputNum} type="number" placeholder="Age" />
+            </div>
+            <Field
+              name="favorite"
+              component={ReactSelect}
+              placeholder="Favorite"
+              handleSubmit={handleSubmit}
+              options={[
+                {
+                  value: 'All',
+                  label: 'All',
+                },
+                {
+                  value: '1',
+                  label: 'Favorite',
+                },
+              ]}
+            ></Field>
 
-              {table === 'Batting' && (
-                <Field
-                  name="type"
-                  component={ReactSelect}
-                  options={[
-                    {
-                      value: 'exit_velocity',
-                      label: 'Exit Velocity',
-                    },
-                    {
-                      value: 'carry_distance',
-                      label: 'Carry Distance',
-                    },
-                  ]}
-                ></Field>
-              )}
-              {table === 'Pitching' && (
-                <Field
-                  name="type"
-                  component={ReactSelect}
-                  options={[
-                    {
-                      value: 'pitch_velocity',
-                      label: 'Pitch Velocity',
-                    },
-                    {
-                      value: 'spin_rate',
-                      label: 'Spin Rate',
-                    },
-                  ]}
-                ></Field>
-              )}
+            {table === 'Batting' && (
+              <Field
+                name="type"
+                component={ReactSelect}
+                handleSubmit={handleSubmit}
+                options={[
+                  {
+                    value: 'exit_velocity',
+                    label: 'Exit Velocity',
+                  },
+                  {
+                    value: 'carry_distance',
+                    label: 'Carry Distance',
+                  },
+                ]}
+              ></Field>
+            )}
+            {table === 'Pitching' && (
+              <Field
+                name="type"
+                component={ReactSelect}
+                handleSubmit={handleSubmit}
+                options={[
+                  {
+                    value: 'pitch_velocity',
+                    label: 'Pitch Velocity',
+                  },
+                  {
+                    value: 'spin_rate',
+                    label: 'Spin Rate',
+                  },
+                ]}
+              ></Field>
+            )}
 
-              <button
-                onClick={() => {
-                  setTable('Batting');
-                  // submit();
-                  console.log(`table = ${table}`);
-                }}
-              >
-                Batting
-              </button>
-              <button
-                onClick={() => {
-                  setTable('Pitching');
-                  // submit();
-                  console.log(`table = ${table}`);
-                }}
-              >
-                Pitching
-              </button>
-            </form>
-          );
-        }}
+            <button
+              onClick={() => {
+                setTable('Batting');
+              }}
+            >
+              Batting
+            </button>
+            <button
+              onClick={() => {
+                setTable('Pitching');
+              }}
+            >
+              Pitching
+            </button>
+          </form>
+        )}
       />
       <h1>Leaderboard</h1>
       <TableContainer component={Paper}>
@@ -332,7 +300,6 @@ function LeaderBoard() {
           </TableBody>
         </Table>
       </TableContainer>
-      {console.log(data)}
     </>
   );
 }

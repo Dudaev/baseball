@@ -1,51 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { Field, Form } from 'react-final-form';
-import { GraphQLClient,  gql } from 'graphql-request';
 
 function Login() {
-  async function queryLogin(accessToken, client, uid) {
-
-    const endpoint = 'https://baseballcloud-back.herokuapp.com/api/v1/graphql';
-
-    const graphQLClient = new GraphQLClient(endpoint, {
-      headers: {
-        "access-token": accessToken,
-        "client": client,
-        "uid": uid
-      },
-    });
-
-    const variables = {
-      input: {type: "exit_velocity"},
-    }
-
-    const query = gql`
-      query LeaderboardBatting($input: FilterLeaderboardInput!) {
-        leaderboard_batting(input: $input) {
-          leaderboard_batting {
-            batter_name
-            exit_velocity
-            launch_angle
-            distance
-            batter_datraks_id
-            age
-            school {
-              id
-              name
-            }
-            teams {
-              id
-              name
-            }
-            favorite
-          }
-        }
-      }
-    `;
-    const data = await graphQLClient.request(query, variables);
-    console.log(JSON.stringify(data, undefined, 2));
-  }
 
 return (
   <>
@@ -59,14 +16,12 @@ return (
     })
     .then(response => {
       console.log(response);
+      // eslint-disable-next-line prettier/prettier
       const accessToken = response.headers.[`access-token`];
       const {client, uid} = response.headers
       localStorage.accessToken = accessToken;
       localStorage.client = client;
       localStorage.uid = uid;
-      // localStorage.id = response.data.data.id;
-
-      queryLogin(localStorage.accessToken, localStorage.client, localStorage.uid).catch(error => console.error(error));
     });
     }}
   >
