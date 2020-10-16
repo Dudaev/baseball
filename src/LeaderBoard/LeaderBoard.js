@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,7 +16,9 @@ import queryLeaderBoard from './requests/queryLeaderBoard';
 import queryLeaderboardPitching from './requests/queryLeaderboardPitching';
 import mutationUpdateProfile from './requests/mutationUpdateFavoriteProfile';
 import heart from '../img/heart.png';
-import like from '../img/like.png';
+import like from '../img/fullHeart.png';
+import inputText from '../InputText/InputText';
+import InputNum from '../InputNum/InputNum';
 
 const useStyles = makeStyles({
   table: {
@@ -32,6 +35,8 @@ const ReactSelect = ({ input, name, ...rest }) => {
       <Select
         {...input}
         {...rest}
+        value={options.find(option => option.value === input.value)}
+        isSearchable={false}
         onChange={option => {
           // eslint-disable-next-line no-restricted-globals
           if (isNaN(option.value)) {
@@ -43,31 +48,10 @@ const ReactSelect = ({ input, name, ...rest }) => {
           console.log(option);
           submit();
         }}
-        value={options.find(option => option.value === input.value)}
-        isSearchable={false}
       />
     </div>
   );
 };
-
-const inputText = ({ input, name, ...rest }) => (
-  <div>
-    <input
-      {...input}
-      {...rest}
-      onChange={event => {
-        // eslint-disable-next-line no-restricted-globals
-        if (isNaN(event.currentTarget.value)) {
-          input.onChange(event.currentTarget.value);
-        } else {
-          input.onChange(+event.currentTarget.value);
-        }
-
-        submit();
-      }}
-    />
-  </div>
-);
 
 function LeaderBoard() {
   const [data, setData] = useState('');
@@ -172,11 +156,11 @@ function LeaderBoard() {
               </div>
               <div>
                 <label>School</label>
-                <Field name="school" component={inputText} type="text" placeholder="School" />
+                <Field name="school" handleSubmit={submit} component={inputText} type="text" placeholder="School" />
               </div>
               <div>
                 <label>Team</label>
-                <Field name="team" component={inputText} type="text" placeholder="Team" />
+                <Field name="team" handleSubmit={submit} component={inputText} type="text" placeholder="Team" />
               </div>
               <Field
                 name="position"
@@ -215,7 +199,7 @@ function LeaderBoard() {
               ></Field>
               <div>
                 <label>Age</label>
-                <Field name="age" component={inputText} type="number" placeholder="Age" />
+                <Field name="age" handleSubmit={submit} component={InputNum} type="number" placeholder="Age" />
               </div>
               <Field
                 name="favorite"

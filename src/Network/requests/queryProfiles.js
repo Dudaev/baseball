@@ -1,7 +1,11 @@
 const axios = require('axios');
 
 export default async function queryProfiles(accessToken, client, uid, values) {
-  const { school, team, position, age, favorite, profilesСount = 10, playerName, tableNavigation } = values;
+  const parameters = values;
+  if (parameters.favorite === 'All') {
+    delete parameters.favorite;
+  }
+  const { school, team, position, age, favorite, profilesСount = 10, playerName, tableNavigation } = parameters;
 
   return axios.post(
     'https://baseballcloud-back.herokuapp.com/api/v1/graphql',

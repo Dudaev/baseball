@@ -1,23 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const InputText = ({ input, handleSubmit, ...rest }) => (
+const InputNum = ({ input, handleSubmit, ...rest }) => (
   <div>
     <input
       {...input}
       {...rest}
       onChange={event => {
-        input.onChange(event.currentTarget.value);
+        if (event.currentTarget.value === '') {
+          input.onChange(event.currentTarget.value);
+        } else input.onChange(+event.currentTarget.value);
         handleSubmit();
       }}
     />
   </div>
 );
 
-InputText.propTypes = {
+InputNum.propTypes = {
   input: PropTypes.object,
   handleSubmit: PropTypes.func,
   rest: PropTypes.object,
 };
 
-export default InputText;
+export default InputNum;

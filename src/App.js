@@ -5,6 +5,7 @@ import Registration from './Registration/Registration';
 import Profile from './Profile/Profile';
 import LeaderBoard from './LeaderBoard/LeaderBoard';
 import Network from './Network/Network';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   return (

@@ -15,7 +15,11 @@ import Pagination from '@material-ui/lab/Pagination';
 import queryProfiles from './requests/queryProfiles';
 import mutationUpdateProfile from '../LeaderBoard/requests/mutationUpdateFavoriteProfile';
 import heart from '../img/heart.png';
-import like from '../img/like.png';
+import like from '../img/fullHeart.png';
+import InputText from '../InputText/InputText';
+import InputNum from '../InputNum/InputNum';
+import TableNavigation from '../TableNavigation/TableNavigation';
+import ReactSelect from '../ReactSelect/ReactSelect';
 
 function Network() {
   const [profiles, setProfiles] = useState('');
@@ -70,69 +74,6 @@ function Network() {
 
   let submit;
 
-  const ReactSelect = ({ input, name, ...rest }) => {
-    const { options } = rest;
-    return (
-      <div>
-        <Select
-          {...input}
-          {...rest}
-          value={options.find(option => option.value === input.value)}
-          isSearchable={false}
-          onChange={option => {
-            // eslint-disable-next-line no-restricted-globals
-            if (isNaN(option.value)) {
-              input.onChange(option.value);
-            } else {
-              input.onChange(+option.value);
-            }
-
-            console.log(option);
-            submit();
-            {
-              console.log(input.name);
-              input.name == 'profilesСount' && setProfilesСount(+option.value);
-            }
-          }}
-        />
-      </div>
-    );
-  };
-
-  const inputText = ({ input, name, ...rest }) => (
-    <div>
-      <input
-        {...input}
-        {...rest}
-        onChange={event => {
-          // eslint-disable-next-line no-restricted-globals
-          if (isNaN(event.currentTarget.value) || event.currentTarget.value === '') {
-            input.onChange(event.currentTarget.value);
-          } else {
-            input.onChange(+event.currentTarget.value);
-          }
-
-          submit();
-        }}
-      />
-    </div>
-  );
-
-  const pagination = ({ input, profilesСount, totalCount }) => (
-    <div>
-      <Pagination
-        count={Math.ceil(totalCount / profilesСount)}
-        variant="outlined"
-        shape="rounded"
-        onChange={(event, page) => {
-          console.log(page);
-          input.onChange(page);
-          submit();
-        }}
-      />
-    </div>
-  );
-
   return (
     <>
       <h1>Network</h1>
@@ -144,16 +85,17 @@ function Network() {
             <form id="exampleForm" onSubmit={handleSubmit}>
               <div>
                 <label>School</label>
-                <Field name="school" component={inputText} type="text" placeholder="School" />
+                <Field name="school" handleSubmit={submit} component={InputText} type="text" placeholder="School" />
               </div>
               <div>
                 <label>Team</label>
-                <Field name="team" component={inputText} type="text" placeholder="Team" />
+                <Field name="team" handleSubmit={submit} component={InputText} type="text" placeholder="Team" />
               </div>
               <Field
                 name="position"
                 component={ReactSelect}
                 placeholder="Position"
+                handleSubmit={submit}
                 options={[
                   {
                     value: 'catcher',
@@ -187,12 +129,13 @@ function Network() {
               ></Field>
               <div>
                 <label>Age</label>
-                <Field name="age" component={inputText} placeholder="Age" />
+                <Field name="age" handleSubmit={submit} component={InputNum} placeholder="Age" />
               </div>
               <Field
                 name="favorite"
                 component={ReactSelect}
                 placeholder="Favorite"
+                handleSubmit={submit}
                 options={[
                   {
                     value: 'All',
@@ -208,6 +151,8 @@ function Network() {
                 name="profilesСount"
                 component={ReactSelect}
                 placeholder="Profiles Сount"
+                setProfilesСount={setProfilesСount}
+                handleSubmit={submit}
                 options={[
                   {
                     value: '10',
@@ -224,10 +169,17 @@ function Network() {
                 ]}
               ></Field>
 
-              <Field name="playerName" component={inputText} type="text" placeholder="Player Name" />
+              <Field
+                name="playerName"
+                handleSubmit={submit}
+                component={InputText}
+                type="text"
+                placeholder="Player Name"
+              />
               <Field
                 name="tableNavigation"
-                component={pagination}
+                handleSubmit={submit}
+                component={TableNavigation}
                 profilesСount={profilesСount}
                 totalCount={totalCount}
               />
@@ -252,9 +204,6 @@ function Network() {
             {console.log(profiles)}
             {profiles.map(row => (
               <TableRow key={row.id}>
-                {/* <TableCell component="th" scope="row">
-                  {row.first_name} {row.last_name}
-                </TableCell> */}
                 <TableCell align="center">
                   <Link to={`/profile/${row.id}`}>
                     {row.first_name} {row.last_name}

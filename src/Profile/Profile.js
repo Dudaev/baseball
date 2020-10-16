@@ -14,22 +14,18 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import Popper from '@material-ui/core/Popper';
 import Tooltip from '@material-ui/core/Tooltip';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryBattingSummary from './requests/queryBattingSummary';
 import queryFacilities from './requests/queryFacilities';
-import queryLeaderBoard from './requests/queryLeaderBoard';
 import queryNotifications from './requests/queryNotifications';
 import queryProfile from './requests/queryProfile';
-import queryProfileEvents from './requests/queryProfileEvents';
 import querySchools from './requests/querySchools';
 import queryTeams from './requests/queryTeams';
 import ErrorWithDelay from '../ErrorWithDelay';
 import styles from './Profile.module.css';
 import queryBattingGraph from './requests/queryBattingGraph';
-import PageNavigation from '../PageNavigation/PageNavigation';
 import queryBattingLog from './requests/queryBattingLog';
 import ReactSelect from '../ReactSelect/ReactSelect';
 import InputText from '../InputText/InputText';
@@ -383,6 +379,7 @@ const PlayerResults = ({ personId, profile }) => {
                   {console.log(battingLog.total_count)}
                   <Field
                     totalCount={battingLog.total_count}
+                    profilesСount={10}
                     name="tableNavigation"
                     handleSubmit={handleSubmit}
                     component={TableNavigation}

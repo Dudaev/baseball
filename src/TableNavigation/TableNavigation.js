@@ -3,9 +3,9 @@
 import React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
-const TableNavigation = ({ input, handleSubmit, totalCount }) => {
+const TableNavigation = ({ input, handleSubmit, totalCount, profilesСount }) => {
   console.log(totalCount);
-  const maxNumber = Math.ceil(totalCount / 10);
+  const maxNumber = Math.ceil(totalCount / profilesСount);
   const items = [];
   for (let number = 1; number <= maxNumber; number++) {
     items.push(
