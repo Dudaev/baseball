@@ -10,8 +10,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom';
 import { Field, Form } from 'react-final-form';
-import Select from 'react-select';
-import Pagination from '@material-ui/lab/Pagination';
 import queryProfiles from './requests/queryProfiles';
 import mutationUpdateProfile from '../LeaderBoard/requests/mutationUpdateFavoriteProfile';
 import heart from '../img/heart.png';
