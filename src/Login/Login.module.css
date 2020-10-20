@@ -1,0 +1,69 @@
+.mainContent{
+  /* position: relative; */
+  grid-area: content;
+  background: #fff;
+  display: flex;
+  /* justify-content: space-between; */
+  overflow: hidden;
+}
+.loginView{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  padding: 16px;
+  background-image: url(./stadium.png);
+    background-position: top center;
+    background-size: cover;
+}
+.formContainer{
+  background: hsla(0,0%,100%,.8);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,0,0,.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 450px;
+}
+.flexContainer{
+
+}
+.welcome{
+
+}
+.input{
+  display: block;
+  width: 100%;
+  height: 50px;
+  border-radius: 4px;
+  background-color: #eff1f3;
+  padding: 6px 12px 10px 37px;
+  font-size: 16px;
+  line-height: 1.13;
+  font-weight: 400;
+  color: #667784;
+  border: 1px solid transparent;
+}
+
+.wrapper{
+  display: flex;
+  position: relative;
+  margin-bottom: 15px;
+}
+.wrapper2{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-flex: 0 0 100%;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
