@@ -39,15 +39,23 @@ export default function App() {
               </svg>
             </div>
           </a>
+          <div className={styles.nav}>
+            <div className={styles.leaderboardNetwork}>
+              <nav>
+                <Link to="/leaderboard" className={styles.link}>
+                  Leaderboard
+                </Link>
+                <Link to="/network" className={styles.link}>
+                  Network
+                </Link>
+              </nav>
+            </div>
+          </div>
           <Link to="/registration">Registration</Link>
 
           <Link to="/login">Login</Link>
 
           <Link to="/profile">Profile</Link>
-
-          <Link to="/network">Network</Link>
-
-          <Link to="/leaderboard">Leaderboard</Link>
         </header>
         <div className={styles.mainContent}>
           <Switch>

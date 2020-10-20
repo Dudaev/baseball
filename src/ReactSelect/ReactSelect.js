@@ -9,6 +9,7 @@ const ReactSelect = ({ input, handleSubmit, setProfilesСount, ...rest }) => {
   return (
     <div>
       <Select
+        className={Styles.input}
         {...input}
         {...rest}
         value={options.find(option => option.value === input.value)}

@@ -18,6 +18,7 @@ import InputText from '../InputText/InputText';
 import InputNum from '../InputNum/InputNum';
 import TableNavigation from '../TableNavigation/TableNavigation';
 import ReactSelect from '../ReactSelect/ReactSelect';
+import styles from './Network.module.css';
 
 function Network() {
   const [profiles, setProfiles] = useState('');
