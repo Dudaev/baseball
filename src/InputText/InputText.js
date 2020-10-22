@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Styles from './InputText.module.css';
 
 const InputText = ({ input, handleSubmit, ...rest }) => (
   <div>
@@ -10,6 +11,7 @@ const InputText = ({ input, handleSubmit, ...rest }) => (
         input.onChange(event.currentTarget.value);
         handleSubmit();
       }}
+      className={Styles.input}
     />
   </div>
 );

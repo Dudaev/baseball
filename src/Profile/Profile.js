@@ -130,8 +130,7 @@ function Profile() {
   }
   return (
     <>
-      <h1>Profile</h1>
-      <div className={styles.PlayerResultsContainer}>
+      <div className={styles.profileContainer}>
         <div>
           {visibleForm && (
             <Form

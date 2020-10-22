@@ -7,13 +7,14 @@
 }
 .loginView{
 
-  width: 3000px;/* временно */
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: auto;
   padding: 16px;
-  background-image: url(./stadium.png);
+  background-image: url(../img/stadium.png);
     background-position: top center;
     background-size: cover;
 }

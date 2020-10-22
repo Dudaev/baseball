@@ -198,12 +198,10 @@ header{
 }
 
 .mainContent{
-  /* height: 10000px; */
   grid-area: content;
   background: #fff;
-  display: flex;
   justify-content: space-between;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .nav{
@@ -253,24 +251,6 @@ header nav {
   -webkit-text-decoration-skip: objects;
 }
 
-/* .link:hover:after {
-  border-bottom: 4px solid #788b99;
-  content: "";
-  display: block;
-  left: 0;
-  right: 0;
-  position: absolute;
-  bottom: -16px;
-}
-.link:hover:after {
-  border-bottom: 4px solid #788b99;
-  content: "";
-  display: block;
-  left: 0;
-  right: 0;
-  position: absolute;
-  bottom: -16px;
-} */
 
 header nav .link.active:after, header nav .link:hover:after {
   border-bottom: 4px solid #788b99;

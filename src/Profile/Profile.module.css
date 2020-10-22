@@ -1,39 +1,35 @@
-.container{
-
+.profileContainer{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex: 2;
+  padding: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
-.container > div{
-  margin: 10px;
-}
-
-.sidebar {
- display: flex;
- flex-direction: column;
- justify-content: center;
- align-items: center;
-}
-
-.error span {
-  color: red;
-}
-.PlayerResultsContainer{
-  display: inline-flex;
-}
-
-
-
-
-
-
-
-.playerResults{
-
-}
-.topBattingValues{
-  display: inline-flex;
-
-}
-.topBattingValues > div{
-  margin-right: 20px;
-
+.sideBar{
+  overflow: auto;
+  background: #fff;
+  border-left: 1px solid rgba(0,0,0,.1);
+  width: 200px;
+  overflow: auto;
+  padding: 16px;
+  grid-area: sidebar;
+    grid-row-start: sidebar;
+    grid-column-start: 1;
+    grid-row-end: sidebar;
+    grid-column-end: auto;
+    background: #fff;
+    border-right: 1px solid rgba(0,0,0,.1);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    grid-column: 1;
+    width: 200px;
 }

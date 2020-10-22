@@ -1,0 +1,110 @@
+@media (max-width: 40em) {
+  .pageHeader {
+    flex-direction: column;
+}
+}
+
+
+.container{
+  padding: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.container:before{
+  display: table;
+  content: " ";
+}
+
+.container:after{
+  clear: both;
+}
+
+.container:after{
+  display: table;
+  content: " ";
+}
+
+.pageHeader{
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.leaderboardTitle{
+  font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    -webkit-text-align: center;
+    text-align: center;
+    color: #667784;
+}
+
+.filtersContainer{
+  width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    flex-flow: row wrap;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.batttinOrPichingWrapper{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: space-between;
+
+}
+
+batttinOrPiching{
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: unset;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 35px;
+  margin: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.06);
+}
+
+.battingButton{
+  background: #788b99;
+  color: #fff;
+  padding: 8px;
+  margin: 8px;
+  border: 2px solid #788b99;
+  border-radius: 40px;
+  bottom: -4px;
+  box-shadow: unset;
+}
+
+.pitchingButton{
+  background: #fff;
+  color: #788b99;
+  padding: 8px;
+  margin: 8px;
+  border: 2px solid #788b99;
+  border-radius: 40px;
+  bottom: -4px;
+  box-shadow: unset;
+}
+
+.velocityOrDistance{
+  justify-content: flex-end;
+}

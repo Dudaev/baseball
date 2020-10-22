@@ -7,7 +7,7 @@ import Styles from './ReactSelect.module.css';
 const ReactSelect = ({ input, handleSubmit, setProfilesСount, ...rest }) => {
   const { options } = rest;
   return (
-    <div>
+    <div className={Styles.inputWrapper}>
       <Select
         className={Styles.input}
         {...input}

@@ -7,7 +7,6 @@ function Login() {
 
 return (
   <>
-  <div className={styles.mainContent}>
     <div className={styles.loginView}>
       <div className={styles.formContainer}>
         <div className={styles.flexContainer}>
@@ -68,9 +67,6 @@ return (
       </div>
 
     </div>
-
-  </div>
-
 
   </>
 
