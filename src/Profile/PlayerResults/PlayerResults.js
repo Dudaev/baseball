@@ -95,272 +95,315 @@ const PlayerResults = ({ personId, profile }) => {
   }
   return (
     <div className={styles.playerResults}>
-      <div>Top Batting Values</div>
-      <div className={styles.topBattingValues}>
-        {!battingSummary.top_values.length && (
-          <>
-            <div>
-              <p>Exit Velocity {'NA'}</p>
+      <div className={styles.summaryEventsWrapper}>
+        <div className={styles.topValuesWrapper}>
+          <div className={(styles.topValuesWrapper2, styles.card)}>
+            <div className={styles.titleWrapper}>
+              <div className={styles.title}>Top Batting Values</div>
             </div>
-            <div>
-              <p>Carry Distance {'NA'}</p>
-            </div>
-            <div>
-              <p>Launch Angle {'NA'}</p>
-            </div>
-          </>
-        )}
-        {!!battingSummary.top_values.length && (
-          <>
-            <div>
-              <p>Exit Velocity {battingSummary.top_values[0].exit_velocity}</p>
-            </div>
-            <div>
-              <p>Carry Distance {battingSummary.top_values[0].distance}</p>
-            </div>
-            <div>
-              <p>Launch Angle {battingSummary.top_values[0].launch_angle}</p>
-            </div>
-          </>
-        )}
-      </div>
 
-      <div>
-        <p>Recent Session Reports</p>
-        <p>No data currently linked to this profile</p>
-      </div>
-      <Select
-        options={[
-          { value: 'Summary', label: 'Summary' },
-          { value: 'Charts', label: 'Charts' },
-          { value: 'Log', label: 'Log' },
-        ]}
-        onChange={e => setVisible(e.value)}
-      />
-      <button onClick={() => setVisible('Сomparison')}>Сomparison</button>
-      {visible === 'Summary' && (
-        <>
-          {!battingSummary.top_values.length && !battingSummary.average_values.length && (
-            <p>There&apos;s no info yet!</p>
-          )}
-          {!!battingSummary.top_values.length && !!battingSummary.average_values.length && (
-            <>
-              <div>
-                <p>Top Batting Values</p>
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Pitch Type</TableCell>
-                        <TableCell align="center">Distance</TableCell>
-                        <TableCell align="center">Launch Angle</TableCell>
-                        <TableCell align="center">Exit Velocity</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {battingSummary.top_values.map(row => (
-                        <TableRow key={row.exit_velocity}>
-                          <TableCell align="center">{row.pitch_type}</TableCell>
-                          <TableCell align="center">{row.distance}</TableCell>
-                          <TableCell align="center">{row.launch_angle}</TableCell>
-                          <TableCell align="center">{row.exit_velocity}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-              <div>
-                <p>Average Batting Values</p>
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Pitch Type</TableCell>
-                        <TableCell align="center">Distance</TableCell>
-                        <TableCell align="center">Launch Angle</TableCell>
-                        <TableCell align="center">Exit Velocity</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {battingSummary.average_values.map(row => (
-                        <TableRow key={row.exit_velocity}>
-                          <TableCell align="center">{row.pitch_type}</TableCell>
-                          <TableCell align="center">{row.distance}</TableCell>
-                          <TableCell align="center">{row.launch_angle}</TableCell>
-                          <TableCell align="center">{row.exit_velocity}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-            </>
-          )}
-        </>
-      )}
-      {visible === 'Charts' && (
-        <div>
-          <Charts personId={personId} />
-        </div>
-      )}
-      {visible === 'Log' && (
-        <div>
-          <p>Batting Log</p>
-          <Form
-            onSubmit={onSubmit}
-            render={({ handleSubmit, form }) => (
-              <form id="exampleForm" onSubmit={handleSubmit}>
-                <Field
-                  handleSubmit={handleSubmit}
-                  name="pitchType"
-                  component={ReactSelect}
-                  placeholder="Pitch Type"
-                  options={[
-                    {
-                      value: '',
-                      label: 'None',
-                    },
-                    {
-                      value: 'Four Seam Fastball',
-                      label: 'Four Seam Fastball',
-                    },
-                    {
-                      value: 'Two Seam Fastball',
-                      label: 'Two Seam Fastball',
-                    },
-                    {
-                      value: 'Curveball',
-                      label: 'Curveball',
-                    },
-                    {
-                      value: 'Changeup',
-                      label: 'Changeup',
-                    },
-                    {
-                      value: 'Slider',
-                      label: 'Slider',
-                    },
-                  ]}
-                ></Field>
+            <div className={styles.sdsdsdsd}>
+              {!battingSummary.top_values.length && (
+                <>
+                  <div className={styles.topValuesItem}>
+                    <div className={styles.topValue}>
+                      <div className={styles.topName}>Exit Velocity</div>
+                      <div className={styles.topValue}>{'NA'}</div>
+                    </div>
+                    <div className={styles.topValueProgressBar}></div>
+                  </div>
 
-                <Field
-                  handleSubmit={handleSubmit}
-                  name="playerName"
-                  component={InputText}
-                  type="text"
-                  placeholder="Player Name"
-                />
-                <Field
-                  totalCount={battingLog.total_count}
-                  profilesСount={10}
-                  name="tableNavigation"
-                  handleSubmit={handleSubmit}
-                  component={TableNavigation}
-                />
-              </form>
-            )}
-          />
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Pitcher Name</TableCell>
-                  <TableCell align="center">Pitcher Handedness</TableCell>
-                  <TableCell align="center">Pitch Type</TableCell>
-                  <TableCell align="center">Pitch Call</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {!battingLog.batting_log.length && <p>There&apos;s no info yet!</p>}
-                {!!battingLog.batting_log.length &&
-                  battingLog.batting_log.map(row => (
-                    // eslint-disable-next-line react/jsx-key
-                    <TableRow>
-                      <TableCell align="center">{row.date}</TableCell>
-                      <TableCell align="center">{row.pitcher_name}</TableCell>
-                      <TableCell align="center">{row.pitcher_handedness}</TableCell>
-                      <TableCell align="center">{row.pitch_type}</TableCell>
-                      <TableCell align="center">{row.pitch_call}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-      )}
-      {visible === 'Сomparison' && (
-        <div>
-          <div>
-            <div>
-              <div>
-                {profile.first_name} {profile.last_name}
-              </div>
-              <div>
-                <span>svg </span>
-                <span>age</span>
-                <span> {profile.age} </span>
-              </div>
-              <div>
-                <span>svg </span>
-                <span>Height</span>
-                <span>
-                  ft {profile.feet} in {profile.inches}
-                </span>
-              </div>
-              <div>
-                <span>svg </span>
-                <span>Weight</span>
-                <span>{profile.weight}</span>
-              </div>
-            </div>
-            <div>
-              <Tooltip
-                title={<>{data}</>}
-                aria-label="add"
-                disableFocusListener
-                disableHoverListener
-                disableTouchListener
-                open={open}
-              >
-                <input
-                  onChange={event => {
-                    handleProfileNames(event.currentTarget.value);
-                    setOpen(true);
-                  }}
-                  onBlur={() => setOpen(false)}
-                />
-              </Tooltip>
-              {comparedProfile !== '' && (
-                <div>
-                  <div>
-                    {comparedProfile.first_name} {comparedProfile.last_name}
+                  <div className={styles.topValuesItem}>
+                    <div className={styles.topValue}>
+                      <div className={styles.topName}>Carry Distance </div>
+                      <div className={styles.topValue}>{'NA'}</div>
+                    </div>
+                    <div className={styles.topValueProgressBar}></div>
                   </div>
-                  <div>
-                    <span>svg </span>
-                    <span>age</span>
-                    <span> {comparedProfile.age} </span>
+                  <div className={styles.topValuesItem}>
+                    <div className={styles.topValue}>
+                      <div className={styles.topName}>Launch Angle </div>
+                      <div className={styles.topValue}>{'NA'}</div>
+                    </div>
+                    <div className={styles.topValueProgressBar}></div>
                   </div>
-                  <div>
-                    <span>svg </span>
-                    <span>Height</span>
-                    <span>
-                      ft {comparedProfile.feet} in {comparedProfile.inches}
-                    </span>
+                </>
+              )}
+              {!!battingSummary.top_values.length && (
+                <>
+                  <div className={styles.topValuesItem}>
+                    <div className={styles.topValue}>
+                      <div className={styles.topName}>Exit Velocity</div>
+                      <div className={styles.topValue}>{battingSummary.top_values[0].exit_velocity}</div>
+                    </div>
+                    <div className={styles.topValueProgressBar}></div>
                   </div>
-                  <div>
-                    <span>svg </span>
-                    <span>Weight</span>
-                    <span>{comparedProfile.weight}</span>
+
+                  <div className={styles.topValuesItem}>
+                    <div className={styles.topValue}>
+                      <div className={styles.topName}>Carry Distance </div>
+                      <div className={styles.topValue}>{battingSummary.top_values[0].distance}</div>
+                    </div>
+                    <div className={styles.topValueProgressBar}></div>
                   </div>
-                </div>
+                  <div className={styles.topValuesItem}>
+                    <div className={styles.topValue}>
+                      <div className={styles.topName}>Launch Angle </div>
+                      <div className={styles.topValue}>{battingSummary.top_values[0].launch_angle}</div>
+                    </div>
+                    <div className={styles.topValueProgressBar}></div>
+                  </div>
+                </>
               )}
             </div>
           </div>
-          <div></div>
         </div>
-      )}
+
+        <div className={styles.card}>
+          <div className={styles.recentSessionReportsTitle}>Recent Session Reports</div>
+          <div className={styles.recentSessionReportsP}>No data currently linked to this profile</div>
+        </div>
+      </div>
+      <div className={styles.card}>
+        <Select
+          options={[
+            { value: 'Summary', label: 'Summary' },
+            { value: 'Charts', label: 'Charts' },
+            { value: 'Log', label: 'Log' },
+          ]}
+          onChange={e => setVisible(e.value)}
+        />
+        <ul className={styles.buttonsWrapper}>
+          <li className={styles.buttonBatting}>Batting</li>
+          <li className={styles.button}>Session Reports </li>
+          <li onClick={() => setVisible('Сomparison')} className={styles.button}>
+            Сomparison
+          </li>
+        </ul>
+        {visible === 'Summary' && (
+          <>
+            {!battingSummary.top_values.length && !battingSummary.average_values.length && (
+              <p>There&apos;s no info yet!</p>
+            )}
+            {!!battingSummary.top_values.length && !!battingSummary.average_values.length && (
+              <>
+                <div>
+                  <p>Top Batting Values</p>
+                  <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="center">Pitch Type</TableCell>
+                          <TableCell align="center">Distance</TableCell>
+                          <TableCell align="center">Launch Angle</TableCell>
+                          <TableCell align="center">Exit Velocity</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {battingSummary.top_values.map(row => (
+                          <TableRow key={row.exit_velocity}>
+                            <TableCell align="center">{row.pitch_type}</TableCell>
+                            <TableCell align="center">{row.distance}</TableCell>
+                            <TableCell align="center">{row.launch_angle}</TableCell>
+                            <TableCell align="center">{row.exit_velocity}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+                <div>
+                  <p>Average Batting Values</p>
+                  <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="center">Pitch Type</TableCell>
+                          <TableCell align="center">Distance</TableCell>
+                          <TableCell align="center">Launch Angle</TableCell>
+                          <TableCell align="center">Exit Velocity</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {battingSummary.average_values.map(row => (
+                          <TableRow key={row.exit_velocity}>
+                            <TableCell align="center">{row.pitch_type}</TableCell>
+                            <TableCell align="center">{row.distance}</TableCell>
+                            <TableCell align="center">{row.launch_angle}</TableCell>
+                            <TableCell align="center">{row.exit_velocity}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </>
+            )}
+          </>
+        )}
+        {visible === 'Charts' && (
+          <div>
+            <Charts personId={personId} />
+          </div>
+        )}
+        {visible === 'Log' && (
+          <div>
+            <p>Batting Log</p>
+            <Form
+              onSubmit={onSubmit}
+              render={({ handleSubmit, form }) => (
+                <form id="exampleForm" onSubmit={handleSubmit}>
+                  <Field
+                    handleSubmit={handleSubmit}
+                    name="pitchType"
+                    component={ReactSelect}
+                    placeholder="Pitch Type"
+                    options={[
+                      {
+                        value: '',
+                        label: 'None',
+                      },
+                      {
+                        value: 'Four Seam Fastball',
+                        label: 'Four Seam Fastball',
+                      },
+                      {
+                        value: 'Two Seam Fastball',
+                        label: 'Two Seam Fastball',
+                      },
+                      {
+                        value: 'Curveball',
+                        label: 'Curveball',
+                      },
+                      {
+                        value: 'Changeup',
+                        label: 'Changeup',
+                      },
+                      {
+                        value: 'Slider',
+                        label: 'Slider',
+                      },
+                    ]}
+                  ></Field>
+
+                  <Field
+                    handleSubmit={handleSubmit}
+                    name="playerName"
+                    component={InputText}
+                    type="text"
+                    placeholder="Player Name"
+                  />
+                  <Field
+                    totalCount={battingLog.total_count}
+                    profilesСount={10}
+                    name="tableNavigation"
+                    handleSubmit={handleSubmit}
+                    component={TableNavigation}
+                  />
+                </form>
+              )}
+            />
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Date</TableCell>
+                    <TableCell align="center">Pitcher Name</TableCell>
+                    <TableCell align="center">Pitcher Handedness</TableCell>
+                    <TableCell align="center">Pitch Type</TableCell>
+                    <TableCell align="center">Pitch Call</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {!battingLog.batting_log.length && <p>There&apos;s no info yet!</p>}
+                  {!!battingLog.batting_log.length &&
+                    battingLog.batting_log.map(row => (
+                      // eslint-disable-next-line react/jsx-key
+                      <TableRow>
+                        <TableCell align="center">{row.date}</TableCell>
+                        <TableCell align="center">{row.pitcher_name}</TableCell>
+                        <TableCell align="center">{row.pitcher_handedness}</TableCell>
+                        <TableCell align="center">{row.pitch_type}</TableCell>
+                        <TableCell align="center">{row.pitch_call}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        )}
+        {visible === 'Сomparison' && (
+          <div>
+            <div>
+              <div>
+                <div>
+                  {profile.first_name} {profile.last_name}
+                </div>
+                <div>
+                  <span>svg </span>
+                  <span>age</span>
+                  <span> {profile.age} </span>
+                </div>
+                <div>
+                  <span>svg </span>
+                  <span>Height</span>
+                  <span>
+                    ft {profile.feet} in {profile.inches}
+                  </span>
+                </div>
+                <div>
+                  <span>svg </span>
+                  <span>Weight</span>
+                  <span>{profile.weight}</span>
+                </div>
+              </div>
+              <div>
+                <Tooltip
+                  title={<>{data}</>}
+                  aria-label="add"
+                  disableFocusListener
+                  disableHoverListener
+                  disableTouchListener
+                  open={open}
+                >
+                  <input
+                    onChange={event => {
+                      handleProfileNames(event.currentTarget.value);
+                      setOpen(true);
+                    }}
+                    onBlur={() => setOpen(false)}
+                  />
+                </Tooltip>
+                {comparedProfile !== '' && (
+                  <div>
+                    <div>
+                      {comparedProfile.first_name} {comparedProfile.last_name}
+                    </div>
+                    <div>
+                      <span>svg </span>
+                      <span>age</span>
+                      <span> {comparedProfile.age} </span>
+                    </div>
+                    <div>
+                      <span>svg </span>
+                      <span>Height</span>
+                      <span>
+                        ft {comparedProfile.feet} in {comparedProfile.inches}
+                      </span>
+                    </div>
+                    <div>
+                      <span>svg </span>
+                      <span>Weight</span>
+                      <span>{comparedProfile.weight}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div></div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

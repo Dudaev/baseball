@@ -33,3 +33,384 @@
     grid-column: 1;
     width: 200px;
 }
+
+.userInfo{
+  position: relative;
+}
+
+.editProfile{
+  position: absolute;
+    top: 12px;
+    right: 13px;
+    padding: 0;
+    display: block;
+    padding: 7px 19px 10px 18px;
+    border-radius: 4px;
+    box-shadow: none;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+button{
+  touch-action: manipulation;
+  text-transform: none;
+  overflow: visible;
+  background-color: transparent;
+    border-style: none;
+    color: inherit;
+    font-size: 1em;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+.editSvg{
+  height: 30px;
+  width: 30px;
+}
+
+.wrapperAvatar{
+  display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin-bottom: 6px;
+}
+
+.avatar{
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: 50% 50%;
+  border-radius: 50%;
+  background-image: url("../img/user.png");
+}
+
+.wrapperName{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.name{
+  font-size: 20px;
+  line-height: 24px;
+  color: #414f5a;
+  word-wrap: break-word;
+  word-break: break-all;
+  -webkit-text-align: center;
+  text-align: center;
+}
+
+.position{
+  font-size: 16px;
+  line-height: 19px;
+  color: #788b99;
+}
+.position2{
+  font-size: 16px;
+  line-height: 19px;
+  color: #788b99;
+  border-top: 1px solid #cbcccd;
+}
+
+.personalInfo{
+  display: flex;
+  flex-flow: column;
+}
+.item{
+  display: flex;
+  padding: 16px 0;
+  justify-content: space-between;
+}
+
+.item span:nth-child(1n) {
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+}
+
+.item span:nth-child(2n) {
+  width: auto;
+  margin-right: auto;
+}
+
+.item span:nth-child(3n) {
+  width: auto;
+  margin: 0;
+}
+
+.wrapperSvg{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.ageSvg{
+  height: 21px;
+  width: 24px;
+}
+
+.heightSvg{
+  width: 20px;
+  height: 40px;
+}
+.weightSvg{
+  width: 14px;
+  height: 17px;
+}
+
+.ballSvg{
+  width: 18px;
+  height: 18px;
+}
+
+.batSvg{
+  width: 20px;
+  height: 20px;
+}
+
+.schoolInfo{
+  display: flex;
+  flex-direction: column;
+}
+
+.schoolInfoItemWrapper{
+  display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.schoolInfoItemLabel{
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 400;
+  -webkit-text-align: center;
+  text-align: center;
+  color: #667784;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 300;
+  color: #667784;
+  margin-bottom: 3px;
+  -webkit-text-align: left;
+  text-align: left;
+}
+
+.schoolInfoItem{
+  font-size: 16px;
+    color: #667784;
+    word-wrap: break-word;
+    margin-bottom: 11px;
+}
+
+.like{
+  width: 30px;
+  height: 27px;
+}
+
+.playerResults{
+  background: #788b99;
+    flex: 2;
+    overflow: auto;
+    width: calc(100vw - 220px);
+}
+
+.topValuesWrapper{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    display: block;
+}
+
+.topValuesWrapper2{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: 100%;
+  min-width: 0;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.card{
+  background: #fff;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+.titleWrapper{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.title{
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 400;
+  -webkit-text-align: center;
+  text-align: center;
+  color: #667784;
+  font-size: 18px;
+  font-weight: 900;
+  color: #414f5a;
+}
+
+
+.sdsdsdsd{
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.topValuesItem{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding: 16px 24px 0 0;
+}
+
+.topValue{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.topNameAndValue{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-between;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.topName{
+  font-size: 16px;
+  color: #667784;
+}
+
+.topValue{
+  font-size: 16px;
+  color: #667784;
+  font-weight: 700;
+}
+
+.recentSessionReportsTitle{
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 400;
+  -webkit-text-align: center;
+  text-align: center;
+  color: #667784;
+  font-size: 18px;
+  font-weight: 900;
+  color: #414f5a;
+  text-align: left;
+}
+
+.recentSessionReportsP{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  color: #667784;
+  font-size: 16px;
+}
+
+.summaryEventsWrapper{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.buttonsWrapper{
+  margin: 0;
+    padding: 0;
+    box-shadow: unset;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.buttonsWrapper{
+
+}
+
+.buttonBatting{
+  padding: 8px;
+  margin: 8px;
+  border: 2px solid #788b99;
+  border-radius: 40px;
+  background: #788b99;
+    color: #fff;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.button{
+  padding: 8px;
+  margin: 8px;
+  border: 2px solid #788b99;
+  border-radius: 40px;
+  background: #fff;
+    color: #788b99;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 700;
+    cursor: pointer;
+}

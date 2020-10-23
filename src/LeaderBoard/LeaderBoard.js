@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { makeStyles, StylesProvider } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';

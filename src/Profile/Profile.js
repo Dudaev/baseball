@@ -424,18 +424,17 @@ function Profile() {
             </div>
           </div>
         )}
-        <div>
-          {personId !== undefined && (
-            <>
-              <PlayerResults personId={personId} profile={profile} />
-            </>
-          )}
-          {personId === undefined && (
-            <>
-              <PlayerResults personId={profile.id} />
-            </>
-          )}
-        </div>
+
+        {personId !== undefined && (
+          <>
+            <PlayerResults personId={personId} profile={profile} />
+          </>
+        )}
+        {personId === undefined && (
+          <>
+            <PlayerResults personId={profile.id} />
+          </>
+        )}
       </div>
     </>
   );
