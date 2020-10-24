@@ -4,6 +4,12 @@
 }
 }
 
+.mainContent{
+  grid-area: content;
+  background: #fff;
+  justify-content: space-between;
+  overflow: auto;
+}
 
 .container{
   padding: 0;

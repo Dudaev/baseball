@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
-import { makeStyles, StylesProvider } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -98,20 +98,108 @@ function LeaderBoard() {
   }
   return (
     <>
-      <div className={Styles.container}>
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit, form }) => (
-            <form id="exampleForm" onSubmit={handleSubmit}>
-              <div className={Styles.pageHeader}>
-                <div className={Styles.leaderboardTitle}>Leaderboard</div>
-                <div className={Styles.filtersContainer}>
-                  <div>
-                    <label>Last Week</label>
+      <div className={Styles.mainContent}>
+        <div className={Styles.container}>
+          <Form
+            onSubmit={onSubmit}
+            render={({ handleSubmit, form }) => (
+              <form id="exampleForm" onSubmit={handleSubmit}>
+                <div className={Styles.pageHeader}>
+                  <div className={Styles.leaderboardTitle}>Leaderboard</div>
+                  <div className={Styles.filtersContainer}>
+                    <div>
+                      <label>Last Week</label>
+                      <Field
+                        name="date"
+                        component={ReactSelect}
+                        placeholder="Date"
+                        handleSubmit={handleSubmit}
+                        options={[
+                          {
+                            value: 'All',
+                            label: 'All',
+                          },
+                          {
+                            value: 'last_week',
+                            label: 'Last Week',
+                          },
+                          {
+                            value: 'last_month',
+                            label: 'Last Month',
+                          },
+                        ]}
+                      ></Field>
+                    </div>
+                    <div>
+                      <label>School</label>
+                      <Field
+                        name="school"
+                        handleSubmit={handleSubmit}
+                        component={inputText}
+                        type="text"
+                        placeholder="School"
+                      />
+                    </div>
+                    <div>
+                      <label>Team</label>
+                      <Field
+                        name="team"
+                        handleSubmit={handleSubmit}
+                        component={inputText}
+                        type="text"
+                        placeholder="Team"
+                      />
+                    </div>
                     <Field
-                      name="date"
+                      name="position"
                       component={ReactSelect}
-                      placeholder="Date"
+                      placeholder="Position"
+                      handleSubmit={handleSubmit}
+                      options={[
+                        {
+                          value: 'catcher',
+                          label: 'Catcher',
+                        },
+                        {
+                          value: 'first_base',
+                          label: 'First Base',
+                        },
+                        {
+                          value: 'second_base',
+                          label: 'Second Base',
+                        },
+                        {
+                          value: 'shortstop',
+                          label: 'Shortstop',
+                        },
+                        {
+                          value: 'third_base',
+                          label: 'Third Base',
+                        },
+                        {
+                          value: 'outfield',
+                          label: 'Outfield',
+                        },
+                        {
+                          value: 'pitcher',
+                          label: 'Pitcher',
+                        },
+                      ]}
+                    ></Field>
+                    <div>
+                      <label>Age</label>
+                      <Field
+                        name="age"
+                        handleSubmit={handleSubmit}
+                        component={InputNum}
+                        type="number"
+                        placeholder="Age"
+                      />
+                    </div>
+                    <Field
+                      name="favorite"
+                      component={ReactSelect}
+                      placeholder="Favorite"
                       handleSubmit={handleSubmit}
                       options={[
                         {
@@ -119,230 +207,144 @@ function LeaderBoard() {
                           label: 'All',
                         },
                         {
-                          value: 'last_week',
-                          label: 'Last Week',
-                        },
-                        {
-                          value: 'last_month',
-                          label: 'Last Month',
+                          value: '1',
+                          label: 'Favorite',
                         },
                       ]}
                     ></Field>
                   </div>
-                  <div>
-                    <label>School</label>
-                    <Field
-                      name="school"
-                      handleSubmit={handleSubmit}
-                      component={inputText}
-                      type="text"
-                      placeholder="School"
-                    />
-                  </div>
-                  <div>
-                    <label>Team</label>
-                    <Field
-                      name="team"
-                      handleSubmit={handleSubmit}
-                      component={inputText}
-                      type="text"
-                      placeholder="Team"
-                    />
-                  </div>
-                  <Field
-                    name="position"
-                    component={ReactSelect}
-                    placeholder="Position"
-                    handleSubmit={handleSubmit}
-                    options={[
-                      {
-                        value: 'catcher',
-                        label: 'Catcher',
-                      },
-                      {
-                        value: 'first_base',
-                        label: 'First Base',
-                      },
-                      {
-                        value: 'second_base',
-                        label: 'Second Base',
-                      },
-                      {
-                        value: 'shortstop',
-                        label: 'Shortstop',
-                      },
-                      {
-                        value: 'third_base',
-                        label: 'Third Base',
-                      },
-                      {
-                        value: 'outfield',
-                        label: 'Outfield',
-                      },
-                      {
-                        value: 'pitcher',
-                        label: 'Pitcher',
-                      },
-                    ]}
-                  ></Field>
-                  <div>
-                    <label>Age</label>
-                    <Field
-                      name="age"
-                      handleSubmit={handleSubmit}
-                      component={InputNum}
-                      type="number"
-                      placeholder="Age"
-                    />
-                  </div>
-                  <Field
-                    name="favorite"
-                    component={ReactSelect}
-                    placeholder="Favorite"
-                    handleSubmit={handleSubmit}
-                    options={[
-                      {
-                        value: 'All',
-                        label: 'All',
-                      },
-                      {
-                        value: '1',
-                        label: 'Favorite',
-                      },
-                    ]}
-                  ></Field>
                 </div>
-              </div>
-              <main>
-                <div className={Styles.batttinOrPichingWrapper}>
-                  <ul className={Styles.batttinOrPiching}>
-                    <button
-                      onClick={() => {
-                        setTable('Batting');
-                      }}
-                      className={Styles.battingButton}
-                    >
-                      Batting
-                    </button>
-                    <button
-                      onClick={() => {
-                        setTable('Pitching');
-                      }}
-                      className={Styles.pitchingButton}
-                    >
-                      Pitching
-                    </button>
-                  </ul>
-                  <div className={Styles.velocityOrDistance}>
-                    {table === 'Batting' && (
-                      <Field
-                        name="type"
-                        component={ReactSelect}
-                        handleSubmit={handleSubmit}
-                        options={[
-                          {
-                            value: 'exit_velocity',
-                            label: 'Exit Velocity',
-                          },
-                          {
-                            value: 'carry_distance',
-                            label: 'Carry Distance',
-                          },
-                        ]}
-                      ></Field>
-                    )}
-                    {table === 'Pitching' && (
-                      <Field
-                        name="type"
-                        component={ReactSelect}
-                        handleSubmit={handleSubmit}
-                        options={[
-                          {
-                            value: 'pitch_velocity',
-                            label: 'Pitch Velocity',
-                          },
-                          {
-                            value: 'spin_rate',
-                            label: 'Spin Rate',
-                          },
-                        ]}
-                      ></Field>
-                    )}
+                <main>
+                  <div className={Styles.batttinOrPichingWrapper}>
+                    <ul className={Styles.batttinOrPiching}>
+                      <button
+                        onClick={() => {
+                          setTable('Batting');
+                        }}
+                        className={Styles.battingButton}
+                      >
+                        Batting
+                      </button>
+                      <button
+                        onClick={() => {
+                          setTable('Pitching');
+                        }}
+                        className={Styles.pitchingButton}
+                      >
+                        Pitching
+                      </button>
+                    </ul>
+                    <div className={Styles.velocityOrDistance}>
+                      {table === 'Batting' && (
+                        <Field
+                          name="type"
+                          component={ReactSelect}
+                          handleSubmit={handleSubmit}
+                          options={[
+                            {
+                              value: 'exit_velocity',
+                              label: 'Exit Velocity',
+                            },
+                            {
+                              value: 'carry_distance',
+                              label: 'Carry Distance',
+                            },
+                          ]}
+                        ></Field>
+                      )}
+                      {table === 'Pitching' && (
+                        <Field
+                          name="type"
+                          component={ReactSelect}
+                          handleSubmit={handleSubmit}
+                          options={[
+                            {
+                              value: 'pitch_velocity',
+                              label: 'Pitch Velocity',
+                            },
+                            {
+                              value: 'spin_rate',
+                              label: 'Spin Rate',
+                            },
+                          ]}
+                        ></Field>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className={Styles.tableWrapper}>
-                  <TableContainer component={Paper}>
-                    <Table className={classes.table} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Rank</TableCell>
-                          {table === 'Batting' && <TableCell align="center">Batter Name</TableCell>}
-                          {table === 'Pitching' && <TableCell align="center">Pitcher Name</TableCell>}
-                          <TableCell align="center">Age</TableCell>
-                          <TableCell align="center">School</TableCell>
-                          <TableCell align="center">Teams</TableCell>
-                          {table === 'Batting' && <TableCell align="center">Exit Velocity</TableCell>}
-                          {table === 'Pitching' && <TableCell align="center">Pitch Type</TableCell>}
-                          {table === 'Batting' && <TableCell align="center">Launch Angle</TableCell>}
-                          {table === 'Pitching' && <TableCell align="center">Velocity</TableCell>}
-                          {table === 'Batting' && <TableCell align="center">Distance</TableCell>}
-                          {table === 'Pitching' && <TableCell align="center">Spin Rate</TableCell>}
+                  <div className={Styles.tableWrapper}>
+                    <TableContainer component={Paper}>
+                      <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Rank</TableCell>
+                            {table === 'Batting' && <TableCell align="center">Batter Name</TableCell>}
+                            {table === 'Pitching' && <TableCell align="center">Pitcher Name</TableCell>}
+                            <TableCell align="center">Age</TableCell>
+                            <TableCell align="center">School</TableCell>
+                            <TableCell align="center">Teams</TableCell>
+                            {table === 'Batting' && <TableCell align="center">Exit Velocity</TableCell>}
+                            {table === 'Pitching' && <TableCell align="center">Pitch Type</TableCell>}
+                            {table === 'Batting' && <TableCell align="center">Launch Angle</TableCell>}
+                            {table === 'Pitching' && <TableCell align="center">Velocity</TableCell>}
+                            {table === 'Batting' && <TableCell align="center">Distance</TableCell>}
+                            {table === 'Pitching' && <TableCell align="center">Spin Rate</TableCell>}
 
-                          <TableCell align="center">Favorite</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data.map(person => (
-                          <TableRow key={person.rank}>
-                            <TableCell align="center">{person.rank}</TableCell>
-                            {table === 'Batting' && (
-                              <TableCell align="center">
-                                <Link to={`/profile/${person.batter_datraks_id}`}>{person.batter_name}</Link>
-                              </TableCell>
-                            )}
-                            {table === 'Pitching' && (
-                              <TableCell align="center">
-                                <Link to={`/profile/${person.pitcher_datraks_id}`}>{person.pitcher_name}</Link>
-                              </TableCell>
-                            )}
-
-                            <TableCell align="center">{person.age}</TableCell>
-                            <TableCell align="center">{person.school.name}</TableCell>
-                            <TableCell align="center">{person.teams.map(team => `${team.name}`)}</TableCell>
-                            {table === 'Batting' && <TableCell align="center">{person.exit_velocity}</TableCell>}
-                            {table === 'Pitching' && <TableCell align="center">{person.pitch_type}</TableCell>}
-
-                            {table === 'Batting' && <TableCell align="center">{person.launch_angle}</TableCell>}
-                            {table === 'Pitching' && <TableCell align="center">{person.velocity}</TableCell>}
-                            {table === 'Batting' && <TableCell align="center">{person.distance}</TableCell>}
-                            {table === 'Pitching' && <TableCell align="center">{person.spin_rate}</TableCell>}
-
-                            <TableCell align="center">
-                              {!person.favorite && (
-                                <img
-                                  onClick={() => updateFavorite(person.batter_datraks_id, true)}
-                                  src={heart}
-                                  alt="Heart"
-                                />
-                              )}{' '}
-                              {person.favorite && (
-                                <img
-                                  src={like}
-                                  onClick={() => updateFavorite(person.batter_datraks_id, false)}
-                                  alt="Like"
-                                />
-                              )}
-                            </TableCell>
+                            <TableCell align="center">Favorite</TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </div>
-              </main>
-            </form>
-          )}
-        />
+                        </TableHead>
+                        <TableBody>
+                          {data.map(person => (
+                            <TableRow key={person.rank}>
+                              <TableCell align="center">{person.rank}</TableCell>
+                              {table === 'Batting' && (
+                                <TableCell align="center">
+                                  <Link to={`/profile/${person.batter_datraks_id}`}>{person.batter_name}</Link>
+                                </TableCell>
+                              )}
+                              {table === 'Pitching' && (
+                                <TableCell align="center">
+                                  <Link to={`/profile/${person.pitcher_datraks_id}`}>{person.pitcher_name}</Link>
+                                </TableCell>
+                              )}
+
+                              <TableCell align="center">{person.age}</TableCell>
+                              <TableCell align="center">{person.school.name}</TableCell>
+                              <TableCell align="center">{person.teams.map(team => `${team.name}`)}</TableCell>
+                              {table === 'Batting' && <TableCell align="center">{person.exit_velocity}</TableCell>}
+                              {table === 'Pitching' && <TableCell align="center">{person.pitch_type}</TableCell>}
+
+                              {table === 'Batting' && <TableCell align="center">{person.launch_angle}</TableCell>}
+                              {table === 'Pitching' && <TableCell align="center">{person.velocity}</TableCell>}
+                              {table === 'Batting' && <TableCell align="center">{person.distance}</TableCell>}
+                              {table === 'Pitching' && <TableCell align="center">{person.spin_rate}</TableCell>}
+
+                              <TableCell align="center">
+                                {!person.favorite && (
+                                  <img
+                                    onClick={() => updateFavorite(person.batter_datraks_id, true)}
+                                    src={heart}
+                                    alt="Heart"
+                                  />
+                                )}{' '}
+                                {person.favorite && (
+                                  <img
+                                    src={like}
+                                    onClick={() => updateFavorite(person.batter_datraks_id, false)}
+                                    alt="Like"
+                                  />
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </main>
+              </form>
+            )}
+          />
+        </div>
       </div>
     </>
   );

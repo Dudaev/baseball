@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Login from './Login/Login';
 import Registration from './Registration/Registration';
 import Profile from './Profile/Profile';
@@ -39,42 +39,42 @@ export default function App() {
               </svg>
             </div>
           </a>
-          <div className={styles.nav}>
-            <div className={styles.leaderboardNetwork}>
-              <nav>
-                <Link to="/leaderboard" className={styles.link}>
-                  Leaderboard
-                </Link>
-                <Link to="/network" className={styles.link}>
-                  Network
-                </Link>
-              </nav>
+          <Route path={['/profile/:personId?', '/network', '/leaderboard']}>
+            <div className={styles.nav}>
+              <div className={styles.leaderboardNetwork}>
+                <nav>
+                  <Link to="/leaderboard" className={styles.link}>
+                    Leaderboard
+                  </Link>
+                  <Link to="/network" className={styles.link}>
+                    Network
+                  </Link>
+                </nav>
+              </div>
             </div>
-          </div>
-          <Link to="/registration">Registration</Link>
+            <Link to="/registration">Registration</Link>
 
-          <Link to="/login">Login</Link>
+            <Link to="/login">Login</Link>
 
-          <Link to="/profile">Profile</Link>
+            <Link to="/profile">Profile</Link>
+          </Route>
         </header>
         <div className={styles.mainContent}>
-          <Switch>
-            <Route path="/profile/:personId?">
-              <Profile />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/registration">
-              <Registration />
-            </Route>
-            <Route path="/network">
-              <Network />
-            </Route>
-            <Route path="/leaderboard">
-              <LeaderBoard />
-            </Route>
-          </Switch>
+          <Route path="/profile/:personId?">
+            <Profile />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/registration">
+            <Registration />
+          </Route>
+          <Route path="/network">
+            <Network />
+          </Route>
+          <Route path="/leaderboard">
+            <LeaderBoard />
+          </Route>
         </div>
         <footer>
           <div className={styles.legal}>
@@ -83,16 +83,16 @@ export default function App() {
             <a href="/">Privacy Policy</a>
           </div>
           <div className={styles.socialMedia}>
-            <a href="https://baseballcloud.blog" target="_blank">
+            <a href="https://baseballcloud.blog" target="_blank" rel="noopener noreferrer">
               Blog
             </a>
-            <a href="http://twitter.com/baseballcloudus" target="_blank">
+            <a href="http://twitter.com/baseballcloudus" target="_blank" rel="noopener noreferrer">
               Twitter
             </a>
-            <a href="http://www.instagram.com/baseballcloudus/" target="_blank">
+            <a href="http://www.instagram.com/baseballcloudus/" target="_blank" rel="noopener noreferrer">
               Instagram
             </a>
-            <a href="http://www.facebook.com/BaseballCloudUS/" target="_blank">
+            <a href="http://www.facebook.com/BaseballCloudUS/" target="_blank" rel="noopener noreferrer">
               Facebook
             </a>
           </div>

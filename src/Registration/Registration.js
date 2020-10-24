@@ -49,6 +49,7 @@ function Registration() {
   }
 
 return (
+  <>
       <div className={styles.signUpView }>
         <div className={styles.formContainer}>
           <div className={styles.signUpContent}>
@@ -129,6 +130,8 @@ return (
           </div>
         </div>
       </div>
+  </>
+
 )
 }
 

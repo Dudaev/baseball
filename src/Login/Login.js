@@ -49,7 +49,7 @@ return (
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDQwMS45OTggNDAxLjk5OCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgY2xhc3M9IiI+PGc+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+Cgk8cGF0aCBkPSJNMzU3LjQ1LDE5MC43MjFjLTUuMzMxLTUuMzMtMTEuOC03Ljk5My0xOS40MTctNy45OTNoLTkuMTMxdi01NC44MjFjMC0zNS4wMjItMTIuNTU5LTY1LjA5My0zNy42ODUtOTAuMjE4ICAgQzI2Ni4wOTMsMTIuNTYzLDIzNi4wMjUsMCwyMDAuOTk4LDBjLTM1LjAyNiwwLTY1LjEsMTIuNTYzLTkwLjIyMiwzNy42ODhDODUuNjUsNjIuODE0LDczLjA5MSw5Mi44ODQsNzMuMDkxLDEyNy45MDd2NTQuODIxICAgaC05LjEzNWMtNy42MTEsMC0xNC4wODQsMi42NjMtMTkuNDE0LDcuOTkzYy01LjMzLDUuMzI2LTcuOTk0LDExLjc5OS03Ljk5NCwxOS40MTdWMzc0LjU5YzAsNy42MTEsMi42NjUsMTQuMDg2LDcuOTk0LDE5LjQxNyAgIGM1LjMzLDUuMzI1LDExLjgwMyw3Ljk5MSwxOS40MTQsNy45OTFIMzM4LjA0YzcuNjE3LDAsMTQuMDg1LTIuNjYzLDE5LjQxNy03Ljk5MWM1LjMyNS01LjMzMSw3Ljk5NC0xMS44MDYsNy45OTQtMTkuNDE3VjIxMC4xMzUgICBDMzY1LjQ1NSwyMDIuNTIzLDM2Mi43ODIsMTk2LjA1MSwzNTcuNDUsMTkwLjcyMXogTTI3NC4wODcsMTgyLjcyOEgxMjcuOTA5di01NC44MjFjMC0yMC4xNzUsNy4xMzktMzcuNDAyLDIxLjQxNC01MS42NzUgICBjMTQuMjc3LTE0LjI3NSwzMS41MDEtMjEuNDExLDUxLjY3OC0yMS40MTFjMjAuMTc5LDAsMzcuMzk5LDcuMTM1LDUxLjY3NywyMS40MTFjMTQuMjcxLDE0LjI3MiwyMS40MDksMzEuNSwyMS40MDksNTEuNjc1VjE4Mi43MjggICB6IiBmaWxsPSIjNjY3Nzg0IiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIj48L3BhdGg+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPC9nPjwvc3ZnPg==" className={styles.iconWrapper}/>
                    </div>
                 </div>
-                <button type="submit" className={styles.button}>Sing in</button>
+                <button type="submit" className={styles.button}>Sign In</button>
                 <div className={styles.forgottenPasswordWrapper}>
                    <a href="/">Forgotten password?</a>
                 </div>
@@ -60,15 +60,11 @@ return (
                 </form>
               )}
             </Form>
-
-
         </div>
-
       </div>
-
     </div>
-
   </>
+
 
 )
 }

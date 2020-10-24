@@ -130,6 +130,8 @@ function Profile() {
   }
   return (
     <>
+      {/* <Header /> */}
+
       <div className={styles.profileContainer}>
         <div>
           {visibleForm && (

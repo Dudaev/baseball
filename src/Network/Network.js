@@ -75,182 +75,184 @@ function Network() {
 
   return (
     <>
-      <div className={Styles.container}>
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit, form }) => {
-            submit = handleSubmit;
-            return (
-              <form id="exampleForm" onSubmit={handleSubmit}>
-                <div className={Styles.pageHeader}>
-                  <div className={Styles.networkText}>Network</div>
-                  <div className={Styles.filtersContainer}>
-                    <div>
-                      <label>School</label>
+      <div className={Styles.mainContent}>
+        <div className={Styles.container}>
+          <Form
+            onSubmit={onSubmit}
+            render={({ handleSubmit, form }) => {
+              submit = handleSubmit;
+              return (
+                <form id="exampleForm" onSubmit={handleSubmit}>
+                  <div className={Styles.pageHeader}>
+                    <div className={Styles.networkText}>Network</div>
+                    <div className={Styles.filtersContainer}>
+                      <div>
+                        <label>School</label>
+                        <Field
+                          name="school"
+                          handleSubmit={submit}
+                          component={InputText}
+                          type="text"
+                          placeholder="School"
+                        />
+                      </div>
+                      <div>
+                        <label>Team</label>
+                        <Field name="team" handleSubmit={submit} component={InputText} type="text" placeholder="Team" />
+                      </div>
                       <Field
-                        name="school"
+                        name="position"
+                        component={ReactSelect}
+                        placeholder="Position"
+                        handleSubmit={submit}
+                        options={[
+                          {
+                            value: 'catcher',
+                            label: 'Catcher',
+                          },
+                          {
+                            value: 'first_base',
+                            label: 'First Base',
+                          },
+                          {
+                            value: 'second_base',
+                            label: 'Second Base',
+                          },
+                          {
+                            value: 'shortstop',
+                            label: 'Shortstop',
+                          },
+                          {
+                            value: 'third_base',
+                            label: 'Third Base',
+                          },
+                          {
+                            value: 'outfield',
+                            label: 'Outfield',
+                          },
+                          {
+                            value: 'pitcher',
+                            label: 'Pitcher',
+                          },
+                        ]}
+                      ></Field>
+                      <div>
+                        <label>Age</label>
+                        <Field name="age" handleSubmit={submit} component={InputNum} placeholder="Age" />
+                      </div>
+                      <Field
+                        name="favorite"
+                        component={ReactSelect}
+                        placeholder="Favorite"
+                        handleSubmit={submit}
+                        options={[
+                          {
+                            value: 'All',
+                            label: 'All',
+                          },
+                          {
+                            value: '1',
+                            label: 'Favorite',
+                          },
+                        ]}
+                      ></Field>
+                      <Field
+                        name="profilesСount"
+                        component={ReactSelect}
+                        placeholder="Profiles Сount"
+                        setProfilesСount={setProfilesСount}
+                        handleSubmit={submit}
+                        options={[
+                          {
+                            value: '10',
+                            label: '10',
+                          },
+                          {
+                            value: '15',
+                            label: '15',
+                          },
+                          {
+                            value: '25',
+                            label: '25',
+                          },
+                        ]}
+                      ></Field>
+                    </div>
+                  </div>
+                  <div className={Styles.tableFilter}>
+                    <div className={Styles.availablePlayers}>{`Available Players ${totalCount}`}</div>
+                    <div className={Styles.PlayerName}>
+                      <Field
+                        name="playerName"
                         handleSubmit={submit}
                         component={InputText}
                         type="text"
-                        placeholder="School"
+                        placeholder="Player Name"
                       />
                     </div>
-                    <div>
-                      <label>Team</label>
-                      <Field name="team" handleSubmit={submit} component={InputText} type="text" placeholder="Team" />
-                    </div>
-                    <Field
-                      name="position"
-                      component={ReactSelect}
-                      placeholder="Position"
-                      handleSubmit={submit}
-                      options={[
-                        {
-                          value: 'catcher',
-                          label: 'Catcher',
-                        },
-                        {
-                          value: 'first_base',
-                          label: 'First Base',
-                        },
-                        {
-                          value: 'second_base',
-                          label: 'Second Base',
-                        },
-                        {
-                          value: 'shortstop',
-                          label: 'Shortstop',
-                        },
-                        {
-                          value: 'third_base',
-                          label: 'Third Base',
-                        },
-                        {
-                          value: 'outfield',
-                          label: 'Outfield',
-                        },
-                        {
-                          value: 'pitcher',
-                          label: 'Pitcher',
-                        },
-                      ]}
-                    ></Field>
-                    <div>
-                      <label>Age</label>
-                      <Field name="age" handleSubmit={submit} component={InputNum} placeholder="Age" />
-                    </div>
-                    <Field
-                      name="favorite"
-                      component={ReactSelect}
-                      placeholder="Favorite"
-                      handleSubmit={submit}
-                      options={[
-                        {
-                          value: 'All',
-                          label: 'All',
-                        },
-                        {
-                          value: '1',
-                          label: 'Favorite',
-                        },
-                      ]}
-                    ></Field>
-                    <Field
-                      name="profilesСount"
-                      component={ReactSelect}
-                      placeholder="Profiles Сount"
-                      setProfilesСount={setProfilesСount}
-                      handleSubmit={submit}
-                      options={[
-                        {
-                          value: '10',
-                          label: '10',
-                        },
-                        {
-                          value: '15',
-                          label: '15',
-                        },
-                        {
-                          value: '25',
-                          label: '25',
-                        },
-                      ]}
-                    ></Field>
                   </div>
-                </div>
-                <div className={Styles.tableFilter}>
-                  <div className={Styles.availablePlayers}>{`Available Players ${totalCount}`}</div>
-                  <div className={Styles.PlayerName}>
-                    <Field
-                      name="playerName"
-                      handleSubmit={submit}
-                      component={InputText}
-                      type="text"
-                      placeholder="Player Name"
-                    />
-                  </div>
-                </div>
-                <div className={Styles.tableWrapper}>
-                  <div className={Styles.table}>
-                    <TableContainer component={Paper}>
-                      <Table aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Player Name</TableCell>
-                            <TableCell align="center">Sessions</TableCell>
-                            <TableCell align="center">School</TableCell>
-                            <TableCell align="center">Teams</TableCell>
-                            <TableCell align="center">Age</TableCell>
-                            <TableCell align="center">Favorite</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {console.log(profiles)}
-                          {profiles.map(row => (
-                            <TableRow key={row.id}>
-                              <TableCell align="center">
-                                <Link to={`/profile/${row.id}`}>
-                                  {row.first_name} {row.last_name}
-                                </Link>
-                              </TableCell>
-                              <TableCell align="center">
-                                {row.events.length !== 0 && row.events.length} {row.events.length === 0 && '-'}
-                              </TableCell>
-                              <TableCell align="center">
-                                {row.school && row.school.name} {!row.school && '-'}
-                              </TableCell>
-                              <TableCell align="center">
-                                {+row.teams !== 0 && row.teams.map(team => `${team.name}`)} {+row.teams === 0 && '-'}
-                              </TableCell>
-                              <TableCell align="center">{row.age}</TableCell>
-                              <TableCell align="center">
-                                {!row.favorite && (
-                                  <img onClick={() => updateFavorite(row.id, true)} src={heart} alt="Heart" />
-                                )}{' '}
-                                {row.favorite && (
-                                  <img src={like} onClick={() => updateFavorite(row.id, false)} alt="Like" />
-                                )}
-                              </TableCell>
+                  <div className={Styles.tableWrapper}>
+                    <div className={Styles.table}>
+                      <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Player Name</TableCell>
+                              <TableCell align="center">Sessions</TableCell>
+                              <TableCell align="center">School</TableCell>
+                              <TableCell align="center">Teams</TableCell>
+                              <TableCell align="center">Age</TableCell>
+                              <TableCell align="center">Favorite</TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+                          </TableHead>
+                          <TableBody>
+                            {console.log(profiles)}
+                            {profiles.map(row => (
+                              <TableRow key={row.id}>
+                                <TableCell align="center">
+                                  <Link to={`/profile/${row.id}`}>
+                                    {row.first_name} {row.last_name}
+                                  </Link>
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.events.length !== 0 && row.events.length} {row.events.length === 0 && '-'}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.school && row.school.name} {!row.school && '-'}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {+row.teams !== 0 && row.teams.map(team => `${team.name}`)} {+row.teams === 0 && '-'}
+                                </TableCell>
+                                <TableCell align="center">{row.age}</TableCell>
+                                <TableCell align="center">
+                                  {!row.favorite && (
+                                    <img onClick={() => updateFavorite(row.id, true)} src={heart} alt="Heart" />
+                                  )}{' '}
+                                  {row.favorite && (
+                                    <img src={like} onClick={() => updateFavorite(row.id, false)} alt="Like" />
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
+                    <div className={Styles.pagination}>
+                      <Field
+                        name="tableNavigation"
+                        handleSubmit={submit}
+                        component={TableNavigation}
+                        profilesСount={profilesСount}
+                        totalCount={totalCount}
+                      />
+                    </div>
                   </div>
-                  <div className={Styles.pagination}>
-                    <Field
-                      name="tableNavigation"
-                      handleSubmit={submit}
-                      component={TableNavigation}
-                      profilesСount={profilesСount}
-                      totalCount={totalCount}
-                    />
-                  </div>
-                </div>
-              </form>
-            );
-          }}
-        />
+                </form>
+              );
+            }}
+          />
+        </div>
       </div>
     </>
   );

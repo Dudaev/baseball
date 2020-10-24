@@ -179,85 +179,39 @@ footer {
   font-size: 1.4rem;
 }
 
-header{
-  grid-area: hd;
-    grid-column-end: span 2;
-    display: flex;
-    align-items: center;
-    padding: 8px;
-  color: #788b99;
+footer .legal a, footer .socialMedia a {
+  padding: 8px;
 }
 
-.headerContainer{
-  background: #fff;
-  background: var(--primaryColor,#fff);
+footer .legal span {
+  padding-right: 10px;
+}
+
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+.legal{
+  font-size: 14px;
+}
+
+.socialMedia{
+  font-size: 14px;
+}
+
+header {
+  grid-area: hd;
+  grid-column-end: span 2;
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  border-bottom: 1px solid rgba(0,0,0,.1);
+  align-items: center;
+  padding: 8px;
 }
 
 .mainContent{
   grid-area: content;
   background: #fff;
+  display: flex;
   justify-content: space-between;
-  overflow: auto;
-}
-
-.nav{
-  display: flex;
-  flex-direction: row;
-  padding-left: 0;
-  margin-bottom: 0;
-  list-style: none;
-  display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-}
-
-.leaderboardNetwork{
-  display: inline-flex;
-  margin-left: 16px;
-}
-
-header nav {
-  display: flex;
-}
-
-.link{
-  padding: 0 8px;
-  color: #788b99!important;
-  text-decoration: none!important;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  touch-action: manipulation;
-  background-color: transparent;
-  -webkit-text-decoration-skip: objects;
-}
-
-
-header nav .link.active:after, header nav .link:hover:after {
-  border-bottom: 4px solid #788b99;
-  content: "";
-  display: block;
-  left: 0;
-  right: 0;
-  position: absolute;
-  bottom: -16px;
+  overflow: hidden;
 }

@@ -13,6 +13,12 @@
     padding-left: 0;
     border: 0;
 }
+.mainContent{
+  grid-area: content;
+  background: #fff;
+  justify-content: space-between;
+  overflow: auto;
+}
 
 .networkText{
   font-size: 24px;
