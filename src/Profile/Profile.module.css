@@ -86,13 +86,18 @@ button{
     margin-bottom: 6px;
 }
 
-.avatar{
+.noAvatar{
   width: 100px;
   height: 100px;
   background-size: cover;
   background-position: 50% 50%;
   border-radius: 50%;
   background-image: url("../img/user.png");
+}
+.avatar{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }
 
 .wrapperName{
@@ -296,7 +301,7 @@ button{
 }
 
 
-.sdsdsdsd{
+.topValuesWrapper3{
   overflow: hidden;
   height: 100%;
   display: flex;
@@ -410,3 +415,105 @@ button{
     font-weight: 700;
     cursor: pointer;
 }
+
+.reportsTableWrapper{
+
+}
+
+.reportsWrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.reportsElementControlWrapper{
+  display: flex;
+  margin-bottom: 21px;
+}
+
+.reportsElementControlWrapper > div{
+  display: flex;
+}
+
+.reportsElementControlWrapper > form{
+  justify-content: flex-end;
+  width: 100%;
+
+}
+
+.reportsElementControlWrapper > form > div:nth-child(1){
+  width: 100%;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.reportsElementControlWrapper > form > div:nth-child(1) > div{
+  margin-right: 20px;
+  align-items: center;
+}
+
+.reportsElementControlWrapper > form > div:nth-child(1) > div:nth-child(3){
+  width: 100px;
+}
+.reportsElementControlWrapper > form > div:nth-child(1) > div:nth-child(1){
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.19;
+  color: #48bbff;
+}
+
+.reportsElementControlWrapper > div:nth-child(1){
+  justify-content: flex-start;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.reportsTableWrapper{
+  display: flex;
+  flex-direction: column;
+}
+.reportsTableWrapper > div:nth-child(1){
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 6px;
+}
+
+.reportsTableWrapper > div:nth-child(1) > div{
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 300;
+  color: #667784;
+}
+
+.reportsTableWrapper > div:nth-child(2){
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  min-height: 420px;
+  color: #667784;
+  font-size: 16px;
+}
+
+.mainContent{
+  grid-area: content;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+

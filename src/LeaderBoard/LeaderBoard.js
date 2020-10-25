@@ -19,6 +19,7 @@ import inputText from '../InputText/InputText';
 import InputNum from '../InputNum/InputNum';
 import ReactSelect from '../ReactSelect/ReactSelect';
 import Styles from './LeaderBoard.module.css';
+import Header from '../Header/Header';
 
 const useStyles = makeStyles({
   table: {
@@ -98,6 +99,7 @@ function LeaderBoard() {
   }
   return (
     <>
+      <Header />
       <div className={Styles.mainContent}>
         <div className={Styles.container}>
           <Form

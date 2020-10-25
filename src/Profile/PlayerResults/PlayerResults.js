@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
@@ -10,6 +12,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import PropTypes from 'prop-types';
+import DatePicker from 'react-date-picker';
+// import DatePicker from 'react-datepicker';
 import queryProfile from '../requests/queryProfile';
 import styles from '../Profile.module.css';
 import queryBattingLog from '../requests/queryBattingLog';
@@ -18,6 +22,8 @@ import InputText from '../../InputText/InputText';
 import TableNavigation from '../../TableNavigation/TableNavigation';
 import queryProfileNames from '../requests/queryProfileNames';
 import queryBattingSummary from '../requests/queryBattingSummary';
+import queryProfileEvents from '../requests/queryProfileEvents';
+
 import Charts from './Charts/Charts';
 
 const PlayerResults = ({ personId, profile }) => {
@@ -25,8 +31,10 @@ const PlayerResults = ({ personId, profile }) => {
   const [comparedProfile, setСomparedProfile] = useState('');
   const [battingSummary, setBattingSummary] = useState('');
   const [profileNames, setProfileNames] = useState('');
+  const [profileEvents, setProfileEvents] = useState('');
   const [visible, setVisible] = useState('Summary');
   const [open, setOpen] = useState(false);
+
   useEffect(() => {
     queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
       .catch(error => {
@@ -44,7 +52,28 @@ const PlayerResults = ({ personId, profile }) => {
         console.log(JSON.stringify(response, undefined, 2));
         setBattingSummary(response.data.data.batting_summary);
       });
+    queryProfileEvents(localStorage.accessToken, localStorage.client, personId, {})
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response, undefined, 2));
+        setProfileEvents(response.data.data.profile_events);
+      });
   }, []);
+
+  const Calendar = ({ input, handleSubmit, ...rest }) => (
+    <div>
+      <DatePicker
+        {...input}
+        {...rest}
+        onChange={data => {
+          input.onChange(data);
+          handleSubmit();
+        }}
+      />
+    </div>
+  );
 
   const onSubmit = async values => {
     console.log(values);
@@ -55,6 +84,17 @@ const PlayerResults = ({ personId, profile }) => {
       .then(response => {
         console.log(JSON.stringify(response, undefined, 2));
         setBattingLog(response.data.data.batting_log);
+      });
+  };
+  const sessionReportsOnSubmit = async values => {
+    console.log(values);
+    queryProfileEvents(localStorage.accessToken, localStorage.client, personId, values)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response, undefined, 2));
+        setProfileEvents(response.data.data.profile_events);
       });
   };
 
@@ -90,7 +130,7 @@ const PlayerResults = ({ personId, profile }) => {
     ));
   }
 
-  if (battingLog === '' || battingSummary === '') {
+  if (battingLog === '' || battingSummary === '' || profileEvents === '') {
     return <p>Loading PlayerResults…</p>;
   }
   return (
@@ -102,7 +142,7 @@ const PlayerResults = ({ personId, profile }) => {
               <div className={styles.title}>Top Batting Values</div>
             </div>
 
-            <div className={styles.sdsdsdsd}>
+            <div className={styles.topValuesWrapper3}>
               {!battingSummary.top_values.length && (
                 <>
                   <div className={styles.topValuesItem}>
@@ -175,7 +215,9 @@ const PlayerResults = ({ personId, profile }) => {
         />
         <ul className={styles.buttonsWrapper}>
           <li className={styles.buttonBatting}>Batting</li>
-          <li className={styles.button}>Session Reports </li>
+          <li onClick={() => setVisible('sessionReports')} className={styles.button}>
+            Session Reports
+          </li>
           <li onClick={() => setVisible('Сomparison')} className={styles.button}>
             Сomparison
           </li>
@@ -401,6 +443,67 @@ const PlayerResults = ({ personId, profile }) => {
               </div>
             </div>
             <div></div>
+          </div>
+        )}
+        {visible === 'sessionReports' && (
+          <div className={styles.reportsWrapper}>
+            <div className={styles.reportsElementControlWrapper}>
+              <div className={styles.reportsSessions}>Sessions</div>
+              <Form
+                className={styles.sessionReportsForm}
+                onSubmit={sessionReportsOnSubmit}
+                render={({ handleSubmit, form }) => (
+                  <form onSubmit={handleSubmit}>
+                    <div className={styles.reportsElementControl}>
+                      <div className={styles.clearFilters}>
+                        <button
+                          onClick={() => {
+                            form.reset();
+                          }}
+                        >
+                          Clear Filters
+                        </button>
+                      </div>
+                      <div>
+                        <Field name="datePicker" handleSubmit={handleSubmit} component={Calendar}></Field>
+                      </div>
+                      <div>
+                        <Field
+                          name="type"
+                          handleSubmit={handleSubmit}
+                          component={ReactSelect}
+                          placeholder="Type"
+                          options={[
+                            {
+                              value: 'None',
+                              label: 'None',
+                            },
+                            {
+                              value: 'Game',
+                              label: 'Game',
+                            },
+                            {
+                              value: 'Practice',
+                              label: 'Practice',
+                            },
+                          ]}
+                        ></Field>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              />
+            </div>
+            <div className={styles.reportsTableWrapper}>
+              <div>
+                <div>Date</div>
+                <div>Type</div>
+                <div>Name</div>
+                <div>Purchased</div>
+              </div>
+              {!profileEvents.events.length && <div>The player haven&apos;t had any sessions yet!</div>}
+              {!!profileEvents.events.length && <div>{profileEvents.events.length}</div>}
+            </div>
           </div>
         )}
       </div>

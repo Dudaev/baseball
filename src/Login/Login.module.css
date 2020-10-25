@@ -182,3 +182,16 @@
   justify-content: space-between;
   overflow: auto;
 }
+
+header {
+  grid-area: hd;
+  grid-column-end: span 2;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: var(--primaryColor,#fff);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}

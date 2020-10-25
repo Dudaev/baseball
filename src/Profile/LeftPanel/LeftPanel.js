@@ -52,7 +52,8 @@ const LeftPanel = ({ profile, personId, setVisibleForm }) => {
             )}
 
             <div className={styles.wrapperAvatar}>
-              <div className={styles.avatar}></div>
+              {profile.avatar === null && <div className={styles.noAvatar}></div>}
+              {!(profile.avatar === null) && <img src={profile.avatar} className={styles.avatar} />}
             </div>
             <div className={styles.wrapperName}>
               <div className={styles.name}>

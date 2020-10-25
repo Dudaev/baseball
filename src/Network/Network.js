@@ -19,6 +19,7 @@ import InputNum from '../InputNum/InputNum';
 import TableNavigation from '../TableNavigation/TableNavigation';
 import ReactSelect from '../ReactSelect/ReactSelect';
 import Styles from './Network.module.css';
+import Header from '../Header/Header';
 
 function Network() {
   const [profiles, setProfiles] = useState('');
@@ -75,6 +76,7 @@ function Network() {
 
   return (
     <>
+      <Header />
       <div className={Styles.mainContent}>
         <div className={Styles.container}>
           <Form

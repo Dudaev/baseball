@@ -132,7 +132,7 @@ table {
 html, body {
   height: 100%;
   width: 100%;
-  font-family: 'Lato', sans-serif;
+      font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   box-sizing: border-box;
@@ -206,6 +206,11 @@ header {
   display: flex;
   align-items: center;
   padding: 8px;
+  background: var(--primaryColor,#fff);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
 .mainContent{
@@ -214,4 +219,10 @@ header {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
+}
+
+button:hover, button:focus, button:active, button:active:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
 }

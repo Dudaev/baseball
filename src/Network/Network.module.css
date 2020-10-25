@@ -1,3 +1,7 @@
+
+.container{
+  width: 100%;
+}
 .pagination{
   border-radius: 4px;
   display: flex!important;
@@ -85,4 +89,13 @@
   -ms-flex-direction: column;
   flex-direction: column;
   padding: 16px;
+}
+
+
+.mainContent{
+  grid-area: content;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
 }
