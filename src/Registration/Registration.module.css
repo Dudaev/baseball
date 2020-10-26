@@ -259,3 +259,6 @@ header {
   justify-content: space-between;
   overflow: auto;
 }
+.error{
+  color: red;
+}

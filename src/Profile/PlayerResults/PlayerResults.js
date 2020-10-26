@@ -26,39 +26,40 @@ import queryProfileEvents from '../requests/queryProfileEvents';
 
 import Charts from './Charts/Charts';
 
-const PlayerResults = ({ personId, profile }) => {
+const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
   const [battingLog, setBattingLog] = useState('');
   const [comparedProfile, setСomparedProfile] = useState('');
   const [battingSummary, setBattingSummary] = useState('');
   const [profileNames, setProfileNames] = useState('');
   const [profileEvents, setProfileEvents] = useState('');
+  const [currentProfile, setcurrentProfile] = useState(profile || myProfile);
   const [visible, setVisible] = useState('Summary');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
-      .catch(error => {
-        console.log(error);
-      })
       .then(response => {
         console.log(JSON.stringify(response, undefined, 2));
         setBattingLog(response.data.data.batting_log);
-      });
-    queryBattingSummary(localStorage.accessToken, localStorage.client, personId)
+      })
       .catch(error => {
         console.log(error);
-      })
+      });
+    queryBattingSummary(localStorage.accessToken, localStorage.client, personId)
       .then(response => {
         console.log(JSON.stringify(response, undefined, 2));
         setBattingSummary(response.data.data.batting_summary);
-      });
-    queryProfileEvents(localStorage.accessToken, localStorage.client, personId, {})
+      })
       .catch(error => {
         console.log(error);
-      })
+      });
+    queryProfileEvents(localStorage.accessToken, localStorage.client, personId, {})
       .then(response => {
         console.log(JSON.stringify(response, undefined, 2));
         setProfileEvents(response.data.data.profile_events);
+      })
+      .catch(error => {
+        console.log(error);
       });
   }, []);
 
@@ -198,11 +199,12 @@ const PlayerResults = ({ personId, profile }) => {
             </div>
           </div>
         </div>
-
-        <div className={styles.card}>
-          <div className={styles.recentSessionReportsTitle}>Recent Session Reports</div>
-          <div className={styles.recentSessionReportsP}>No data currently linked to this profile</div>
-        </div>
+        {myProfile && (
+          <div className={styles.card}>
+            <div className={styles.recentSessionReportsTitle}>Recent Session Reports</div>
+            <div className={styles.recentSessionReportsP}>No data currently linked to this profile</div>
+          </div>
+        )}
       </div>
       <div className={styles.card}>
         <Select
@@ -214,10 +216,13 @@ const PlayerResults = ({ personId, profile }) => {
           onChange={e => setVisible(e.value)}
         />
         <ul className={styles.buttonsWrapper}>
-          <li className={styles.buttonBatting}>Batting</li>
-          <li onClick={() => setVisible('sessionReports')} className={styles.button}>
-            Session Reports
-          </li>
+          {/* <li className={styles.buttonBatting}>Batting</li> */}
+          {myProfile && (
+            <li onClick={() => setVisible('sessionReports')} className={styles.button}>
+              Session Reports
+            </li>
+          )}
+
           <li onClick={() => setVisible('Сomparison')} className={styles.button}>
             Сomparison
           </li>
@@ -379,24 +384,24 @@ const PlayerResults = ({ personId, profile }) => {
             <div>
               <div>
                 <div>
-                  {profile.first_name} {profile.last_name}
+                  {currentProfile.first_name} {currentProfile.last_name}
                 </div>
                 <div>
                   <span>svg </span>
                   <span>age</span>
-                  <span> {profile.age} </span>
+                  <span> {currentProfile.age} </span>
                 </div>
                 <div>
                   <span>svg </span>
                   <span>Height</span>
                   <span>
-                    ft {profile.feet} in {profile.inches}
+                    ft {currentProfile.feet} in {currentProfile.inches}
                   </span>
                 </div>
                 <div>
                   <span>svg </span>
                   <span>Weight</span>
-                  <span>{profile.weight}</span>
+                  <span>{currentProfile.weight}</span>
                 </div>
               </div>
               <div>

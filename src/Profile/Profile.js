@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryFacilities from './requests/queryFacilities';
@@ -12,7 +12,8 @@ import querySchools from './requests/querySchools';
 import queryTeams from './requests/queryTeams';
 import ErrorWithDelay from '../ErrorWithDelay';
 import styles from './Profile.module.css';
-import ReactSelect from '../ReactSelect/ReactSelect';
+// import ReactSelect from '../ReactSelect/ReactSelect';
+import ReactSelectProfile from '../ReactSelect/ReactSelectProfile';
 import LeftPanel from './LeftPanel/LeftPanel';
 import PlayerResults from './PlayerResults/PlayerResults';
 import Header from '../Header/Header';
@@ -72,6 +73,7 @@ function Profile() {
   const [facilities, setFacilities] = useState('');
   const [profile, setProfile] = useState('');
   const [visibleForm, setVisibleForm] = useState(false);
+  const [playerResults, setPlayerResults] = useState(true);
   const { personId } = useParams();
 
   useEffect(() => {
@@ -129,17 +131,24 @@ function Profile() {
   if (schools === '' || teams === '' || facilities === '' || profile === '') {
     return <p>Loading Профиль…</p>;
   }
+
   return (
     <>
       <Header profile={profile} />
       <div className={styles.mainContent}>
         <div className={styles.profileContainer}>
-          <div>
-            {visibleForm && (
+          <div className={styles.formWrapper}>
+            {(visibleForm || profile.first_name === null) && (
               <Form
                 onSubmit={formObj => {
                   setVisibleForm(false);
-                  mutationUpdateProfile(localStorage.accessToken, localStorage.client, localStorage.uid, formObj)
+                  mutationUpdateProfile(
+                    localStorage.accessToken,
+                    localStorage.client,
+                    localStorage.uid,
+                    formObj,
+                    profile.id,
+                  )
                     .catch(error => {
                       console.log(error);
                     })
@@ -161,12 +170,31 @@ function Profile() {
                   }
                   if (!values.age) {
                     errors.age = 'Age Required';
+                  } else if (values.age > 30) {
+                    errors.age = 'Must not be older than 30';
+                  } else if (values.age < 0) {
+                    errors.age = 'You must be older than 0';
                   }
                   if (!values.feet) {
                     errors.feet = 'Feet Required';
+                  } else if (values.feet < 4) {
+                    errors.feet = 'Minimal height is 4';
+                  } else if (values.feet > 7) {
+                    errors.feet = 'Maximum height is 7';
+                  }
+                  if (values.inches) {
+                    if (values.inches < 0) {
+                      errors.inches = 'Inches can be from 0 to 11';
+                    } else if (values.inches > 11) {
+                      errors.inches = 'Inches can be from 0 to 11';
+                    }
                   }
                   if (!values.weight) {
                     errors.weight = 'Weight Required';
+                  } else if (values.weight > 350) {
+                    errors.weight = 'Maximum weight is 350 lbs';
+                  } else if (values.weight < 50) {
+                    errors.weight = 'Minimal weight is 50 lbs';
                   }
                   if (!values.throws_hand) {
                     errors.throws_hand = 'Throws Required';
@@ -184,71 +212,86 @@ function Profile() {
                 }}
               >
                 {({ handleSubmit }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Field name="first_name">
-                      {({ input }) => (
-                        <div>
-                          <input placeholder="firstName *" type="text" {...input} />
-                          <div className={styles.error}>
-                            <ErrorWithDelay name="first_name" delay={1000}>
-                              {error => <span>{error}</span>}
-                            </ErrorWithDelay>
-                          </div>
-                        </div>
-                      )}
-                    </Field>
-                    <Field name="last_name">
-                      {({ input }) => (
-                        <div>
-                          <input placeholder="lastName *" type="text" {...input} />
-                          <div className={styles.error}>
-                            <ErrorWithDelay name="last_name" delay={1000}>
-                              {error => <span>{error}</span>}
-                            </ErrorWithDelay>
-                          </div>
-                        </div>
-                      )}
-                    </Field>
-                    <Field
-                      name="position"
-                      handleSubmit={handleSubmit}
-                      component={ReactSelect}
-                      placeholder="Position in Game *"
-                      options={[
-                        {
-                          value: 'catcher',
-                          label: 'Catcher',
-                        },
-                        {
-                          value: 'first_base',
-                          label: 'First Base',
-                        },
-                        {
-                          value: 'second_base',
-                          label: 'Second Base',
-                        },
-                        {
-                          value: 'shortstop',
-                          label: 'Shortstop',
-                        },
-                        {
-                          value: 'third_base',
-                          label: 'Third Base',
-                        },
-                        {
-                          value: 'outfield',
-                          label: 'Outfield',
-                        },
-                        {
-                          value: 'pitcher',
-                          label: 'Pitcher',
-                        },
-                      ]}
-                    ></Field>
+                  <form onSubmit={handleSubmit} className={styles.form}>
+                    <div>
+                      <div>
+                        <Field name="first_name">
+                          {({ input }) => (
+                            <div>
+                              <div>
+                                <input placeholder="firstName *" type="text" {...input} />
+                              </div>
+
+                              <div className={styles.error}>
+                                <ErrorWithDelay name="first_name" delay={1000}>
+                                  {error => <span>{error}</span>}
+                                </ErrorWithDelay>
+                              </div>
+                            </div>
+                          )}
+                        </Field>
+                      </div>
+                      <div>
+                        <Field name="last_name">
+                          {({ input }) => (
+                            <div>
+                              <div>
+                                <input placeholder="lastName *" type="text" {...input} />
+                              </div>
+
+                              <div className={styles.error}>
+                                <ErrorWithDelay name="last_name" delay={1000}>
+                                  {error => <span>{error}</span>}
+                                </ErrorWithDelay>
+                              </div>
+                            </div>
+                          )}
+                        </Field>
+                      </div>
+                    </div>
+                    <div>
+                      <Field
+                        name="position"
+                        handleSubmit={handleSubmit}
+                        component={ReactSelectProfile}
+                        placeholder="Position in Game *"
+                        options={[
+                          {
+                            value: 'catcher',
+                            label: 'Catcher',
+                          },
+                          {
+                            value: 'first_base',
+                            label: 'First Base',
+                          },
+                          {
+                            value: 'second_base',
+                            label: 'Second Base',
+                          },
+                          {
+                            value: 'shortstop',
+                            label: 'Shortstop',
+                          },
+                          {
+                            value: 'third_base',
+                            label: 'Third Base',
+                          },
+                          {
+                            value: 'outfield',
+                            label: 'Outfield',
+                          },
+                          {
+                            value: 'pitcher',
+                            label: 'Pitcher',
+                          },
+                        ]}
+                      ></Field>
+                    </div>
+
                     <Field
                       name="position2"
                       handleSubmit={handleSubmit}
-                      component={ReactSelect}
+                      component={ReactSelectProfile}
                       placeholder="Secondary Position in Game"
                       options={[
                         {
@@ -285,16 +328,24 @@ function Profile() {
                         },
                       ]}
                     ></Field>
+                    <div className={styles.label}>Personal Info</div>
                     <div>
-                      <label>Personal Info</label>
                       <Field name="age" component={InputNum} placeholder="Age *" />
+                    </div>
+                    <div>
                       <Field name="feet" component={InputNum} placeholder="Feet *" />
+                    </div>
+                    <div>
                       <Field name="inches" component={InputNum} placeholder="Inches" />
+                    </div>
+                    <div>
                       <Field name="weight" component={InputNum} placeholder="Weight *" />
+                    </div>
+                    <div>
                       <Field
                         name="throws_hand"
                         handleSubmit={handleSubmit}
-                        component={ReactSelect}
+                        component={ReactSelectProfile}
                         placeholder="Throws *"
                         options={[
                           {
@@ -307,10 +358,12 @@ function Profile() {
                           },
                         ]}
                       ></Field>
+                    </div>
+                    <div>
                       <Field
                         name="bats_hand"
                         handleSubmit={handleSubmit}
-                        component={ReactSelect}
+                        component={ReactSelectProfile}
                         placeholder="Bats *"
                         options={[
                           {
@@ -324,8 +377,8 @@ function Profile() {
                         ]}
                       ></Field>
                     </div>
+                    <div className={styles.label}>School</div>
                     <div>
-                      <label>School</label>
                       <Field
                         name="school"
                         handleSubmit={handleSubmit}
@@ -337,12 +390,12 @@ function Profile() {
                         }))}
                       />
                     </div>
+                    <div className={styles.label}>School Year</div>
                     <div>
-                      <label>School Year</label>
                       <Field
                         name="school_year"
                         handleSubmit={handleSubmit}
-                        component={ReactSelect}
+                        component={ReactSelectProfile}
                         placeholder="School Year"
                         options={[
                           {
@@ -368,8 +421,8 @@ function Profile() {
                         ]}
                       />
                     </div>
+                    <div className={styles.label}>Team</div>
                     <div>
-                      <label>Team</label>
                       <Field
                         name="teams"
                         handleSubmit={handleSubmit}
@@ -381,8 +434,8 @@ function Profile() {
                         }))}
                       />
                     </div>
+                    <div className={styles.label}>Facility</div>
                     <div>
-                      <label>Facility</label>
                       <div>
                         <Field
                           name="facilities"
@@ -397,8 +450,8 @@ function Profile() {
                           ]}
                         />
                       </div>
+                      <div className={styles.label}>About</div>
                       <div>
-                        <label>About</label>
                         <Field
                           name="biography"
                           component="textarea"
@@ -412,31 +465,62 @@ function Profile() {
                         {error => <span>{error}</span>}
                       </ErrorWithDelay>
                     </div>
-
-                    <button type="submit">Save</button>
+                    <div className={styles.buttonsWrapper}>
+                      <button
+                        className={styles.cancelButton}
+                        onClick={() => {
+                          if (profile.first_name !== null) {
+                            setVisibleForm(false);
+                          }
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button className={styles.saveButton} type="submit">
+                        Save
+                      </button>
+                    </div>
                   </form>
                 )}
               </Form>
             )}
+            {!visibleForm && !(profile.first_name === null) && (
+              <div>
+                <div>
+                  <LeftPanel profile={profile} personId={personId} setVisibleForm={setVisibleForm} />
+                </div>
+              </div>
+            )}
           </div>
 
-          {!visibleForm && (
-            <div>
-              <div>
-                <LeftPanel profile={profile} personId={personId} setVisibleForm={setVisibleForm} />
-              </div>
-            </div>
+          {!(profile.first_name === null) && (
+            <>
+              {personId !== undefined && (
+                <>
+                  <PlayerResults personId={personId} profile={profile} />
+                </>
+              )}
+              {personId === undefined && (
+                <>
+                  <PlayerResults personId={profile.id} myProfile={profile} />
+                </>
+              )}
+            </>
           )}
 
-          {personId !== undefined && (
-            <>
-              <PlayerResults personId={personId} profile={profile} />
-            </>
-          )}
-          {personId === undefined && (
-            <>
-              <PlayerResults personId={profile.id} />
-            </>
+          {profile.first_name === null && (
+            <div className={styles.NoPlayerResults}>
+              <div>
+                <div>
+                  <div></div>
+                  <div>Your Account</div>
+                  <div>
+                    Changing your profile options lets you control how others see you and your profile. These settings
+                    include things like your name, personal info and school.
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

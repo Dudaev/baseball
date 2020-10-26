@@ -2,7 +2,7 @@
 /* eslint-disable no-lone-blocks */
 const axios = require('axios');
 
-export default async function mutationUpdateProfile(accessToken, client, uid, formObj) {
+export default async function mutationUpdateProfile(accessToken, client, uid, formObj, id) {
   {
     if (formObj.teams == null) {
       formObj.teams = [];
@@ -63,7 +63,7 @@ export default async function mutationUpdateProfile(accessToken, client, uid, fo
     }`,
       variables: {
         form: {
-          id: localStorage.id,
+          id,
           ...formObj,
         },
       },
