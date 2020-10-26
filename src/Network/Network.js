@@ -89,7 +89,6 @@ function Network() {
                     <div className={Styles.networkText}>Network</div>
                     <div className={Styles.filtersContainer}>
                       <div>
-                        <label>School</label>
                         <Field
                           name="school"
                           handleSubmit={submit}
@@ -99,86 +98,91 @@ function Network() {
                         />
                       </div>
                       <div>
-                        <label>Team</label>
                         <Field name="team" handleSubmit={submit} component={InputText} type="text" placeholder="Team" />
                       </div>
-                      <Field
-                        name="position"
-                        component={ReactSelect}
-                        placeholder="Position"
-                        handleSubmit={submit}
-                        options={[
-                          {
-                            value: 'catcher',
-                            label: 'Catcher',
-                          },
-                          {
-                            value: 'first_base',
-                            label: 'First Base',
-                          },
-                          {
-                            value: 'second_base',
-                            label: 'Second Base',
-                          },
-                          {
-                            value: 'shortstop',
-                            label: 'Shortstop',
-                          },
-                          {
-                            value: 'third_base',
-                            label: 'Third Base',
-                          },
-                          {
-                            value: 'outfield',
-                            label: 'Outfield',
-                          },
-                          {
-                            value: 'pitcher',
-                            label: 'Pitcher',
-                          },
-                        ]}
-                      ></Field>
                       <div>
-                        <label>Age</label>
+                        <Field
+                          name="position"
+                          component={ReactSelect}
+                          placeholder="Position"
+                          handleSubmit={submit}
+                          options={[
+                            {
+                              value: 'catcher',
+                              label: 'Catcher',
+                            },
+                            {
+                              value: 'first_base',
+                              label: 'First Base',
+                            },
+                            {
+                              value: 'second_base',
+                              label: 'Second Base',
+                            },
+                            {
+                              value: 'shortstop',
+                              label: 'Shortstop',
+                            },
+                            {
+                              value: 'third_base',
+                              label: 'Third Base',
+                            },
+                            {
+                              value: 'outfield',
+                              label: 'Outfield',
+                            },
+                            {
+                              value: 'pitcher',
+                              label: 'Pitcher',
+                            },
+                          ]}
+                        ></Field>
+                      </div>
+
+                      <div>
                         <Field name="age" handleSubmit={submit} component={InputNum} placeholder="Age" />
                       </div>
-                      <Field
-                        name="favorite"
-                        component={ReactSelect}
-                        placeholder="Favorite"
-                        handleSubmit={submit}
-                        options={[
-                          {
-                            value: 'All',
-                            label: 'All',
-                          },
-                          {
-                            value: '1',
-                            label: 'Favorite',
-                          },
-                        ]}
-                      ></Field>
-                      <Field
-                        name="profilesСount"
-                        component={ReactSelect}
-                        placeholder="Profiles Сount"
-                        setProfilesСount={setProfilesСount}
-                        handleSubmit={submit}
-                        options={[
-                          {
-                            value: '10',
-                            label: '10',
-                          },
-                          {
-                            value: '15',
-                            label: '15',
-                          },
-                          {
-                            value: '25',
-                            label: '25',
-                          },
-                        ]}
-                      ></Field>
+                      <div>
+                        <Field
+                          name="favorite"
+                          component={ReactSelect}
+                          placeholder="Favorite"
+                          handleSubmit={submit}
+                          options={[
+                            {
+                              value: 'All',
+                              label: 'All',
+                            },
+                            {
+                              value: '1',
+                              label: 'Favorite',
+                            },
+                          ]}
+                        ></Field>
+                      </div>
+                      <div>
+                        <Field
+                          name="profilesСount"
+                          component={ReactSelect}
+                          placeholder="Show: 10"
+                          setProfilesСount={setProfilesСount}
+                          handleSubmit={submit}
+                          options={[
+                            {
+                              value: '10',
+                              label: '10',
+                            },
+                            {
+                              value: '15',
+                              label: '15',
+                            },
+                            {
+                              value: '25',
+                              label: '25',
+                            },
+                          ]}
+                        ></Field>
+                      </div>
                     </div>
                   </div>
                   <div className={Styles.tableFilter}>

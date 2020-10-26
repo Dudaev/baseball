@@ -110,7 +110,6 @@ function LeaderBoard() {
                   <div className={Styles.leaderboardTitle}>Leaderboard</div>
                   <div className={Styles.filtersContainer}>
                     <div>
-                      <label>Last Week</label>
                       <Field
                         name="date"
                         component={ReactSelect}
@@ -133,7 +132,6 @@ function LeaderBoard() {
                       ></Field>
                     </div>
                     <div>
-                      <label>School</label>
                       <Field
                         name="school"
                         handleSubmit={handleSubmit}
@@ -143,7 +141,6 @@ function LeaderBoard() {
                       />
                     </div>
                     <div>
-                      <label>Team</label>
                       <Field
                         name="team"
                         handleSubmit={handleSubmit}
@@ -189,7 +186,6 @@ function LeaderBoard() {
                       ]}
                     ></Field>
                     <div>
-                      <label>Age</label>
                       <Field
                         name="age"
                         handleSubmit={handleSubmit}
@@ -198,22 +194,24 @@ function LeaderBoard() {
                         placeholder="Age"
                       />
                     </div>
-                    <Field
-                      name="favorite"
-                      component={ReactSelect}
-                      placeholder="Favorite"
-                      handleSubmit={handleSubmit}
-                      options={[
-                        {
-                          value: 'All',
-                          label: 'All',
-                        },
-                        {
-                          value: '1',
-                          label: 'Favorite',
-                        },
-                      ]}
-                    ></Field>
+                    <div className={Styles.favorite}>
+                      <Field
+                        name="favorite"
+                        component={ReactSelect}
+                        placeholder="Favorite"
+                        handleSubmit={handleSubmit}
+                        options={[
+                          {
+                            value: 'All',
+                            label: 'All',
+                          },
+                          {
+                            value: '1',
+                            label: 'Favorite',
+                          },
+                        ]}
+                      ></Field>
+                    </div>
                   </div>
                 </div>
                 <main>
@@ -242,6 +240,7 @@ function LeaderBoard() {
                           name="type"
                           component={ReactSelect}
                           handleSubmit={handleSubmit}
+                          placeholder="Exit Velocity"
                           options={[
                             {
                               value: 'exit_velocity',
@@ -259,6 +258,7 @@ function LeaderBoard() {
                           name="type"
                           component={ReactSelect}
                           handleSubmit={handleSubmit}
+                          placeholder="Exit Velocity"
                           options={[
                             {
                               value: 'pitch_velocity',
