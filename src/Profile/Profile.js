@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryFacilities from './requests/queryFacilities';
@@ -78,6 +78,7 @@ function Profile() {
   const [playerResults, setPlayerResults] = useState(true);
   const [favoriteProfiles, setFavoriteProfiles] = useState('');
   const { personId } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     // eslint-disable-next-line no-lone-blocks
@@ -509,11 +510,14 @@ function Profile() {
             {profile === null && (
               <>
                 {favoriteProfiles.map(player => (
-                  <div>
+                  <div
+                    key={player.id}
+                    className={styles.favorite}
+                    onClick={() => history.push(`/profile/${player.id}`)}
+                  >
                     {player.first_name} {player.last_name}
                   </div>
                 ))}
-                {/* <div>СПИСОК ФАВОРИТОВ</div> */}
               </>
             )}
           </div>
