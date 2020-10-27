@@ -10,7 +10,6 @@ import ErrorWithDelay from '../ErrorWithDelay'
 
 function Registration() {
   const history = useHistory();
-  const [formError, setFormError] = useState(false)
   const [role, setRole] = useState('player')
 
   async function queryRegistration(accessToken, client, uid) {

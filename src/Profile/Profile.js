@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
-import { useParams, Link, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import mutationUpdateProfile from './requests/mutationUpdateProfile';
 import queryCurrentProfile from './requests/queryCurrentProfile';
 import queryFacilities from './requests/queryFacilities';
@@ -75,7 +75,6 @@ function Profile() {
   const [facilities, setFacilities] = useState('');
   const [profile, setProfile] = useState('');
   const [visibleForm, setVisibleForm] = useState(false);
-  const [playerResults, setPlayerResults] = useState(true);
   const [favoriteProfiles, setFavoriteProfiles] = useState('');
   const { personId } = useParams();
   const history = useHistory();

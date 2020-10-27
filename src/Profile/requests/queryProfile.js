@@ -1,16 +1,7 @@
 const axios = require('axios');
 
 export default async function queryProfile(accessToken, client, personId = 538) {
-  // let id;
   console.log(personId);
-  // if (personId) {
-  //   console.log(personId);
-  //   id = personId;
-  // } else {
-  //   // eslint-disable-next-line prefer-destructuring
-  //   id = localStorage.id;
-  // }
-  // console.log(id);
   return axios.post(
     'https://baseballcloud-back.herokuapp.com/api/v1/graphql',
     {

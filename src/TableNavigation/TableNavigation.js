@@ -11,7 +11,6 @@ const TableNavigation = ({ input, handleSubmit, totalCount, profilesСount }) =>
     items.push(
       <Pagination.Item
         key={number}
-        // active={number === active}
         onClick={() => {
           console.log(number);
           input.onChange(number);

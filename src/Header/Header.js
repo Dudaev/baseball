@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Route } from 'react-router-dom';
 import styles from './Header.module.css';
 import queryCurrentProfile from '../Profile/requests/queryCurrentProfile';
 
