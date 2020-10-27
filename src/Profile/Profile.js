@@ -18,6 +18,7 @@ import LeftPanel from './LeftPanel/LeftPanel';
 import PlayerResults from './PlayerResults/PlayerResults';
 import Header from '../Header/Header';
 import ScoutResult from './PlayerResults/ScoutResult';
+import queryMyFavoriteProfiles from './requests/queryMyFavoriteProfiles';
 
 const ReactSelectMultiObj = ({ input, ...rest }) => {
   const { options } = rest;
@@ -75,6 +76,7 @@ function Profile() {
   const [profile, setProfile] = useState('');
   const [visibleForm, setVisibleForm] = useState(false);
   const [playerResults, setPlayerResults] = useState(true);
+  const [favoriteProfiles, setFavoriteProfiles] = useState('');
   const { personId } = useParams();
 
   useEffect(() => {
@@ -127,9 +129,17 @@ function Profile() {
             setProfile(response.data.data.profile);
           });
       }
+      queryMyFavoriteProfiles(localStorage.accessToken, localStorage.client, localStorage.uid)
+        .catch(error => {
+          console.log(error);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response.data, undefined, 2));
+          setFavoriteProfiles(response.data.data.my_favorite.profiles);
+        });
     }
   }, []);
-  if (schools === '' || teams === '' || facilities === '' || profile === '') {
+  if (schools === '' || teams === '' || facilities === '' || profile === '' || favoriteProfiles === '') {
     return <p>Loading Профиль…</p>;
   }
 
@@ -498,7 +508,12 @@ function Profile() {
             )}
             {profile === null && (
               <>
-                <div>СПИСОК ФАВОРИТОВ</div>
+                {favoriteProfiles.map(player => (
+                  <div>
+                    {player.first_name} {player.last_name}
+                  </div>
+                ))}
+                {/* <div>СПИСОК ФАВОРИТОВ</div> */}
               </>
             )}
           </div>

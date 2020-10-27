@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
@@ -13,7 +12,7 @@ import styles from '../Profile.module.css';
 import UserImg from '../../img/user.png';
 import queryMyFavoriteProfiles from '../requests/queryMyFavoriteProfiles';
 
-const ScoutResult = ({ personId = false }) => {
+const ScoutResult = () => {
   const [valuesType, setValuesType] = useState('Exit Velocity');
 
   const [favoriteProfiles, setFavoriteProfiles] = useState('');
@@ -67,7 +66,7 @@ const ScoutResult = ({ personId = false }) => {
             <div className={styles.recentSessionReportsP}>No data currently linked to this profile</div>
           </div>
 
-          <div className={styles.comparisonWrapper}>
+          <div className={styles.card}>
             <div>
               <div>
                 <div className={styles.comparisonHeader}>
