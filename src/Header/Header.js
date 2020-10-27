@@ -89,32 +89,38 @@ const Header = () => {
               </nav>
             </div>
             <div>
-              {profile !== null && <a href="/profile">
-                {profile.avatar !== null && <img src={profile.avatar} className={styles.headerAvatar} />}
-                {profile.avatar === null && <div className={styles.noHeaderAvatar}></div>}
-              </a>}
+              {profile !== null && (
+                <a href="/profile">
+                  {profile.avatar !== null && <img src={profile.avatar} className={styles.headerAvatar} />}
+                  {profile.avatar === null && <div className={styles.noHeaderAvatar}></div>}
+                </a>
+              )}
 
               <button onClick={() => setProfileAndLogOut(!profileAndLogOut)}>
-
-
-                {profile !== null && <>
-                  {profile.first_name !== null && (
+                {profile !== null && (
                   <>
-                    {profile.first_name} {profile.last_name}
+                    {profile.first_name !== null && (
+                      <>
+                        {profile.first_name} {profile.last_name}
+                      </>
+                    )}
+                    {profile.first_name === null && <>Profile Name</>}
                   </>
                 )}
-                {profile.first_name === null && <>Profile Name</>}
-
-                </>}
                 {profile === null && <>{localStorage.uid}</>}
-
-
-
               </button>
               {profileAndLogOut && (
                 <div className={styles.profileAndLogOut}>
-                  {profile === null && <><a href="/profile">Dashboard</a></>}
-                  {profile !== null && <><a href="/profile">My Profile</a></>}
+                  {profile === null && (
+                    <>
+                      <a href="/profile">Dashboard</a>
+                    </>
+                  )}
+                  {profile !== null && (
+                    <>
+                      <a href="/profile">My Profile</a>
+                    </>
+                  )}
                   <a href="/login" onClick={() => console.log(1)}>
                     Log out
                   </a>
