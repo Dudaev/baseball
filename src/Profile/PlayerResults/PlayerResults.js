@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import Select from 'react-select';
@@ -25,16 +24,17 @@ import queryProfileEvents from '../requests/queryProfileEvents';
 import UserImg from '../../img/user.png';
 import Charts from './Charts/Charts';
 
-const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
+const PlayerResults = ({ personId = false, myProfile = false }) => {
   const [battingLog, setBattingLog] = useState('');
   const [comparedProfile, setСomparedProfile] = useState('');
   const [battingSummary, setBattingSummary] = useState('');
   const [profileNames, setProfileNames] = useState('');
   const [profileEvents, setProfileEvents] = useState('');
-  const [currentProfile, setcurrentProfile] = useState(profile || myProfile);
+  const [currentProfile, setcurrentProfile] = useState('');
   const [visible, setVisible] = useState('Summary');
   const [profileSelection, setProfileSelection] = useState(false);
   const [valuesType, setValuesType] = useState('Exit Velocity');
+  const [tableInput, setTableInput] = useState('');
 
   useEffect(() => {
     queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
@@ -60,6 +60,14 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
       })
       .catch(error => {
         console.log(error);
+      });
+    queryProfile(localStorage.accessToken, localStorage.client, personId)
+      .catch(error => {
+        console.log(error);
+      })
+      .then(response => {
+        console.log(JSON.stringify(response.data, undefined, 2));
+        setcurrentProfile(response.data.data.profile);
       });
   }, []);
 
@@ -100,7 +108,7 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
   };
 
   const handleProfileNames = playerName => {
-    queryProfileNames(localStorage.accessToken, localStorage.client, personId, playerName, profile.position)
+    queryProfileNames(localStorage.accessToken, localStorage.client, personId, playerName, currentProfile.position)
       .catch(error => {
         console.log(error);
       })
@@ -120,16 +128,6 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
         setСomparedProfile(response.data.data.profile);
       });
   };
-
-  // let data;
-  // if (profileNames !== '' && !profileNames.length !== true && profileNames !== undefined) {
-  //   data = profileNames.map(player => (
-  //     // eslint-disable-next-line react/jsx-key
-  //     <div onClick={() => console.log('1')}>
-  //       {player.first_name} {player.last_name}
-  //     </div>
-  //   ));
-  // }
 
   if (battingLog === '' || battingSummary === '' || profileEvents === '' || currentProfile === '') {
     return <p>Loading PlayerResults…</p>;
@@ -403,15 +401,23 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
                     <div className={styles.comparedProfilesWrapper}>
                       <input
                         onChange={event => {
+                          setTableInput(event.currentTarget.value);
                           handleProfileNames(event.currentTarget.value);
                           setProfileSelection(true);
                         }}
-                        onBlur={() => setTimeout(setProfileSelection, 100, false)}
+                        onBlur={() => setTimeout(setProfileSelection, 500, false)}
+                        value={tableInput}
                       />
                       {profileSelection && profileNames !== '' && (
                         <div className={styles.profileSelection}>
                           {profileNames.map(player => (
-                            <div key={player.id} onClick={() => handleQueryProfile(player.id)}>
+                            <div
+                              key={player.id}
+                              onClick={() => {
+                                handleQueryProfile(player.id);
+                                setTableInput(`${player.first_name} ${player.last_name}`);
+                              }}
+                            >
                               {player.first_name} {player.last_name}
                             </div>
                           ))}
@@ -468,6 +474,8 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
                         { value: 'Exit Velocity', label: 'Exit Velocity' },
                       ]}
                       onChange={e => setValuesType(e.value)}
+                      value={valuesType}
+                      placeholder={valuesType}
                     />
                     <div>
                       <TableContainer component={Paper}>
@@ -479,18 +487,18 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
                                 <TableCell align="left">{pitchType}</TableCell>
                                 {currentProfile.batting_top_values.some(v => v.pitch_type === pitchType) && (
                                   <>
-                                    {currentProfile.batting_top_values.map(row2 => {
-                                      if (row2.pitch_type === pitchType) {
+                                    {currentProfile.batting_top_values.map(data => {
+                                      if (data.pitch_type === pitchType) {
                                         return (
                                           <>
                                             {valuesType === 'Distance' && (
-                                              <TableCell align="center">{row2.distance}</TableCell>
+                                              <TableCell align="center">{data.distance}</TableCell>
                                             )}
                                             {valuesType === 'Launch Angle' && (
-                                              <TableCell align="center">{row2.launch_angle}</TableCell>
+                                              <TableCell align="center">{data.launch_angle}</TableCell>
                                             )}
                                             {valuesType === 'Exit Velocity' && (
-                                              <TableCell align="center">{row2.exit_velocity}</TableCell>
+                                              <TableCell align="center">{data.exit_velocity}</TableCell>
                                             )}
                                           </>
                                         );
@@ -505,18 +513,18 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
                                   <>
                                     {comparedProfile.batting_top_values.some(v => v.pitch_type === pitchType) && (
                                       <>
-                                        {comparedProfile.batting_top_values.map(row2 => {
-                                          if (row2.pitch_type === pitchType) {
+                                        {comparedProfile.batting_top_values.map(data => {
+                                          if (data.pitch_type === pitchType) {
                                             return (
                                               <>
                                                 {valuesType === 'Distance' && (
-                                                  <TableCell align="center">{row2.distance}</TableCell>
+                                                  <TableCell align="center">{data.distance}</TableCell>
                                                 )}
                                                 {valuesType === 'Launch Angle' && (
-                                                  <TableCell align="center">{row2.launch_angle}</TableCell>
+                                                  <TableCell align="center">{data.launch_angle}</TableCell>
                                                 )}
                                                 {valuesType === 'Exit Velocity' && (
-                                                  <TableCell align="center">{row2.exit_velocity}</TableCell>
+                                                  <TableCell align="center">{data.exit_velocity}</TableCell>
                                                 )}
                                               </>
                                             );

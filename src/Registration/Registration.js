@@ -11,6 +11,7 @@ import ErrorWithDelay from '../ErrorWithDelay'
 function Registration() {
   const history = useHistory();
   const [formError, setFormError] = useState(false)
+  const [role, setRole] = useState('player')
 
   async function queryRegistration(accessToken, client, uid) {
 
@@ -64,26 +65,54 @@ return (
           <div className={styles.signUpContent}>
             <div className={styles.flexContainer}>
               <div className={styles.topBlock}>
-                <button className={styles.asPlayerButton}>
+              {role === 'player' && <>
+              <button className={styles.asPlayerButton} onClick={() => setRole('player') }>
                   <span className={styles.asPlayerSpan}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15"><path fill="#FFF" fillRule="evenodd" d="M6.116 10.884l5.482-5.482a.566.566 0 0 0 0-.804l-.91-.91a.566.566 0 0 0-.804 0l-4.17 4.17L3.83 5.972a.566.566 0 0 0-.803 0l-.91.91a.566.566 0 0 0 0 .804l3.196 3.197c.223.223.58.223.803 0zM13.714 3v8.571a2.572 2.572 0 0 1-2.571 2.572H2.57A2.572 2.572 0 0 1 0 11.57V3A2.572 2.572 0 0 1 2.571.429h8.572A2.572 2.572 0 0 1 13.714 3z"></path></svg>
                   </span>
                   Sign Up as Player
                 </button>
-                <button className={styles.asScoutButton}>
+
+                <button className={styles.asScoutButton}  onClick={() => setRole('scout')}>
                   <span className={styles.asScoutSpan}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15"><path fill="#FFF" fillRule="evenodd" d="M6.116 10.884l5.482-5.482a.566.566 0 0 0 0-.804l-.91-.91a.566.566 0 0 0-.804 0l-4.17 4.17L3.83 5.972a.566.566 0 0 0-.803 0l-.91.91a.566.566 0 0 0 0 .804l3.196 3.197c.223.223.58.223.803 0zM13.714 3v8.571a2.572 2.572 0 0 1-2.571 2.572H2.57A2.572 2.572 0 0 1 0 11.57V3A2.572 2.572 0 0 1 2.571.429h8.572A2.572 2.572 0 0 1 13.714 3z"></path></svg>
                      </span>
                   Sign Up as Scout
                 </button>
+              </>}
+              {role === 'scout' && <>
+              <button className={styles.asScoutButton}  onClick={() => setRole('player')}>
+                  <span className={styles.asScoutSpan}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15"><path fill="#FFF" fillRule="evenodd" d="M6.116 10.884l5.482-5.482a.566.566 0 0 0 0-.804l-.91-.91a.566.566 0 0 0-.804 0l-4.17 4.17L3.83 5.972a.566.566 0 0 0-.803 0l-.91.91a.566.566 0 0 0 0 .804l3.196 3.197c.223.223.58.223.803 0zM13.714 3v8.571a2.572 2.572 0 0 1-2.571 2.572H2.57A2.572 2.572 0 0 1 0 11.57V3A2.572 2.572 0 0 1 2.571.429h8.572A2.572 2.572 0 0 1 13.714 3z"></path></svg>
+                   </span>
+                  Sign Up as Player
+                </button>
+                <button className={styles.asPlayerButton}  onClick={() => setRole('scout')}>
+                  <span className={styles.asPlayerSpan}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15"><path fill="#FFF" fillRule="evenodd" d="M6.116 10.884l5.482-5.482a.566.566 0 0 0 0-.804l-.91-.91a.566.566 0 0 0-.804 0l-4.17 4.17L3.83 5.972a.566.566 0 0 0-.803 0l-.91.91a.566.566 0 0 0 0 .804l3.196 3.197c.223.223.58.223.803 0zM13.714 3v8.571a2.572 2.572 0 0 1-2.571 2.572H2.57A2.572 2.572 0 0 1 0 11.57V3A2.572 2.572 0 0 1 2.571.429h8.572A2.572 2.572 0 0 1 13.714 3z"></path></svg>
+                     </span>
+                  Sign Up as Scout
+                </button>
+              </>}
+
               </div>
               <div className={styles.playersBox}>
-                <div className={styles.players}>
-                  Players
-                </div>
-                <div className={styles.playersDescription}>
-                  Players have their own profile within the system and plan on having data collected.
-                </div>
+              {role === 'player' && <>
+                  <div className={styles.players}>
+                    Players
+                  </div>
+                  <div className={styles.playersDescription}>
+                    Players have their own profile within the system and plan on having data collected.
+                  </div>
+                </>}
+              {role === 'scout' && <>
+                  <div className={styles.players}>
+                    Scouts
+                  </div>
+                  <div className={styles.playersDescription}>
+                  Coaches and scouts can view players in the system but do not have their own profile.
+                  </div>
+                </>}
               </div>
     <Form
       onSubmit={formObj => {
@@ -92,7 +121,9 @@ return (
         email: formObj.email,
         password: formObj.password,
         password_confirmation: formObj.passwordConfirmation,
-        role: "player"
+        // {role === "player" && role: "player"}
+        // {role === "scout" && role: "scout"}
+        role,
       })
       .then(response => {
         console.log(response);
@@ -102,7 +133,9 @@ return (
         localStorage.client = client;
         localStorage.uid = uid;
         queryRegistration(localStorage.accessToken, localStorage.client, localStorage.uid).catch(error => console.error(error));
-        history.push("/profile");
+        // history.push("/profile");
+        {role === "player" && history.push("/profile");}
+        {role === "scout" && history.push("/network");}
       });
       }}
       validate={values => {

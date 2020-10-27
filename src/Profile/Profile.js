@@ -17,7 +17,7 @@ import ReactSelectProfile from '../ReactSelect/ReactSelectProfile';
 import LeftPanel from './LeftPanel/LeftPanel';
 import PlayerResults from './PlayerResults/PlayerResults';
 import Header from '../Header/Header';
-
+import ScoutResult from '../Profile/PlayerResults/ScoutResult';
 const ReactSelectMultiObj = ({ input, ...rest }) => {
   const { options } = rest;
   return (
@@ -138,6 +138,7 @@ function Profile() {
       <div className={styles.mainContent}>
         <div className={styles.profileContainer}>
           <div className={styles.formWrapper}>
+          {profile !== null && <>
             {(visibleForm || profile.first_name === null) && (
               <Form
                 onSubmit={formObj => {
@@ -491,18 +492,24 @@ function Profile() {
                 </div>
               </div>
             )}
+          </>}
+          {profile === null && <>
+          <div>
+            СПИСОК ФАВОРИТОВ
           </div>
-
-          {!(profile.first_name === null) && (
+          </>}
+          </div>
+          {profile !== null && <>
+            {!(profile.first_name === null) && (
             <>
               {personId !== undefined && (
                 <>
-                  <PlayerResults personId={personId} profile={profile} />
+                  <PlayerResults personId={personId} />
                 </>
               )}
               {personId === undefined && (
                 <>
-                  <PlayerResults personId={profile.id} myProfile={profile} />
+                  <PlayerResults personId={profile.id} />
                 </>
               )}
             </>
@@ -522,6 +529,11 @@ function Profile() {
               </div>
             </div>
           )}
+
+          </>}
+          {profile === null && <>
+            <ScoutResult />
+          </>}
         </div>
       </div>
     </>
