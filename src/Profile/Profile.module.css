@@ -743,3 +743,95 @@ button{
   border: solid 1px transparent;
   background-color: #48bbff;
 }
+
+.comparisonWrapper{
+  display: block;
+}
+.comparisonHeader{
+  display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.comparisonHeader > div{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.comparisonHeader > div > img{
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    border-radius: 50px;
+}
+.comparisonTable  > div{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 44px;
+  margin-bottom: 6px;
+}
+
+.comparisonTable  > div:nth-child(4){
+  display: flex;
+  flex-direction: column;
+}
+
+.comparisonTable  > div:nth-child(1){
+  margin-top: 15px;
+}
+
+.profileSelection{
+  width: 178px;
+  position: absolute;
+  top: 100%;
+  left: -15px;
+  margin-top: 5px;
+  padding: 8px 0;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, .15);
+  border: solid 1px #ebebeb;
+  z-index: 100;
+  display: block;
+  right: -5px;
+  left: inherit;
+}
+
+.profileSelection > div{
+  display: block;
+  padding: 8px 16px;
+  background: #fff;
+  line-height: 1;
+  font-size: 16px;
+  line-height: 1.13;
+  font-weight: 400;
+  color: #788b99;
+  cursor: pointer;
+}
+.profileSelection > div:before {
+  content: '';
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -8px;
+  right: 25px;
+  z-index: 2;
+  border-style: solid;
+  border-width: 0 8px 8px 8px;
+  border-color: transparent transparent #ffffff transparent;
+}
+.profileSelection > div:after {
+  content: '';
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -9px;
+  right: 25px;
+  z-index: 1;
+  border-style: solid;
+  border-width: 0 8px 8px 8px;
+  border-color: transparent transparent rgba(0, 0, 0, .15) transparent;
+}
+
+.comparedProfilesWrapper{
+  position: relative;
+}

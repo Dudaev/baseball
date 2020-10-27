@@ -13,7 +13,6 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-date-picker';
-// import DatePicker from 'react-datepicker';
 import queryProfile from '../requests/queryProfile';
 import styles from '../Profile.module.css';
 import queryBattingLog from '../requests/queryBattingLog';
@@ -23,7 +22,7 @@ import TableNavigation from '../../TableNavigation/TableNavigation';
 import queryProfileNames from '../requests/queryProfileNames';
 import queryBattingSummary from '../requests/queryBattingSummary';
 import queryProfileEvents from '../requests/queryProfileEvents';
-
+import UserImg from '../../img/user.png';
 import Charts from './Charts/Charts';
 
 const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
@@ -34,7 +33,8 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
   const [profileEvents, setProfileEvents] = useState('');
   const [currentProfile, setcurrentProfile] = useState(profile || myProfile);
   const [visible, setVisible] = useState('Summary');
-  const [open, setOpen] = useState(false);
+  const [profileSelection, setProfileSelection] = useState(false);
+  const [valuesType, setValuesType] = useState('Exit Velocity');
 
   useEffect(() => {
     queryBattingLog(localStorage.accessToken, localStorage.client, personId, {})
@@ -121,19 +121,20 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
       });
   };
 
-  let data;
-  if (profileNames !== '' && !profileNames.length !== true && profileNames !== undefined) {
-    data = profileNames.map(player => (
-      // eslint-disable-next-line react/jsx-key
-      <div onClick={() => console.log('1')}>
-        {player.first_name} {player.last_name}
-      </div>
-    ));
-  }
+  // let data;
+  // if (profileNames !== '' && !profileNames.length !== true && profileNames !== undefined) {
+  //   data = profileNames.map(player => (
+  //     // eslint-disable-next-line react/jsx-key
+  //     <div onClick={() => console.log('1')}>
+  //       {player.first_name} {player.last_name}
+  //     </div>
+  //   ));
+  // }
 
-  if (battingLog === '' || battingSummary === '' || profileEvents === '') {
+  if (battingLog === '' || battingSummary === '' || profileEvents === '' || currentProfile === '') {
     return <p>Loading PlayerResults…</p>;
   }
+
   return (
     <div className={styles.playerResults}>
       <div className={styles.summaryEventsWrapper}>
@@ -380,71 +381,166 @@ const PlayerResults = ({ personId, profile = false, myProfile = false }) => {
           </div>
         )}
         {visible === 'Сomparison' && (
-          <div>
+          <div className={styles.comparisonWrapper}>
             <div>
               <div>
-                <div>
-                  {currentProfile.first_name} {currentProfile.last_name}
+                <div className={styles.comparisonHeader}>
+                  <div>
+                    {currentProfile.avatar !== null && <img src={currentProfile.avatar} alt="avatar" />}
+                    {currentProfile.avatar === null && <img src={UserImg} alt="avatar" />}
+                    <div>
+                      {currentProfile.first_name} {currentProfile.last_name}
+                    </div>
+                  </div>
+                  <div>
+                    {comparedProfile !== '' && (
+                      <>
+                        {comparedProfile.avatar !== null && <img src={comparedProfile.avatar} alt="avatar" />}
+                        {comparedProfile.avatar === null && <img src={UserImg} alt="avatar" />}
+                      </>
+                    )}
+                    {comparedProfile === '' && <img src={UserImg} alt="avatar" />}
+                    <div className={styles.comparedProfilesWrapper}>
+                      <input
+                        onChange={event => {
+                          handleProfileNames(event.currentTarget.value);
+                          setProfileSelection(true);
+                        }}
+                        onBlur={() => setTimeout(setProfileSelection, 100, false)}
+                      />
+                      {profileSelection && profileNames !== '' && (
+                        <div className={styles.profileSelection}>
+                          {profileNames.map(player => (
+                            <div key={player.id} onClick={() => handleQueryProfile(player.id)}>
+                              {player.first_name} {player.last_name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <span>svg </span>
-                  <span>age</span>
-                  <span> {currentProfile.age} </span>
-                </div>
-                <div>
-                  <span>svg </span>
-                  <span>Height</span>
-                  <span>
-                    ft {currentProfile.feet} in {currentProfile.inches}
-                  </span>
-                </div>
-                <div>
-                  <span>svg </span>
-                  <span>Weight</span>
-                  <span>{currentProfile.weight}</span>
-                </div>
-              </div>
-              <div>
-                <Tooltip
-                  title={<>{data}</>}
-                  aria-label="add"
-                  disableFocusListener
-                  disableHoverListener
-                  disableTouchListener
-                  open={open}
-                >
-                  <input
-                    onChange={event => {
-                      handleProfileNames(event.currentTarget.value);
-                      setOpen(true);
-                    }}
-                    onBlur={() => setOpen(false)}
-                  />
-                </Tooltip>
-                {comparedProfile !== '' && (
+                <div className={styles.comparisonTable}>
                   <div>
                     <div>
-                      {comparedProfile.first_name} {comparedProfile.last_name}
+                      <span>Age</span>
+                      <span> {currentProfile.age} </span>
                     </div>
                     <div>
-                      <span>svg </span>
-                      <span>age</span>
-                      <span> {comparedProfile.age} </span>
+                      <span>Age</span>
+                      {comparedProfile !== '' && <span> {comparedProfile.age} </span>}
+                      {comparedProfile === '' && <span> - </span>}
                     </div>
+                  </div>
+                  <div>
                     <div>
-                      <span>svg </span>
-                      <span>Height</span>
+                      <span>Height </span>
                       <span>
-                        ft {comparedProfile.feet} in {comparedProfile.inches}
+                        {currentProfile.feet} ft {currentProfile.inches} in
                       </span>
                     </div>
                     <div>
-                      <span>svg </span>
-                      <span>Weight</span>
-                      <span>{comparedProfile.weight}</span>
+                      <span>Height </span>
+                      {comparedProfile !== '' && (
+                        <span>
+                          {comparedProfile.feet} ft {comparedProfile.inches} in
+                        </span>
+                      )}
+                      {comparedProfile === '' && <span> - </span>}
                     </div>
                   </div>
-                )}
+                  <div>
+                    <div>
+                      <span>Weight </span>
+                      <span>{currentProfile.weight} lbs</span>
+                    </div>
+                    <div>
+                      <span>Weight </span>
+                      {comparedProfile !== '' && <span>{comparedProfile.weight} lbs</span>}
+                      {comparedProfile === '' && <span> - </span>}
+                    </div>
+                  </div>
+                  <div className={styles.tableWrapper}>
+                    <Select
+                      options={[
+                        { value: 'Distance', label: 'Distance' },
+                        { value: 'Launch Angle', label: 'Launch Angle' },
+                        { value: 'Exit Velocity', label: 'Exit Velocity' },
+                      ]}
+                      onChange={e => setValuesType(e.value)}
+                    />
+                    <div>
+                      <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                          <TableBody>
+                            {['Fastball', 'Curveball', 'Changeup', 'Slider'].map(pitchType => (
+                              // eslint-disable-next-line react/jsx-key
+                              <TableRow>
+                                <TableCell align="left">{pitchType}</TableCell>
+                                {currentProfile.batting_top_values.some(v => v.pitch_type === pitchType) && (
+                                  <>
+                                    {currentProfile.batting_top_values.map(row2 => {
+                                      if (row2.pitch_type === pitchType) {
+                                        return (
+                                          <>
+                                            {valuesType === 'Distance' && (
+                                              <TableCell align="center">{row2.distance}</TableCell>
+                                            )}
+                                            {valuesType === 'Launch Angle' && (
+                                              <TableCell align="center">{row2.launch_angle}</TableCell>
+                                            )}
+                                            {valuesType === 'Exit Velocity' && (
+                                              <TableCell align="center">{row2.exit_velocity}</TableCell>
+                                            )}
+                                          </>
+                                        );
+                                      }
+                                    })}
+                                  </>
+                                )}
+                                {!currentProfile.batting_top_values.some(v => v.pitch_type === pitchType) && (
+                                  <TableCell align="center">-</TableCell>
+                                )}
+                                {comparedProfile !== '' && (
+                                  <>
+                                    {comparedProfile.batting_top_values.some(v => v.pitch_type === pitchType) && (
+                                      <>
+                                        {comparedProfile.batting_top_values.map(row2 => {
+                                          if (row2.pitch_type === pitchType) {
+                                            return (
+                                              <>
+                                                {valuesType === 'Distance' && (
+                                                  <TableCell align="center">{row2.distance}</TableCell>
+                                                )}
+                                                {valuesType === 'Launch Angle' && (
+                                                  <TableCell align="center">{row2.launch_angle}</TableCell>
+                                                )}
+                                                {valuesType === 'Exit Velocity' && (
+                                                  <TableCell align="center">{row2.exit_velocity}</TableCell>
+                                                )}
+                                              </>
+                                            );
+                                          }
+                                        })}
+                                        {!comparedProfile.batting_top_values.length && (
+                                          <TableCell align="center">-</TableCell>
+                                        )}
+                                      </>
+                                    )}
+                                    {!comparedProfile.batting_top_values.some(v => v.pitch_type === pitchType) && (
+                                      <TableCell align="center">-</TableCell>
+                                    )}
+                                  </>
+                                )}
+                                {comparedProfile === '' && <TableCell align="center">-</TableCell>}
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div></div>
