@@ -7,6 +7,7 @@ import LeaderBoard from './LeaderBoard/LeaderBoard';
 import Network from './Network/Network';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './App.module.css';
+import Event from './Event/Event';
 
 export default function App() {
   return (
@@ -26,6 +27,9 @@ export default function App() {
         </Route>
         <Route path="/leaderboard">
           <LeaderBoard />
+        </Route>
+        <Route path="/event/:eventId?/:profileId?">
+          <Event />
         </Route>
         <footer>
           <div className={styles.legal}>
